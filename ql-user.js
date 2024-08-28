@@ -1,8 +1,24 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
 import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-database.js";
+
+// Cấu hình Firebase của bạn
+const firebaseConfig = {
+    apiKey: "AIzaSyDrZ9U2m7nv8aHCBBN7mUCNHMiB2J8ATIw",
+    authDomain: "quizdb-ffc85.firebaseapp.com",
+    databaseURL: "https://quizdb-ffc85-default-rtdb.firebaseio.com",
+    projectId: "quizdb-ffc85",
+    storageBucket: "quizdb-ffc85.appspot.com",
+    messagingSenderId: "890541011519",
+    appId: "1:890541011519:web:d6bcd1ea8f88ae15157e8a",
+    measurementId: "G-EZK98N7CJ8"
+};
+
+// Khởi tạo ứng dụng Firebase
+const app = initializeApp(firebaseConfig);
 
 // Hàm tải danh sách người dùng
 function loadUsers() {
-    const db = getDatabase();
+    const db = getDatabase(app);  // Khởi tạo Firebase Database từ app đã khởi tạo
     const userRef = ref(db, 'User'); // Đường dẫn tới danh sách người dùng trong Firebase
 
     onValue(userRef, (snapshot) => {
@@ -68,7 +84,7 @@ function editUser(userKey) {
 
 // Hàm xóa người dùng
 function deleteUser(userKey) {
-    const db = getDatabase();
+    const db = getDatabase(app);
     const userRef = ref(db, `User/${userKey}`);
 
     remove(userRef).then(() => {
@@ -78,4 +94,5 @@ function deleteUser(userKey) {
     });
 }
 
+// Gọi hàm để tải danh sách người dùng
 loadUsers();
