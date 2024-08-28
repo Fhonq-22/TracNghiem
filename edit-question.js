@@ -1,7 +1,7 @@
 import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-database.js";
 
 // Hàm để tải câu hỏi từ Firebase và hiển thị lên form
-export async function loadQuestion(questionKey) {
+async function loadQuestion(questionKey) {
     const db = getDatabase();
     const questionRef = ref(db, `CauHoi/${questionKey}`);
     
@@ -24,7 +24,7 @@ export async function loadQuestion(questionKey) {
 }
 
 // Hàm để lưu các thay đổi của câu hỏi vào Firebase
-export async function saveQuestion() {
+async function saveQuestion() {
     const questionKey = new URLSearchParams(window.location.search).get('key');
     const db = getDatabase();
     const questionRef = ref(db, `CauHoi/${questionKey}`);
