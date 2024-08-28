@@ -1,6 +1,6 @@
-// Import các phương thức cần thiết từ Firebase
+// Import các phương thức Firebase cần thiết
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
 // Cấu hình Firebase
 const firebaseConfig = {
@@ -17,7 +17,7 @@ const firebaseConfig = {
 // Khởi tạo Firebase
 initializeApp(firebaseConfig);
 
-// Hàm để tải và hiển thị danh sách câu hỏi
+// Hàm để tải và hiển thị câu hỏi
 function loadQuestions() {
     const db = getDatabase();
     const questionsRef = ref(db, 'CauHoi');
@@ -31,11 +31,12 @@ function loadQuestions() {
         questionsList.innerHTML = '';
 
         if (data) {
-            // Duyệt qua từng câu hỏi và tạo các dòng hiển thị
+            // Duyệt qua từng câu hỏi và tạo các hàng
             Object.keys(data).forEach((key) => {
                 const question = data[key];
                 const row = document.createElement('tr');
 
+                // Hiển thị thông tin câu hỏi, đáp án đúng, và hành động
                 row.innerHTML = `
                     <td>${key}</td>
                     <td>${question.NoiDung}</td>
@@ -53,6 +54,7 @@ function loadQuestions() {
             // Gán sự kiện click cho các nút sửa và xóa
             assignButtonEvents();
         } else {
+            // Nếu không có câu hỏi nào
             questionsList.innerHTML = '<tr><td colspan="4">Không có câu hỏi nào được tìm thấy</td></tr>';
         }
     });
@@ -81,5 +83,20 @@ function assignButtonEvents() {
     });
 }
 
-// Khi DOM đã tải xong, tải câu hỏi
+// Hàm để xóa câu hỏi
+function deleteQuestion(questionKey) {
+    const db = getDatabase();
+    const questionRef = ref(db, `CauHoi/${questionKey}`);
+    
+    remove(questionRef)
+        .then(() => {
+            alert("Câu hỏi đã được xoá thành công!");
+            loadQuestions();  // Tải lại danh sách câu hỏi sau khi xóa
+        })
+        .catch((error) => {
+            console.error("Lỗi khi xoá câu hỏi: ", error);
+        });
+}
+
+// Khi DOM đã tải xong, gọi hàm loadQuestions để tải danh sách câu hỏi
 document.addEventListener('DOMContentLoaded', loadQuestions);
