@@ -1,7 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-database.js";
+// ql-user.js
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js';
+import { getDatabase, ref, get, remove, set } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js';
 
-// Cấu hình Firebase của bạn
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDrZ9U2m7nv8aHCBBN7mUCNHMiB2J8ATIw",
     authDomain: "quizdb-ffc85.firebaseapp.com",
@@ -13,86 +14,59 @@ const firebaseConfig = {
     measurementId: "G-EZK98N7CJ8"
 };
 
-// Khởi tạo ứng dụng Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase
+initializeApp(firebaseConfig);
+const db = getDatabase();
 
-// Hàm tải danh sách người dùng
-function loadUsers() {
-    const db = getDatabase(app);  // Khởi tạo Firebase Database từ app đã khởi tạo
-    const userRef = ref(db, 'User'); // Đường dẫn tới danh sách người dùng trong Firebase
+const userTable = document.getElementById('userTable').getElementsByTagName('tbody')[0];
 
-    onValue(userRef, (snapshot) => {
-        const userTable = document.getElementById("user-table-body");
-        userTable.innerHTML = ''; // Xóa nội dung cũ trước khi hiển thị danh sách mới
+async function loadUsers() {
+    try {
+        const userRef = ref(db, 'User/');
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+            const users = snapshot.val();
+            for (const [key, user] of Object.entries(users)) {
+                const row = userTable.insertRow();
+                row.insertCell(0).innerText = key;
+                row.insertCell(1).innerText = user.Email || 'Chưa có';
+                row.insertCell(2).innerText = user.HoTen || 'Chưa có';
+                row.insertCell(3).innerText = user.VaiTro || 'Chưa có';
 
-        snapshot.forEach((userSnapshot) => {
-            const userKey = userSnapshot.key;
-            const userData = userSnapshot.val();
-            const userRole = userData.VaiTro;
+                const actionsCell = row.insertCell(4);
+                if (user.VaiTro === 'Admin') {
+                    // Admin can edit
+                    const editButton = document.createElement('button');
+                    editButton.innerText = 'Sửa';
+                    editButton.onclick = () => {
+                        window.location.href = `edit-user.html?key=${key}`;
+                    };
+                    actionsCell.appendChild(editButton);
+                }
 
-            const row = document.createElement("tr");
-
-            // Tạo các ô trong bảng
-            const cellUsername = document.createElement("td");
-            cellUsername.textContent = userKey;
-
-            const cellHoTen = document.createElement("td");
-            cellHoTen.textContent = userData.HoTen || '';
-
-            const cellNgayDangKy = document.createElement("td");
-            cellNgayDangKy.textContent = userData.NgayDangKy || '';
-
-            const cellVaiTro = document.createElement("td");
-            cellVaiTro.textContent = userRole;
-
-            const cellActions = document.createElement("td");
-
-            // Nút sửa và xóa
-            if (userRole === "Admin") {
-                const editButton = document.createElement("button");
-                editButton.textContent = "Sửa";
-                editButton.classList.add("btn", "btn-warning");
-                editButton.onclick = () => editUser(userKey);
-                cellActions.appendChild(editButton);
+                // Both Admin and User can delete
+                const deleteButton = document.createElement('button');
+                deleteButton.innerText = 'Xóa';
+                deleteButton.onclick = () => {
+                    if (confirm(`Bạn có chắc chắn muốn xóa người dùng ${key}?`)) {
+                        deleteUser(key);
+                    }
+                };
+                actionsCell.appendChild(deleteButton);
             }
-
-            if (userRole === "User") {
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Xóa";
-                deleteButton.classList.add("btn", "btn-danger");
-                deleteButton.onclick = () => deleteUser(userKey);
-                cellActions.appendChild(deleteButton);
-            }
-
-            // Thêm các ô vào hàng
-            row.appendChild(cellUsername);
-            row.appendChild(cellHoTen);
-            row.appendChild(cellNgayDangKy);
-            row.appendChild(cellVaiTro);
-            row.appendChild(cellActions);
-
-            // Thêm hàng vào bảng
-            userTable.appendChild(row);
-        });
-    });
+        }
+    } catch (error) {
+        console.error('Lỗi khi tải người dùng:', error);
+    }
 }
 
-// Hàm sửa người dùng
-function editUser(userKey) {
-    window.location.href = `edit-user.html?key=${userKey}`;
+async function deleteUser(key) {
+    try {
+        await remove(ref(db, `User/${key}`));
+        location.reload(); // Refresh the page to reflect changes
+    } catch (error) {
+        console.error('Lỗi khi xóa người dùng:', error);
+    }
 }
 
-// Hàm xóa người dùng
-function deleteUser(userKey) {
-    const db = getDatabase(app);
-    const userRef = ref(db, `User/${userKey}`);
-
-    remove(userRef).then(() => {
-        alert("Người dùng đã được xóa thành công!");
-    }).catch((error) => {
-        console.error("Lỗi khi xóa người dùng:", error);
-    });
-}
-
-// Gọi hàm để tải danh sách người dùng sau khi khởi tạo Firebase thành công
-loadUsers();
+document.addEventListener('DOMContentLoaded', loadUsers);
