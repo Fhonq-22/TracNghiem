@@ -94,5 +94,5 @@ function deleteUser(userKey) {
     });
 }
 
-// Gọi hàm để tải danh sách người dùng
+// Gọi hàm để tải danh sách người dùng sau khi khởi tạo Firebase thành công
 loadUsers();
