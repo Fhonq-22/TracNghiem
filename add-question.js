@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, set, child, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
 // Cấu hình Firebase
 const firebaseConfig = {
@@ -16,33 +16,58 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Xử lý sự kiện form khi người dùng nhấn nút thêm câu hỏi
-document.getElementById('addQuestionForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
+// Hàm tìm khóa trống
+async function findEmptyKey() {
+  const dbRef = ref(db);
+  const snapshot = await get(child(dbRef, 'CauHoi'));
+  const cauHoiData = snapshot.exists() ? snapshot.val() : {};
 
-  // Lấy dữ liệu từ form
-  const noiDung = document.getElementById('questionContent').value;
-  const dapAnDung = document.getElementById('correctAnswer').value;
-  const phuongAn = [
-    document.getElementById('option0').value,
-    document.getElementById('option1').value,
-    document.getElementById('option2').value,
-    document.getElementById('option3').value,
-  ];
-
-  // Thêm câu hỏi vào Firebase
-  try {
-    await push(ref(db, 'CauHoi'), {
-      NoiDung: noiDung,
-      DapAnDung: parseInt(dapAnDung),
-      PhuongAn: phuongAn
-    });
-
-    // Thông báo thành công
-    alert('Câu hỏi đã được thêm thành công!');
-    window.location.href = 'ql-cauhoi.html'; // Chuyển về trang quản lý câu hỏi sau khi thêm thành công
-  } catch (error) {
-    console.error('Lỗi khi thêm câu hỏi', error);
-    alert('Đã xảy ra lỗi khi thêm câu hỏi. Vui lòng thử lại!');
+  let i = 1;
+  while (true) {
+    const key = 'Q' + String(i).padStart(3, '0'); // Tạo khóa như Q001, Q002, Q003, ...
+    if (!cauHoiData[key]) {
+      return key; // Nếu khóa không tồn tại, trả về khóa này
+    }
+    i++;
   }
-});
+}
+
+// Hàm thêm câu hỏi mới
+async function addQuestion() {
+  const noiDung = document.getElementById("noiDung").value;
+  const phuongAn1 = document.getElementById("phuongAn1").value;
+  const phuongAn2 = document.getElementById("phuongAn2").value;
+  const phuongAn3 = document.getElementById("phuongAn3").value;
+  const phuongAn4 = document.getElementById("phuongAn4").value;
+  const dapAnDung = document.getElementById("dapAnDung").value;
+
+  if (!noiDung || !phuongAn1 || !phuongAn2 || !phuongAn3 || !phuongAn4 || dapAnDung === "") {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+
+  try {
+    const newKey = await findEmptyKey(); // Tìm khóa trống
+    if (!newKey) {
+      alert("Không thể tìm thấy khóa trống!");
+      return;
+    }
+
+    const newQuestion = {
+      NoiDung: noiDung,
+      PhuongAn: [phuongAn1, phuongAn2, phuongAn3, phuongAn4],
+      DapAnDung: parseInt(dapAnDung)
+    };
+
+    await set(ref(db, 'CauHoi/' + newKey), newQuestion);
+    alert("Thêm câu hỏi thành công với khóa " + newKey);
+    window.location.reload(); // Tải lại trang sau khi thêm thành công
+  } catch (error) {
+    console.error("Lỗi khi thêm câu hỏi:", error);
+    alert("Đã có lỗi xảy ra khi thêm câu hỏi.");
+  }
+}
+
+// Gán sự kiện cho nút thêm
+document.getElementById("addQuestionBtn").addEventListener("click", addQuestion);
+
