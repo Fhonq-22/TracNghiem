@@ -61,8 +61,8 @@ document.getElementById("addQuestionBtn").addEventListener("click", async functi
     set(ref(db, `CauHoi/${newKey}`), newQuestion)
         .then(() => {
             alert("Thêm câu hỏi thành công!");
-            // Reset form sau khi thêm thành công
-            document.getElementById("addQuestionForm").reset();
+            // Chuyển hướng về trang quản lý câu hỏi
+            window.location.href = "ql-question.html";
         })
         .catch((error) => {
             console.error("Lỗi khi thêm câu hỏi: ", error);
