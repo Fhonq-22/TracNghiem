@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý câu hỏi</title>
-    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js"></script>
-    <script src="ql-cauhoi.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js" type="module"></script>
+    <script src="ql-cauhoi.js" type="module" defer></script>
 </head>
 <body>
     <h1>Quản lý câu hỏi</h1>
@@ -14,9 +14,9 @@
     <table id="questionsTable">
         <thead>
             <tr>
-                <th>NoiDung</th>
-                <th>PhuongAn</th>
-                <th>DapAnDung</th>
+                <th>Nội dung</th>
+                <th>Phương án</th>
+                <th>Đáp án đúng</th>
                 <th>Hành động</th>
             </tr>
         </thead>
@@ -24,11 +24,5 @@
             <!-- Các câu hỏi sẽ được thêm vào đây bằng JavaScript -->
         </tbody>
     </table>
-    <script>
-        // Đảm bảo rằng hàm này được định nghĩa
-        function editQuestion(key) {
-            window.location.href = `edit-question.html?key=${key}`;
-        }
-    </script>
 </body>
 </html>
