@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sửa câu hỏi</title>
     <script type="module">
-        import { loadQuestion } from './edit-question.js';
+        import { loadQuestion, updateQuestion } from './edit-question.js';
 
         document.addEventListener('DOMContentLoaded', () => {
             const queryString = window.location.search;
@@ -15,6 +15,14 @@
             if (questionKey) {
                 loadQuestion(questionKey);
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('editQuestionForm');
+            form.addEventListener('submit', (event) => {
+                event.preventDefault(); // Ngăn chặn form gửi dữ liệu theo cách mặc định
+                updateQuestion(); // Gọi hàm cập nhật câu hỏi
+            });
         });
     </script>
 </head>
