@@ -4,28 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sửa câu hỏi</title>
-    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js"></script>
-    <script src="edit-question.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js" type="module"></script>
+    <script src="edit-question.js" type="module" defer></script>
 </head>
 <body>
     <h1>Sửa câu hỏi</h1>
     <form id="editQuestionForm">
-        <input type="hidden" id="questionKey">
-        <label for="noiDung">Nội dung:</label>
-        <input type="text" id="noiDung" required><br>
+        <input type="hidden" id="questionKey" />
+        <label for="noiDung">Nội dung câu hỏi:</label>
+        <input type="text" id="noiDung" required />
         <label for="phuongAn1">Phương án 1:</label>
-        <input type="text" id="phuongAn1" required><br>
+        <input type="text" id="phuongAn1" required />
         <label for="phuongAn2">Phương án 2:</label>
-        <input type="text" id="phuongAn2" required><br>
+        <input type="text" id="phuongAn2" required />
         <label for="phuongAn3">Phương án 3:</label>
-        <input type="text" id="phuongAn3" required><br>
+        <input type="text" id="phuongAn3" required />
         <label for="phuongAn4">Phương án 4:</label>
-        <input type="text" id="phuongAn4" required><br>
-        <label for="dapAnDung">Đáp án đúng (0-3):</label>
-        <input type="number" id="dapAnDung" min="0" max="3" required><br>
-        <button type="button" id="saveQuestionBtn">Lưu</button>
+        <input type="text" id="phuongAn4" required />
+        <label for="dapAnDung">Đáp án đúng (số từ 0 đến 3):</label>
+        <input type="number" id="dapAnDung" min="0" max="3" required />
+        <button type="submit">Lưu</button>
     </form>
-    <button onclick="window.location.href='ql-cauhoi.html'">Quay lại</button>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const questionKey = urlParams.get('key');
+            
+            if (questionKey) {
+                // Load question data from Firebase and populate the form
+                import('./edit-question.js').then(module => {
+                    module.loadQuestion(questionKey);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
