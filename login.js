@@ -62,3 +62,9 @@ async function loginUser() {
     console.error("Lỗi khi truy cập Firebase", error);
   }
 }
+
+// Gán sự kiện onsubmit cho form
+document.getElementById('loginForm').onsubmit = function(event) {
+  event.preventDefault();
+  loginUser();
+};
