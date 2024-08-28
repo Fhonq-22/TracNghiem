@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
 // Cấu hình Firebase
 const firebaseConfig = {
@@ -17,24 +17,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Lấy khóa câu hỏi từ URL
-const urlParams = new URLSearchParams(window.location.search);
-const questionKey = urlParams.get('key');
-
-// Hiển thị thông tin câu hỏi để chỉnh sửa
-document.addEventListener('DOMContentLoaded', () => {
+export function loadQuestion(questionKey) {
+    const questionRef = ref(db, `CauHoi/${questionKey}`);
     const noiDungInput = document.getElementById('noiDung');
     const phuongAn1Input = document.getElementById('phuongAn1');
     const phuongAn2Input = document.getElementById('phuongAn2');
     const phuongAn3Input = document.getElementById('phuongAn3');
     const phuongAn4Input = document.getElementById('phuongAn4');
     const dapAnDungInput = document.getElementById('dapAnDung');
-    const saveButton = document.getElementById('saveQuestionBtn');
     const questionKeyInput = document.getElementById('questionKey');
 
-    const cauHoiRef = ref(db, `CauHoi/${questionKey}`);
-
-    get(cauHoiRef).then((snapshot) => {
+    get(questionRef).then((snapshot) => {
         if (snapshot.exists()) {
             const question = snapshot.val();
             noiDungInput.value = question.NoiDung;
@@ -51,8 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Lỗi khi tải câu hỏi: ", error);
     });
 
-    // Lưu câu hỏi sau khi sửa
-    saveButton.addEventListener('click', () => {
+    document.getElementById('editQuestionForm').addEventListener('submit', (event) => {
+        event.preventDefault();
         const updatedQuestion = {
             NoiDung: noiDungInput.value,
             PhuongAn: [
@@ -64,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             DapAnDung: parseInt(dapAnDungInput.value)
         };
 
-        set(cauHoiRef, updatedQuestion)
+        set(questionRef, updatedQuestion)
             .then(() => {
                 alert("Cập nhật câu hỏi thành công!");
                 window.location.href = "ql-cauhoi.html";
@@ -74,4 +67,4 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Lỗi khi cập nhật câu hỏi.");
             });
     });
-});
+}
