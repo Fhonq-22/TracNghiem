@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Người dùng</title>
+    <title>Quản lý người dùng</title>
+    <script type="module" src="./ql-user.js" defer></script>
 </head>
 <body>
-    <h1>Quản lý Người dùng</h1>
-    <table id="user-table" border="1">
+    <h1>Quản lý người dùng</h1>
+    <table id="userTable">
         <thead>
             <tr>
-                <th>Tên người dùng</th>
+                <th>Username</th>
+                <th>Email</th>
                 <th>Họ tên</th>
-                <th>Ngày đăng ký</th>
                 <th>Vai trò</th>
-                <th>Hành động</th>
+                <th>Thao tác</th>
             </tr>
         </thead>
-        <tbody id="user-table-body">
-            <!-- Danh sách người dùng sẽ được hiển thị ở đây -->
-        </tbody>
+        <tbody></tbody>
     </table>
-
-    <script type="module" src="ql-user.js"></script>
+    <button onclick="window.location.href='admin-home.html'">Quay lại trang chính</button>
 </body>
 </html>
