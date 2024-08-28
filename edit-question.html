@@ -1,86 +1,31 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sửa Câu Hỏi</title>
-  <script type="module" src="edit-question.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sửa câu hỏi</title>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js"></script>
+    <script src="edit-question.js" defer></script>
 </head>
 <body>
-  <h1>Sửa Câu Hỏi</h1>
-  
-  <form id="editQuestionForm">
-    <input type="hidden" id="editQuestionId">
-    <label for="editQuestionContent">Nội dung câu hỏi:</label>
-    <input type="text" id="editQuestionContent" name="editQuestionContent" required><br><br>
-    
-    <label for="editCorrectAnswer">Đáp án đúng (số chỉ mục):</label>
-    <input type="number" id="editCorrectAnswer" name="editCorrectAnswer" min="0" required><br><br>
-    
-    <label for="editOption0">Phương án 0:</label>
-    <input type="text" id="editOption0" name="editOption0" required><br><br>
-    
-    <label for="editOption1">Phương án 1:</label>
-    <input type="text" id="editOption1" name="editOption1" required><br><br>
-    
-    <label for="editOption2">Phương án 2:</label>
-    <input type="text" id="editOption2" name="editOption2" required><br><br>
-    
-    <label for="editOption3">Phương án 3:</label>
-    <input type="text" id="editOption3" name="editOption3" required><br><br>
-
-    <button type="submit">Cập Nhật Câu Hỏi</button>
-  </form>
-
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const questionId = urlParams.get('id');
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      if (questionId) {
-        // Load question data
-        const questionRef = ref(db, `CauHoi/${questionId}`);
-        const snapshot = await get(questionRef);
-        
-        if (snapshot.exists()) {
-          const question = snapshot.val();
-          document.getElementById('editQuestionId').value = questionId;
-          document.getElementById('editQuestionContent').value = question.NoiDung;
-          document.getElementById('editCorrectAnswer').value = question.DapAnDung;
-          question.PhuongAn.forEach((option, index) => {
-            document.getElementById(`editOption${index}`).value = option;
-          });
-        } else {
-          alert('Câu hỏi không tồn tại.');
-        }
-      }
-    });
-
-    document.getElementById('editQuestionForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const id = document.getElementById('editQuestionId').value;
-      const content = document.getElementById('editQuestionContent').value;
-      const correctAnswer = document.getElementById('editCorrectAnswer').value;
-      const options = [
-        document.getElementById('editOption0').value,
-        document.getElementById('editOption1').value,
-        document.getElementById('editOption2').value,
-        document.getElementById('editOption3').value,
-      ];
-
-      try {
-        await update(ref(db, `CauHoi/${id}`), {
-          NoiDung: content,
-          DapAnDung: correctAnswer,
-          PhuongAn: options
-        });
-        alert('Câu hỏi đã được cập nhật thành công!');
-        window.location.href = 'ql-cauhoi.html';
-      } catch (error) {
-        console.error('Lỗi khi cập nhật câu hỏi', error);
-        alert('Đã xảy ra lỗi khi cập nhật câu hỏi. Vui lòng thử lại!');
-      }
-    });
-  </script>
+    <h1>Sửa câu hỏi</h1>
+    <form id="editQuestionForm">
+        <input type="hidden" id="questionKey">
+        <label for="noiDung">Nội dung:</label>
+        <input type="text" id="noiDung" required><br>
+        <label for="phuongAn1">Phương án 1:</label>
+        <input type="text" id="phuongAn1" required><br>
+        <label for="phuongAn2">Phương án 2:</label>
+        <input type="text" id="phuongAn2" required><br>
+        <label for="phuongAn3">Phương án 3:</label>
+        <input type="text" id="phuongAn3" required><br>
+        <label for="phuongAn4">Phương án 4:</label>
+        <input type="text" id="phuongAn4" required><br>
+        <label for="dapAnDung">Đáp án đúng (0-3):</label>
+        <input type="number" id="dapAnDung" min="0" max="3" required><br>
+        <button type="button" id="saveQuestionBtn">Lưu</button>
+    </form>
+    <button onclick="window.location.href='ql-cauhoi.html'">Quay lại</button>
 </body>
 </html>
