@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Câu Hỏi</title>
+  <script type="module" src="ql-cauhoi.js" defer></script>
+</head>
+<body>
+  <h1>Quản Lý Câu Hỏi</h1>
+  
+  <button id="addQuestionBtn">Thêm Câu Hỏi</button>
+  <div id="questionList"></div>
+  
+  <script>
+    // Script để hiển thị danh sách câu hỏi và xử lý sự kiện thêm câu hỏi
+    document.getElementById('addQuestionBtn').addEventListener('click', () => {
+      window.location.href = 'add-question.html';
+    });
+  </script>
+</body>
+</html>
