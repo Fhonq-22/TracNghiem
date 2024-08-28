@@ -18,7 +18,7 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 // Hàm xoá câu hỏi
-export function deleteQuestion(questionKey) {
+function deleteQuestion(questionKey) {
     const db = getDatabase();
     const questionRef = ref(db, `CauHoi/${questionKey}`);
     
@@ -34,7 +34,7 @@ export function deleteQuestion(questionKey) {
         });
 }
 
-// Khi DOM đã tải xong, gán sự kiện cho nút xoá
+// Khi DOM đã tải xong, gán sự kiện cho các nút xoá
 document.addEventListener('DOMContentLoaded', () => {
     const deleteButtons = document.querySelectorAll('.deleteButton');
 
