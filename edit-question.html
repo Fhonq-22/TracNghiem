@@ -3,44 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sửa Câu Hỏi</title>
+    <title>Sửa câu hỏi</title>
+    <script type="module" src="./edit-question.js"></script>
 </head>
 <body>
     <h1>Sửa Câu Hỏi</h1>
     <form id="editQuestionForm">
-        <input type="hidden" id="questionKey">
-        <label for="noiDung">Nội dung câu hỏi:</label>
-        <input type="text" id="noiDung" required><br>
+        <label for="questionContent">Nội dung câu hỏi:</label>
+        <input type="text" id="questionContent" name="questionContent"><br><br>
 
-        <label for="phuongAn1">Phương án 1:</label>
-        <input type="text" id="phuongAn1" required><br>
+        <label for="option0">Phương án 1:</label>
+        <input type="text" id="option0" name="option0"><br><br>
 
-        <label for="phuongAn2">Phương án 2:</label>
-        <input type="text" id="phuongAn2" required><br>
+        <label for="option1">Phương án 2:</label>
+        <input type="text" id="option1" name="option1"><br><br>
 
-        <label for="phuongAn3">Phương án 3:</label>
-        <input type="text" id="phuongAn3" required><br>
+        <label for="option2">Phương án 3:</label>
+        <input type="text" id="option2" name="option2"><br><br>
 
-        <label for="phuongAn4">Phương án 4:</label>
-        <input type="text" id="phuongAn4" required><br>
+        <label for="option3">Phương án 4:</label>
+        <input type="text" id="option3" name="option3"><br><br>
 
-        <label for="dapAnDung">Đáp án đúng:</label>
-        <input type="number" id="dapAnDung" min="0" max="3" required><br>
+        <label for="correctAnswer">Đáp án đúng (0-3):</label>
+        <input type="number" id="correctAnswer" name="correctAnswer" min="0" max="3"><br><br>
 
-        <button type="button" onclick="saveQuestion()">Lưu</button>
+        <button type="button" id="saveButton">Lưu</button>
     </form>
-
-    <script type="module">
-        import { loadQuestion, saveQuestion } from './edit-question.js';
-
-        // Lấy giá trị của key từ URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const questionKey = urlParams.get('key');
-
-        // Tải câu hỏi từ Firebase và hiển thị
-        document.addEventListener('DOMContentLoaded', () => {
-            loadQuestion(questionKey);
-        });
-    </script>
 </body>
 </html>
