@@ -11,17 +11,17 @@
 <body>
     <h1>Quản lý câu hỏi</h1>
     <button onclick="window.location.href='add-question.html'">Thêm câu hỏi</button>
-    <table id="questionsTable">
+    <table>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Nội dung</th>
-                <th>Phương án</th>
                 <th>Đáp án đúng</th>
                 <th>Hành động</th>
             </tr>
         </thead>
-        <tbody>
-            <!-- Các câu hỏi sẽ được thêm vào đây bằng JavaScript -->
+        <tbody id="questions-list">
+            <!-- Dữ liệu từ Firebase sẽ được thêm vào đây -->
         </tbody>
     </table>
 </body>
