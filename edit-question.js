@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
 // Cấu hình Firebase
 const firebaseConfig = {
@@ -50,7 +50,7 @@ export async function loadQuestion(questionKey) {
     }
 }
 
-export async function updateQuestion() {
+export async function saveQuestion() {
     const questionKey = document.getElementById('questionKey').value;
     const noiDung = document.getElementById('noiDung').value;
     const phuongAn1 = document.getElementById('phuongAn1').value;
@@ -59,20 +59,23 @@ export async function updateQuestion() {
     const phuongAn4 = document.getElementById('phuongAn4').value;
     const dapAnDung = document.getElementById('dapAnDung').value;
 
-    if (questionKey) {
-        const questionRef = ref(db, `CauHoi/${questionKey}`);
-        try {
-            await set(questionRef, {
-                NoiDung: noiDung,
-                PhuongAn: [phuongAn1, phuongAn2, phuongAn3, phuongAn4],
-                DapAnDung: parseInt(dapAnDung, 10)
-            });
-            alert("Cập nhật câu hỏi thành công.");
-            window.location.href = 'ql-cauhoi.html'; // Chuyển hướng về trang quản lý câu hỏi
-        } catch (error) {
-            console.error("Lỗi khi cập nhật câu hỏi: ", error);
-        }
-    } else {
-        alert("Không tìm thấy câu hỏi để cập nhật.");
+    if (!questionKey || !noiDung || !phuongAn1 || !phuongAn2 || !phuongAn3 || !phuongAn4 || dapAnDung === '') {
+        alert("Vui lòng điền đầy đủ thông tin.");
+        return;
+    }
+
+    const questionRef = ref(db, `CauHoi/${questionKey}`);
+
+    try {
+        await update(questionRef, {
+            NoiDung: noiDung,
+            PhuongAn: [phuongAn1, phuongAn2, phuongAn3, phuongAn4],
+            DapAnDung: parseInt(dapAnDung)
+        });
+        alert("Câu hỏi đã được cập nhật thành công!");
+        window.location.href = "ql-cauhoi.html"; // Chuyển về trang quản lý câu hỏi
+    } catch (error) {
+        console.error("Lỗi khi cập nhật câu hỏi: ", error);
+        alert("Có lỗi xảy ra khi cập nhật câu hỏi.");
     }
 }
