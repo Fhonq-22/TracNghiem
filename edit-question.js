@@ -17,6 +17,23 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+document.addEventListener('DOMContentLoaded', () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const questionKey = urlParams.get('key');
+    
+    if (questionKey) {
+        // Load question data from Firebase and populate the form
+        import('./edit-question.js').then(module => {
+            if (typeof module.loadQuestion === 'function') {
+                module.loadQuestion(questionKey);
+            } else {
+                console.error("loadQuestion function is not defined.");
+            }
+        });
+    }
+});
+
 export function loadQuestion(questionKey) {
     const questionRef = ref(db, `CauHoi/${questionKey}`);
     const noiDungInput = document.getElementById('noiDung');
@@ -27,44 +44,48 @@ export function loadQuestion(questionKey) {
     const dapAnDungInput = document.getElementById('dapAnDung');
     const questionKeyInput = document.getElementById('questionKey');
 
-    get(questionRef).then((snapshot) => {
-        if (snapshot.exists()) {
-            const question = snapshot.val();
-            noiDungInput.value = question.NoiDung;
-            phuongAn1Input.value = question.PhuongAn[0];
-            phuongAn2Input.value = question.PhuongAn[1];
-            phuongAn3Input.value = question.PhuongAn[2];
-            phuongAn4Input.value = question.PhuongAn[3];
-            dapAnDungInput.value = question.DapAnDung;
-            questionKeyInput.value = questionKey;
-        } else {
-            alert("Câu hỏi không tồn tại.");
-        }
-    }).catch((error) => {
-        console.error("Lỗi khi tải câu hỏi: ", error);
-    });
+    if (noiDungInput && phuongAn1Input && phuongAn2Input && phuongAn3Input && phuongAn4Input && dapAnDungInput && questionKeyInput) {
+        get(questionRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const question = snapshot.val();
+                noiDungInput.value = question.NoiDung;
+                phuongAn1Input.value = question.PhuongAn[0];
+                phuongAn2Input.value = question.PhuongAn[1];
+                phuongAn3Input.value = question.PhuongAn[2];
+                phuongAn4Input.value = question.PhuongAn[3];
+                dapAnDungInput.value = question.DapAnDung;
+                questionKeyInput.value = questionKey;
+            } else {
+                alert("Câu hỏi không tồn tại.");
+            }
+        }).catch((error) => {
+            console.error("Lỗi khi tải câu hỏi: ", error);
+        });
 
-    document.getElementById('editQuestionForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-        const updatedQuestion = {
-            NoiDung: noiDungInput.value,
-            PhuongAn: [
-                phuongAn1Input.value,
-                phuongAn2Input.value,
-                phuongAn3Input.value,
-                phuongAn4Input.value
-            ],
-            DapAnDung: parseInt(dapAnDungInput.value)
-        };
+        document.getElementById('editQuestionForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const updatedQuestion = {
+                NoiDung: noiDungInput.value,
+                PhuongAn: [
+                    phuongAn1Input.value,
+                    phuongAn2Input.value,
+                    phuongAn3Input.value,
+                    phuongAn4Input.value
+                ],
+                DapAnDung: parseInt(dapAnDungInput.value)
+            };
 
-        set(questionRef, updatedQuestion)
-            .then(() => {
-                alert("Cập nhật câu hỏi thành công!");
-                window.location.href = "ql-cauhoi.html";
-            })
-            .catch((error) => {
-                console.error("Lỗi khi cập nhật câu hỏi: ", error);
-                alert("Lỗi khi cập nhật câu hỏi.");
-            });
-    });
+            set(questionRef, updatedQuestion)
+                .then(() => {
+                    alert("Cập nhật câu hỏi thành công!");
+                    window.location.href = "ql-cauhoi.html";
+                })
+                .catch((error) => {
+                    console.error("Lỗi khi cập nhật câu hỏi: ", error);
+                    alert("Lỗi khi cập nhật câu hỏi.");
+                });
+        });
+    } else {
+        console.error("Một số phần tử DOM không tồn tại.");
+    }
 }
