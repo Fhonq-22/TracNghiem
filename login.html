@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trang Đăng Nhập</title>
-  <script type="module" src="login.js"></script> <!-- Đường dẫn tới file login.js -->
+  <script type="module" src="login.js"></script>
 </head>
 <body>
   <div>
     <h2>Đăng Nhập</h2>
     <form id="loginForm">
       <label for="username">Tên đăng nhập:</label>
-      <input type="text" id="username" name="username" required><br><br>
+      <input type="text" id="username" name="username" autocomplete="username" required><br><br>
       
       <label for="password">Mật khẩu:</label>
-      <input type="password" id="password" name="password" required><br><br>
+      <input type="password" id="password" name="password" autocomplete="current-password" required><br><br>
 
       <button type="submit">Đăng nhập</button>
     </form>
