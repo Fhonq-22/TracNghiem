@@ -3,46 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sửa câu hỏi</title>
-    <script type="module">
-        import { loadQuestion, updateQuestion } from './edit-question.js';
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
-            const questionKey = urlParams.get('key');
-            
-            if (questionKey) {
-                loadQuestion(questionKey);
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('editQuestionForm');
-            form.addEventListener('submit', (event) => {
-                event.preventDefault(); // Ngăn chặn form gửi dữ liệu theo cách mặc định
-                updateQuestion(); // Gọi hàm cập nhật câu hỏi
-            });
-        });
-    </script>
+    <title>Sửa Câu Hỏi</title>
 </head>
 <body>
-    <h1>Sửa câu hỏi</h1>
+    <h1>Sửa Câu Hỏi</h1>
     <form id="editQuestionForm">
-        <input type="hidden" id="questionKey" />
+        <input type="hidden" id="questionKey">
         <label for="noiDung">Nội dung câu hỏi:</label>
-        <input type="text" id="noiDung" required />
+        <input type="text" id="noiDung" required><br>
+
         <label for="phuongAn1">Phương án 1:</label>
-        <input type="text" id="phuongAn1" required />
+        <input type="text" id="phuongAn1" required><br>
+
         <label for="phuongAn2">Phương án 2:</label>
-        <input type="text" id="phuongAn2" required />
+        <input type="text" id="phuongAn2" required><br>
+
         <label for="phuongAn3">Phương án 3:</label>
-        <input type="text" id="phuongAn3" required />
+        <input type="text" id="phuongAn3" required><br>
+
         <label for="phuongAn4">Phương án 4:</label>
-        <input type="text" id="phuongAn4" required />
-        <label for="dapAnDung">Đáp án đúng (số từ 0 đến 3):</label>
-        <input type="number" id="dapAnDung" min="0" max="3" required />
-        <button type="submit">Lưu</button>
+        <input type="text" id="phuongAn4" required><br>
+
+        <label for="dapAnDung">Đáp án đúng:</label>
+        <input type="number" id="dapAnDung" min="0" max="3" required><br>
+
+        <button type="button" onclick="saveQuestion()">Lưu</button>
     </form>
+
+    <script type="module">
+        import { loadQuestion, saveQuestion } from './edit-question.js';
+
+        // Lấy giá trị của key từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const questionKey = urlParams.get('key');
+
+        // Tải câu hỏi từ Firebase và hiển thị
+        document.addEventListener('DOMContentLoaded', () => {
+            loadQuestion(questionKey);
+        });
+    </script>
 </body>
 </html>
