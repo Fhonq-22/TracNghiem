@@ -1,5 +1,6 @@
+// Import các phương thức cần thiết từ Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, remove } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
 // Cấu hình Firebase
 const firebaseConfig = {
@@ -14,72 +15,35 @@ const firebaseConfig = {
 };
 
 // Khởi tạo Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+initializeApp(firebaseConfig);
 
-// Tải và hiển thị câu hỏi
+// Hàm xoá câu hỏi
+export function deleteQuestion(questionKey) {
+    const db = getDatabase();
+    const questionRef = ref(db, `CauHoi/${questionKey}`);
+    
+    // Xoá câu hỏi bằng hàm remove
+    remove(questionRef)
+        .then(() => {
+            console.log("Câu hỏi đã được xoá thành công");
+            // Cập nhật lại danh sách câu hỏi sau khi xoá
+            location.reload();
+        })
+        .catch((error) => {
+            console.error("Lỗi khi xoá câu hỏi: ", error);
+        });
+}
+
+// Khi DOM đã tải xong, gán sự kiện cho nút xoá
 document.addEventListener('DOMContentLoaded', () => {
-    const questionsTableBody = document.querySelector("#questionsTable tbody");
-    const cauHoiRef = ref(db, 'CauHoi');
+    const deleteButtons = document.querySelectorAll('.deleteButton');
 
-    get(cauHoiRef).then((snapshot) => {
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            for (const [key, question] of Object.entries(data)) {
-                const row = document.createElement("tr");
-
-                const noiDungCell = document.createElement("td");
-                noiDungCell.textContent = question.NoiDung;
-                row.appendChild(noiDungCell);
-
-                const phuongAnCell = document.createElement("td");
-                phuongAnCell.textContent = question.PhuongAn.join(", ");
-                row.appendChild(phuongAnCell);
-
-                const dapAnDungCell = document.createElement("td");
-                dapAnDungCell.textContent = question.DapAnDung;
-                row.appendChild(dapAnDungCell);
-
-                const actionCell = document.createElement("td");
-                const editButton = document.createElement("button");
-                editButton.textContent = "Sửa";
-                editButton.onclick = () => editQuestion(key);
-                actionCell.appendChild(editButton);
-
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Xóa";
-                deleteButton.onclick = () => deleteQuestion(key);
-                actionCell.appendChild(deleteButton);
-
-                row.appendChild(actionCell);
-                questionsTableBody.appendChild(row);
+    deleteButtons.forEach((deleteButton) => {
+        deleteButton.addEventListener('click', () => {
+            const questionKey = deleteButton.getAttribute('data-key');
+            if (confirm("Bạn có chắc muốn xoá câu hỏi này?")) {
+                deleteQuestion(questionKey);
             }
-        } else {
-            questionsTableBody.innerHTML = "<tr><td colspan='4'>Không có câu hỏi nào</td></tr>";
-        }
-    }).catch((error) => {
-        console.error("Lỗi khi tải câu hỏi: ", error);
+        });
     });
 });
-
-// Chức năng sửa câu hỏi
-function editQuestion(key) {
-    window.location.href = `edit-question.html?key=${key}`;
-}
-
-// Chức năng xóa câu hỏi
-function deleteQuestion(key) {
-    if (confirm("Bạn có chắc chắn muốn xóa câu hỏi này?")) {
-        // Xóa câu hỏi từ cơ sở dữ liệu
-        const cauHoiRef = ref(db, `CauHoi/${key}`);
-        set(cauHoiRef, null)
-            .then(() => {
-                alert("Xóa câu hỏi thành công!");
-                window.location.reload(); // Làm mới trang để cập nhật danh sách câu hỏi
-            })
-            .catch((error) => {
-                console.error("Lỗi khi xóa câu hỏi: ", error);
-                alert("Lỗi khi xóa câu hỏi.");
-            });
-    }
-}
