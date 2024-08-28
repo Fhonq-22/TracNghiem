@@ -1,6 +1,6 @@
 // Import Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
 // Cấu hình Firebase
 const firebaseConfig = {
@@ -34,20 +34,27 @@ async function registerUser() {
     return;
   }
 
-  // Lưu thông tin người dùng vào Firebase Realtime Database
+  // Kiểm tra xem người dùng đã tồn tại chưa
   const userRef = ref(db, 'User/' + username);
-
   try {
-    await set(userRef, {
-      Email: "",
-      HoTen: "",
-      MatKhau: password,
-      NgayDangKy: new Date().toLocaleDateString(),
-      VaiTro: "User" // Hoặc "Admin" nếu bạn muốn phân quyền khác
-    });
+    const snapshot = await get(userRef);
 
-    alert("Đăng ký thành công! Bạn sẽ được chuyển đến trang đăng nhập.");
-    window.location.href = "login.html"; // Chuyển đến trang đăng nhập
+    if (snapshot.exists()) {
+      // Nếu tài khoản đã tồn tại
+      alert("Tên người dùng đã tồn tại. Vui lòng chọn tên khác.");
+    } else {
+      // Lưu thông tin người dùng vào Firebase Realtime Database
+      await set(userRef, {
+        Email: "",
+        HoTen: "",
+        MatKhau: password,
+        NgayDangKy: new Date().toLocaleDateString(),
+        VaiTro: "User" // Hoặc "Admin" nếu bạn muốn phân quyền khác
+      });
+
+      alert("Đăng ký thành công! Bạn sẽ được chuyển đến trang đăng nhập.");
+      window.location.href = "login.html"; // Chuyển đến trang đăng nhập
+    }
 
   } catch (error) {
     console.error("Lỗi khi đăng ký", error);
