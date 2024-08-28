@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
 // Cấu hình Firebase
 const firebaseConfig = {
@@ -17,7 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-export function loadQuestion(questionKey) {
+export async function loadQuestion(questionKey) {
     const questionRef = ref(db, `CauHoi/${questionKey}`);
     const noiDungInput = document.getElementById('noiDung');
     const phuongAn1Input = document.getElementById('phuongAn1');
@@ -28,7 +28,8 @@ export function loadQuestion(questionKey) {
     const questionKeyInput = document.getElementById('questionKey');
 
     if (noiDungInput && phuongAn1Input && phuongAn2Input && phuongAn3Input && phuongAn4Input && dapAnDungInput && questionKeyInput) {
-        get(questionRef).then((snapshot) => {
+        try {
+            const snapshot = await get(questionRef);
             if (snapshot.exists()) {
                 const question = snapshot.val();
                 noiDungInput.value = question.NoiDung || '';
@@ -41,9 +42,9 @@ export function loadQuestion(questionKey) {
             } else {
                 alert("Câu hỏi không tồn tại.");
             }
-        }).catch((error) => {
+        } catch (error) {
             console.error("Lỗi khi tải câu hỏi: ", error);
-        });
+        }
     } else {
         console.error("Một số phần tử DOM không tồn tại.");
     }
