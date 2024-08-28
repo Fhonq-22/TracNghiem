@@ -1,81 +1,62 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-database.js";
 
-// Cấu hình Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyDrZ9U2m7nv8aHCBBN7mUCNHMiB2J8ATIw",
-    authDomain: "quizdb-ffc85.firebaseapp.com",
-    databaseURL: "https://quizdb-ffc85-default-rtdb.firebaseio.com",
-    projectId: "quizdb-ffc85",
-    storageBucket: "quizdb-ffc85.appspot.com",
-    messagingSenderId: "890541011519",
-    appId: "1:890541011519:web:d6bcd1ea8f88ae15157e8a",
-    measurementId: "G-EZK98N7CJ8"
-};
-
-// Khởi tạo Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
+// Hàm để tải câu hỏi từ Firebase và hiển thị lên form
 export async function loadQuestion(questionKey) {
+    const db = getDatabase();
     const questionRef = ref(db, `CauHoi/${questionKey}`);
-    const noiDungInput = document.getElementById('noiDung');
-    const phuongAn1Input = document.getElementById('phuongAn1');
-    const phuongAn2Input = document.getElementById('phuongAn2');
-    const phuongAn3Input = document.getElementById('phuongAn3');
-    const phuongAn4Input = document.getElementById('phuongAn4');
-    const dapAnDungInput = document.getElementById('dapAnDung');
-    const questionKeyInput = document.getElementById('questionKey');
-
-    if (noiDungInput && phuongAn1Input && phuongAn2Input && phuongAn3Input && phuongAn4Input && dapAnDungInput && questionKeyInput) {
-        try {
-            const snapshot = await get(questionRef);
-            if (snapshot.exists()) {
-                const question = snapshot.val();
-                noiDungInput.value = question.NoiDung || '';
-                phuongAn1Input.value = question.PhuongAn[0] || '';
-                phuongAn2Input.value = question.PhuongAn[1] || '';
-                phuongAn3Input.value = question.PhuongAn[2] || '';
-                phuongAn4Input.value = question.PhuongAn[3] || '';
-                dapAnDungInput.value = question.DapAnDung || '';
-                questionKeyInput.value = questionKey;
-            } else {
-                alert("Câu hỏi không tồn tại.");
-            }
-        } catch (error) {
-            console.error("Lỗi khi tải câu hỏi: ", error);
-        }
-    } else {
-        console.error("Một số phần tử DOM không tồn tại.");
-    }
-}
-
-export async function saveQuestion() {
-    const questionKey = document.getElementById('questionKey').value;
-    const noiDung = document.getElementById('noiDung').value;
-    const phuongAn1 = document.getElementById('phuongAn1').value;
-    const phuongAn2 = document.getElementById('phuongAn2').value;
-    const phuongAn3 = document.getElementById('phuongAn3').value;
-    const phuongAn4 = document.getElementById('phuongAn4').value;
-    const dapAnDung = document.getElementById('dapAnDung').value;
-
-    if (!questionKey || !noiDung || !phuongAn1 || !phuongAn2 || !phuongAn3 || !phuongAn4 || dapAnDung === '') {
-        alert("Vui lòng điền đầy đủ thông tin.");
-        return;
-    }
-
-    const questionRef = ref(db, `CauHoi/${questionKey}`);
-
+    
     try {
-        await update(questionRef, {
-            NoiDung: noiDung,
-            PhuongAn: [phuongAn1, phuongAn2, phuongAn3, phuongAn4],
-            DapAnDung: parseInt(dapAnDung)
-        });
-        alert("Câu hỏi đã được cập nhật thành công!");
-        window.location.href = "ql-cauhoi.html"; // Chuyển về trang quản lý câu hỏi
+        const snapshot = await get(questionRef);
+        if (snapshot.exists()) {
+            const questionData = snapshot.val();
+            document.getElementById('questionContent').value = questionData.NoiDung;
+            document.getElementById('option0').value = questionData.PhuongAn[0];
+            document.getElementById('option1').value = questionData.PhuongAn[1];
+            document.getElementById('option2').value = questionData.PhuongAn[2];
+            document.getElementById('option3').value = questionData.PhuongAn[3];
+            document.getElementById('correctAnswer').value = questionData.DapAnDung;
+        } else {
+            console.error('Câu hỏi không tồn tại.');
+        }
     } catch (error) {
-        console.error("Lỗi khi cập nhật câu hỏi: ", error);
-        alert("Có lỗi xảy ra khi cập nhật câu hỏi.");
+        console.error('Lỗi khi tải câu hỏi: ', error);
     }
 }
+
+// Hàm để lưu các thay đổi của câu hỏi vào Firebase
+export async function saveQuestion() {
+    const questionKey = new URLSearchParams(window.location.search).get('key');
+    const db = getDatabase();
+    const questionRef = ref(db, `CauHoi/${questionKey}`);
+    
+    const updatedQuestion = {
+        NoiDung: document.getElementById('questionContent').value,
+        PhuongAn: [
+            document.getElementById('option0').value,
+            document.getElementById('option1').value,
+            document.getElementById('option2').value,
+            document.getElementById('option3').value,
+        ],
+        DapAnDung: parseInt(document.getElementById('correctAnswer').value, 10)
+    };
+    
+    try {
+        await set(questionRef, updatedQuestion);
+        // Sau khi lưu thành công, chuyển về trang quản lý câu hỏi
+        window.location.href = 'ql-cauhoi.html';
+    } catch (error) {
+        console.error('Lỗi khi lưu câu hỏi: ', error);
+    }
+}
+
+// Khi DOM đã tải xong, gọi hàm loadQuestion để hiển thị câu hỏi
+document.addEventListener('DOMContentLoaded', () => {
+    const questionKey = new URLSearchParams(window.location.search).get('key');
+    loadQuestion(questionKey);
+
+    // Gán sự kiện click cho nút lưu
+    const saveButton = document.getElementById('saveButton');
+    if (saveButton) {
+        saveButton.addEventListener('click', saveQuestion);
+    }
+});
