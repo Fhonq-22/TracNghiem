@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang Đăng Nhập</title>
+  <script type="module" src="login.js"></script> <!-- Đường dẫn tới file login.js -->
+</head>
+<body>
+  <div>
+    <h2>Đăng Nhập</h2>
+    <form onsubmit="event.preventDefault(); loginUser();">
+      <label for="username">Tên đăng nhập:</label>
+      <input type="text" id="username" name="username" required><br><br>
+      
+      <label for="password">Mật khẩu:</label>
+      <input type="password" id="password" name="password" required><br><br>
+
+      <button type="submit">Đăng nhập</button>
+    </form>
+
+    <p>Chưa có tài khoản? <a href="register.html">Đăng ký tại đây</a></p>
+  </div>
+</body>
+</html>
