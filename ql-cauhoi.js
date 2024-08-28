@@ -62,11 +62,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Xóa câu hỏi
+// Chức năng sửa câu hỏi
+function editQuestion(key) {
+    window.location.href = `edit-question.html?key=${key}`;
+}
+
+// Chức năng xóa câu hỏi
 function deleteQuestion(key) {
-    // Implement delete logic here
     if (confirm("Bạn có chắc chắn muốn xóa câu hỏi này?")) {
         // Xóa câu hỏi từ cơ sở dữ liệu
-        // Sau đó, bạn có thể làm mới bảng để phản ánh sự thay đổi
+        const cauHoiRef = ref(db, `CauHoi/${key}`);
+        set(cauHoiRef, null)
+            .then(() => {
+                alert("Xóa câu hỏi thành công!");
+                window.location.reload(); // Làm mới trang để cập nhật danh sách câu hỏi
+            })
+            .catch((error) => {
+                console.error("Lỗi khi xóa câu hỏi: ", error);
+                alert("Lỗi khi xóa câu hỏi.");
+            });
     }
 }
