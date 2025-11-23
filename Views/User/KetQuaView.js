@@ -1,26 +1,32 @@
-import { layDanhSachKetQua, layKetQua } from "../../Controllers/KetQuaController.js";
+import { layKetQua } from "../../Controllers/KetQuaController.js";
 
 $(document).ready(async function() {
-    await loadKetQua();
-});
+    const urlParams = new URLSearchParams(window.location.search);
+    const maKetQua = urlParams.get("maKetQua");
+    if (!maKetQua) {
+        alert("Không có mã kết quả");
+        return;
+    }
 
-async function loadKetQua() {
-    const danhSach = await layDanhSachKetQua();
+    const kq = await layKetQua(maKetQua);
+    if (!kq) {
+        alert("Không tìm thấy kết quả");
+        return;
+    }
+
     const tbody = $("#ketQuaTable tbody");
     tbody.empty();
 
-    for (let ma of danhSach) {
-        const kq = await layKetQua(ma);
-        const row = $(`
-            <tr>
-                <td>${ma}</td>
-                <td>${kq.MaDe}</td>
-                <td>${kq.TenNguoiDung}</td>
-                <td>${kq.ThoiGianBatDau}</td>
-                <td>${kq.ThoiGianNop}</td>
-                <td>${kq.Diem}</td>
-            </tr>
-        `);
-        tbody.append(row);
-    }
-}
+    const row = $(`
+        <tr>
+            <td>${maKetQua}</td>
+            <td>${kq.MaDe}</td>
+            <td>${kq.TenNguoiDung}</td>
+            <td>${kq.ThoiGianBatDau}</td>
+            <td>${kq.ThoiGianNop}</td>
+            <td>${kq.Diem}</td>
+        </tr>
+    `);
+
+    tbody.append(row);
+});

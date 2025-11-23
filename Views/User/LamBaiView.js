@@ -102,4 +102,5 @@ async function submitExam() {
 
     await themKetQua(ketQuaData);
     alert(`Bài đã nộp! Điểm của bạn: ${diem}`);
+    window.location.href = `u-ketqua.html?maKetQua=${maKetQua}`;
 }
