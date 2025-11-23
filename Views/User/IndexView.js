@@ -35,7 +35,7 @@ async function loadBoDe() {
 
         row.find(".startBtn").click(() => {
             localStorage.setItem("currentBoDe", ma);
-            window.location.href = "lam-bai.html";
+            window.location.href = "u-lambai.html";
         });
 
         tbody.append(row);
