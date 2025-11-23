@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý bộ đề</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="module" src="./Views/Admin/QLBoDeView.js"></script>
+</head>
+<body>
+    <h1>Quản lý bộ đề</h1>
+    <a href="admin.html">← Quay về trang quản trị</a>
+    <button id="btnAddBoDe">Thêm bộ đề</button>
+
+    <table border="1" id="boDeTable">
+        <thead>
+            <tr>
+                <th>Mã bộ đề</th>
+                <th>Tên bộ đề</th>
+                <th>Số câu hỏi</th>
+                <th>Thời gian (phút)</th>
+                <th>Ngày tạo</th>
+                <th>Người tạo</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div id="boDeModal" style="display:none; position:fixed; top:15%; left:30%; background:#fff; padding:20px; border:1px solid #000; width:40%;">
+        <h3 id="modalTitle">Thêm bộ đề</h3>
+        <label>Tên bộ đề</label><br>
+        <input type="text" id="modalTenBoDe"><br><br>
+        <label>Thời gian (phút)</label><br>
+        <input type="number" id="modalThoiGian" value="30"><br><br>
+        <label>Chọn câu hỏi</label><br>
+        <div id="modalCauHoiList" style="max-height:200px; overflow:auto; border:1px solid #ccc; padding:5px;"></div><br>
+        <button id="modalSave">Lưu</button>
+        <button id="modalCancel">Hủy</button>
+    </div>
+</body>
+</html>

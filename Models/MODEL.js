@@ -35,3 +35,26 @@ export class CauHoi {
         };
     }
 }
+
+export class BoDe {
+    constructor(MaBoDe, TenBoDe, DanhSachCauHoi, ThoiGian, NgayTao, NguoiTao) {
+        this.MaBoDe = MaBoDe;
+        this.TenBoDe = TenBoDe;
+        this.DanhSachCauHoi = DanhSachCauHoi || [];
+        this.SoCauHoi = DanhSachCauHoi ? DanhSachCauHoi.length : 0;
+        this.ThoiGian = ThoiGian || 30;
+        this.NgayTao = NgayTao;
+        this.NguoiTao = NguoiTao || "Admin";
+    }
+
+    toJSON() {
+        return {
+            TenBoDe: this.TenBoDe,
+            DanhSachCauHoi: this.DanhSachCauHoi,
+            SoCauHoi: this.SoCauHoi,
+            ThoiGian: this.ThoiGian,
+            NgayTao: this.NgayTao,
+            NguoiTao: this.NguoiTao
+        };
+    }
+}
