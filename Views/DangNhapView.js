@@ -20,7 +20,7 @@ $(document).ready(function() {
             alert("Mật khẩu không chính xác!");
         } else {
             if (user.VaiTro === "Admin") {
-                window.location.href = "admin-home.html";
+                window.location.href = "admin.html";
             } else {
                 window.location.href = "user-home.html";
             }
