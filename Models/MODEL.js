@@ -58,3 +58,24 @@ export class BoDe {
         };
     }
 }
+
+export class KetQua {
+    constructor(MaKetQua, MaDe, TenNguoiDung, ThoiGianBatDau, ThoiGianNop, Diem) {
+        this.MaKetQua = MaKetQua;
+        this.MaDe = MaDe;
+        this.TenNguoiDung = TenNguoiDung;
+        this.ThoiGianBatDau = ThoiGianBatDau;
+        this.ThoiGianNop = ThoiGianNop;
+        this.Diem = Diem;
+    }
+
+    toJSON() {
+        return {
+            MaDe: this.MaDe,
+            TenNguoiDung: this.TenNguoiDung,
+            ThoiGianBatDau: this.ThoiGianBatDau,
+            ThoiGianNop: this.ThoiGianNop,
+            Diem: this.Diem
+        };
+    }
+}

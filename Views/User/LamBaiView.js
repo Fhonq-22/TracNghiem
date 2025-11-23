@@ -1,5 +1,6 @@
 import { layBoDe } from "../../Controllers/BoDeController.js";
 import { layCauHoi } from "../../Controllers/CauHoiController.js";
+import { themKetQua } from "../../Controllers/KetQuaController.js";
 
 let timerInterval = null;
 let timeLeft = 0;
@@ -62,7 +63,7 @@ function updateTimerDisplay() {
     $("#timer").text(`${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`);
 }
 
-function submitExam() {
+async function submitExam() {
     $(".question").each(function(i, el) {
         const ma = $(el).data("ma");
         const ans = $(el).find("input[type=radio]:checked").val();
@@ -70,6 +71,21 @@ function submitExam() {
     });
 
     clearInterval(timerInterval);
-    console.log("Kết quả của người dùng:", userAnswers);
-    alert("Bài đã nộp! Xem console để kiểm tra kết quả.");
+    $("#btnSubmit").prop("disabled", true);
+
+    const now = new Date();
+    const formatDateTime = now.toLocaleDateString("vi-VN") + " " + now.toLocaleTimeString("vi-VN");
+
+    const maKetQua = "KQ" + Date.now();
+    const ketQuaData = {
+        MaKetQua: maKetQua,
+        MaDe: new URLSearchParams(window.location.search).get("maBoDe"),
+        TenNguoiDung: localStorage.getItem("currentUser") || "Khách",
+        ThoiGianBatDau: formatDateTime,
+        ThoiGianNop: formatDateTime,
+        Diem: null
+    };
+
+    await themKetQua(ketQuaData);
+    alert("Bài đã nộp! Kết quả đã được lưu.");
 }
