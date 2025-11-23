@@ -2,7 +2,7 @@ import { addData, getData, updateData, deleteData } from "../Models/firebase-CRU
 import { BoDe } from "../Models/MODEL.js";
 
 export async function themBoDe(boDe) {
-    const boDeInstance = new BoDe(
+    const newBoDe = new BoDe(
         boDe.MaBoDe,
         boDe.TenBoDe,
         boDe.DanhSachCauHoi,
@@ -10,7 +10,7 @@ export async function themBoDe(boDe) {
         boDe.NgayTao,
         boDe.NguoiTao
     );
-    await addData("BoDe", boDe.MaBoDe, boDeInstance.toJSON());
+    await addData("BoDe", newBoDe.MaBoDe, newBoDe.toJSON());
 }
 
 export async function layBoDe(maBoDe) {
@@ -31,7 +31,7 @@ export async function layDanhSachBoDe() {
 }
 
 export async function suaBoDe(maBoDe, boDeMoi) {
-    const boDeInstance = new BoDe(
+    const updatedBoDe = new BoDe(
         maBoDe,
         boDeMoi.TenBoDe,
         boDeMoi.DanhSachCauHoi,
@@ -39,7 +39,7 @@ export async function suaBoDe(maBoDe, boDeMoi) {
         boDeMoi.NgayTao,
         boDeMoi.NguoiTao
     );
-    await updateData("BoDe", maBoDe, boDeInstance.toJSON());
+    await updateData("BoDe", maBoDe, updatedBoDe.toJSON());
 }
 
 export async function xoaBoDe(maBoDe) {
