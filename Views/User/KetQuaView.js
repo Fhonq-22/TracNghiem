@@ -14,19 +14,13 @@ $(document).ready(async function() {
         return;
     }
 
-    const tbody = $("#ketQuaTable tbody");
-    tbody.empty();
+    const container = $("#ketQuaContainer");
+    container.empty();
 
-    const row = $(`
-        <tr>
-            <td>${maKetQua}</td>
-            <td>${kq.MaDe}</td>
-            <td>${kq.TenNguoiDung}</td>
-            <td>${kq.ThoiGianBatDau}</td>
-            <td>${kq.ThoiGianNop}</td>
-            <td>${kq.Diem}</td>
-        </tr>
-    `);
-
-    tbody.append(row);
+    container.append(`<p><b>Mã kết quả:</b> ${maKetQua}</p>`);
+    container.append(`<p><b>Mã đề:</b> ${kq.MaDe}</p>`);
+    container.append(`<p><b>Tên người dùng:</b> ${kq.TenNguoiDung}</p>`);
+    container.append(`<p><b>Thời gian bắt đầu:</b> ${kq.ThoiGianBatDau}</p>`);
+    container.append(`<p><b>Thời gian nộp:</b> ${kq.ThoiGianNop}</p>`);
+    container.append(`<p><b>Điểm:</b> ${kq.Diem}</p>`);
 });
