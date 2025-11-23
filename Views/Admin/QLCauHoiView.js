@@ -5,7 +5,7 @@ let editingQuestion = null;
 $(document).ready(async function() {
     await loadQuestions();
 
-    $("#btnAddQuestion").click(async () => {
+    $("#btnAddQuestion").click(() => {
         editingQuestion = null;
         $("#modalTitle").text("Thêm câu hỏi");
         $("#modalNoiDung").val("");
@@ -41,12 +41,12 @@ $(document).ready(async function() {
         }
 
         const phuongAn = $(".modalPhuongAn").map((i, el) => $(el).val().trim()).get();
-        const cauHoiData = new CauHoi(
-            maCauHoi,
-            $("#modalNoiDung").val().trim(),
-            phuongAn,
-            parseInt($("#modalDapAnDung").val())
-        );
+        const cauHoiData = {
+            MaCauHoi: maCauHoi,
+            NoiDung: $("#modalNoiDung").val().trim(),
+            PhuongAn: phuongAn,
+            DapAnDung: parseInt($("#modalDapAnDung").val())
+        };
 
         if (!cauHoiData.MaCauHoi || !cauHoiData.NoiDung) {
             alert("Mã câu hỏi và nội dung không được để trống");
