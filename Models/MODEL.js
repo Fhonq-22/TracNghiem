@@ -18,3 +18,20 @@ export class User {
         };
     }
 }
+
+export class CauHoi {
+    constructor(MaCauHoi, NoiDung, PhuongAn = [], DapAnDung = 0) {
+        this.MaCauHoi = MaCauHoi;
+        this.NoiDung = NoiDung;
+        this.PhuongAn = PhuongAn;
+        this.DapAnDung = DapAnDung;
+    }
+
+    toJSON() {
+        return {
+            NoiDung: this.NoiDung,
+            PhuongAn: this.PhuongAn,
+            DapAnDung: this.DapAnDung
+        };
+    }
+}
