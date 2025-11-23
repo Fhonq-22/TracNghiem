@@ -11,7 +11,7 @@ $(document).ready(async function() {
         $("#modalNoiDung").val("");
         $(".modalPhuongAn").val("");
         $("#modalDapAnDung").val("0");
-        $("#autoCode").prop("checked", true);
+        $("#autoCode").prop("checked", true).prop("disabled", false);
         $("#modalMaCauHoi").val("").prop("disabled", true);
 
         $("#autoCode").off("change").on("change", function() {
@@ -32,12 +32,18 @@ $(document).ready(async function() {
 
         if ($("#autoCode").is(":checked") && !editingQuestion) {
             const danhSach = await layDanhSachCauHoi();
-            let maxNum = 0;
-            for (let code of danhSach) {
-                const num = parseInt(code.slice(1));
-                if (num > maxNum) maxNum = num;
+            let numbers = danhSach.map(code => parseInt(code.slice(1))).sort((a,b) => a-b);
+            let nextNum = 1;
+
+            for (let n of numbers) {
+                if (n === nextNum) {
+                    nextNum++;
+                } else if (n > nextNum) {
+                    break;
+                }
             }
-            maCauHoi = "Q" + String(maxNum + 1).padStart(3, "0");
+
+            maCauHoi = "Q" + String(nextNum).padStart(3, "0");
         }
 
         const phuongAn = $(".modalPhuongAn").map((i, el) => $(el).val().trim()).get();
