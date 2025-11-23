@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý chuyển mã</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="module" src="./Views/Admin/QLChuyenMaView.js"></script>
+</head>
+<body>
+
+<h2>🔧 chuyển mã dữ liệu</h2>
+
+<div>
+    <label>chọn collection:</label>
+    <select id="collectionSelect">
+        <option value="CauHoi">Câu hỏi</option>
+        <option value="BoDe">Bộ đề</option>
+        <option value="NguoiDung">Người dùng</option>
+    </select>
+</div>
+
+<br>
+
+<div class="box">
+    <h3>chuyển 1 mã</h3>
+
+    <label>mã cũ:</label>
+    <input id="oldKey" type="text" placeholder="VD: Q008">
+
+    <label>mã mới:</label>
+    <input id="newKey" type="text" placeholder="VD: Q0008">
+
+    <button id="btnChuyen1">Chuyển</button>
+</div>
+
+<br>
+
+<div class="box">
+    <h3>chuyển hàng loạt theo pattern</h3>
+
+    <label>pattern cũ:</label>
+    <input id="patternOld" type="text" placeholder="VD: Q###">
+
+    <label>pattern mới:</label>
+    <input id="patternNew" type="text" placeholder="VD: Q####">
+
+    <button id="btnChuyenNhieu">Chuyển tất cả</button>
+</div>
+
+<br>
+<pre id="logBox" class="log"></pre>
+</body>
+</html>
