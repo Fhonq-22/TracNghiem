@@ -1,6 +1,8 @@
 import { layDanhSachCauHoi, layCauHoi, themCauHoi, suaCauHoi, xoaCauHoi } from "../../Controllers/CauHoiController.js";
 
 let editingQuestion = null;
+let currentPage = 1;
+const pageSize = 10;
 
 $(document).ready(async function() {
     await loadQuestions();
@@ -34,15 +36,10 @@ $(document).ready(async function() {
             const danhSach = await layDanhSachCauHoi();
             let numbers = danhSach.map(code => parseInt(code.slice(1))).sort((a,b) => a-b);
             let nextNum = 1;
-
             for (let n of numbers) {
-                if (n === nextNum) {
-                    nextNum++;
-                } else if (n > nextNum) {
-                    break;
-                }
+                if (n === nextNum) nextNum++;
+                else if (n > nextNum) break;
             }
-
             maCauHoi = "Q" + String(nextNum).padStart(4, "0");
         }
 
@@ -66,16 +63,23 @@ $(document).ready(async function() {
         }
 
         $("#questionModal").hide();
-        await loadQuestions();
+        await loadQuestions(currentPage);
     });
 });
 
-async function loadQuestions() {
+async function loadQuestions(page = 1) {
     const danhSach = await layDanhSachCauHoi();
     const tbody = $("#questionTable tbody");
     tbody.empty();
 
-    for (let maCauHoi of danhSach) {
+    const totalPages = Math.ceil(danhSach.length / pageSize);
+    currentPage = Math.min(Math.max(page, 1), totalPages);
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, danhSach.length);
+    const pageItems = danhSach.slice(startIndex, endIndex);
+
+    for (let maCauHoi of pageItems) {
         const cauHoi = await layCauHoi(maCauHoi);
         const row = $(`
             <tr>
@@ -107,10 +111,35 @@ async function loadQuestions() {
         row.find(".deleteBtn").click(async () => {
             if (confirm(`Xóa câu hỏi ${maCauHoi}?`)) {
                 await xoaCauHoi(maCauHoi);
-                await loadQuestions();
+                await loadQuestions(currentPage);
             }
         });
 
         tbody.append(row);
     }
+
+    renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+    const container = $("#pagination");
+    container.empty();
+    if (totalPages <= 1) return;
+
+    if (currentPage > 1) {
+        container.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
+    }
+
+    for (let i = 1; i <= totalPages; i++) {
+        container.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
+    }
+
+    if (currentPage < totalPages) {
+        container.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
+    }
+
+    container.find(".pageBtn").click(function() {
+        const page = parseInt($(this).data("page"));
+        loadQuestions(page);
+    });
 }
