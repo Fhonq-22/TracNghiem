@@ -2,27 +2,51 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý câu hỏi</title>
-    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js" type="module"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js" type="module"></script>
-    <script src="ql-cauhoi.js" type="module" defer></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="module" src="./Views/Admin/QLCauHoiView.js"></script>
 </head>
 <body>
     <h1>Quản lý câu hỏi</h1>
-    <button onclick="window.location.href='add-question.html'">Thêm câu hỏi</button>
-    <table>
+    <a href="admin.html">← Quay về trang quản trị</a>
+
+    <button id="btnAddQuestion">Thêm câu hỏi</button>
+
+    <table border="1" id="questionTable">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>Mã câu hỏi</th>
                 <th>Nội dung</th>
+                <th>Phương án 0</th>
+                <th>Phương án 1</th>
+                <th>Phương án 2</th>
+                <th>Phương án 3</th>
                 <th>Đáp án đúng</th>
                 <th>Hành động</th>
             </tr>
         </thead>
-        <tbody id="questions-list">
-            <!-- Dữ liệu từ Firebase sẽ được thêm vào đây -->
+        <tbody>
         </tbody>
     </table>
+
+    <div id="questionModal" style="display:none; position:fixed; top:20%; left:30%; background:#fff; padding:20px; border:1px solid #000;">
+        <h3 id="modalTitle">Thêm câu hỏi</h3>
+        <label><input type="checkbox" id="autoCode" checked> Tạo mã tự động</label><br><br>
+        <input type="text" id="modalMaCauHoi" placeholder="Mã câu hỏi"><br><br>
+        <textarea id="modalNoiDung" placeholder="Nội dung câu hỏi" rows="3" cols="50"></textarea><br><br>
+        <input type="text" class="modalPhuongAn" placeholder="Phương án 0"><br>
+        <input type="text" class="modalPhuongAn" placeholder="Phương án 1"><br>
+        <input type="text" class="modalPhuongAn" placeholder="Phương án 2"><br>
+        <input type="text" class="modalPhuongAn" placeholder="Phương án 3"><br><br>
+        <label>Đáp án đúng:</label>
+        <select id="modalDapAnDung">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select><br><br>
+        <button id="modalSave">Lưu</button>
+        <button id="modalCancel">Hủy</button>
+    </div>
 </body>
 </html>
