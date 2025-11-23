@@ -5,6 +5,7 @@ import { themKetQua } from "../../Controllers/KetQuaController.js";
 let timerInterval = null;
 let timeLeft = 0;
 let userAnswers = {};
+let startTime = null;
 
 $(document).ready(async function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -20,6 +21,7 @@ $(document).ready(async function() {
         return;
     }
 
+    startTime = new Date();
     timeLeft = boDe.ThoiGian * 60;
     startTimer();
 
@@ -42,6 +44,7 @@ $(document).ready(async function() {
     }
 
     $("#btnSubmit").click(submitExam);
+    $("#btnBack").click(() => window.location.href = "index.html");
 });
 
 function startTimer() {
@@ -73,19 +76,30 @@ async function submitExam() {
     clearInterval(timerInterval);
     $("#btnSubmit").prop("disabled", true);
 
-    const now = new Date();
-    const formatDateTime = now.toLocaleDateString("vi-VN") + " " + now.toLocaleTimeString("vi-VN");
+    const endTime = new Date();
+    const formatDateTime = dt => dt.toLocaleDateString("vi-VN") + " " + dt.toLocaleTimeString("vi-VN");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const maBoDe = urlParams.get("maBoDe");
+    const boDe = await layBoDe(maBoDe);
+
+    let correctCount = 0;
+    for (let ma of boDe.DanhSachCauHoi) {
+        const cauHoi = await layCauHoi(ma);
+        if (userAnswers[ma] === cauHoi.DapAnDung) correctCount++;
+    }
+    const diem = Math.round((correctCount / boDe.SoCauHoi * 10) * 100) / 100;
 
     const maKetQua = "KQ" + Date.now();
     const ketQuaData = {
         MaKetQua: maKetQua,
-        MaDe: new URLSearchParams(window.location.search).get("maBoDe"),
+        MaDe: maBoDe,
         TenNguoiDung: localStorage.getItem("currentUser") || "Khách",
-        ThoiGianBatDau: formatDateTime,
-        ThoiGianNop: formatDateTime,
-        Diem: null
+        ThoiGianBatDau: formatDateTime(startTime),
+        ThoiGianNop: formatDateTime(endTime),
+        Diem: diem
     };
 
     await themKetQua(ketQuaData);
-    alert("Bài đã nộp! Kết quả đã được lưu.");
+    alert(`Bài đã nộp! Điểm của bạn: ${diem}`);
 }
