@@ -43,7 +43,7 @@ $(document).ready(async function() {
                 }
             }
 
-            maCauHoi = "Q" + String(nextNum).padStart(3, "0");
+            maCauHoi = "Q" + String(nextNum).padStart(4, "0");
         }
 
         const phuongAn = $(".modalPhuongAn").map((i, el) => $(el).val().trim()).get();
