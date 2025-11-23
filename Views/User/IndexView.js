@@ -34,7 +34,7 @@ async function loadBoDe() {
         `);
 
         row.find(".startBtn").click(() => {
-            window.location.href = "u-lambai.html?maBoDe=${ma}";
+            window.location.href = `u-lambai.html?maBoDe=${ma}`;
         });
 
         tbody.append(row);
