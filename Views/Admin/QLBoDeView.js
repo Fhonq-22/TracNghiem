@@ -2,9 +2,11 @@ import { layDanhSachBoDe, layBoDe, themBoDe, suaBoDe, xoaBoDe } from "../../Cont
 import { layDanhSachCauHoi, layCauHoi } from "../../Controllers/CauHoiController.js";
 
 let editingBoDe = null;
+let currentPage = 1;
+const pageSize = 10;
 
 $(document).ready(async function() {
-    await loadBoDe();
+    await loadBoDe(currentPage);
 
     $("#btnAddBoDe").click(async () => {
         editingBoDe = null;
@@ -57,16 +59,23 @@ $(document).ready(async function() {
         }
 
         $("#boDeModal").hide();
-        await loadBoDe();
+        await loadBoDe(currentPage);
     });
 });
 
-async function loadBoDe() {
+async function loadBoDe(page = 1) {
     const danhSach = await layDanhSachBoDe();
+    currentPage = page;
+    const totalPages = Math.ceil(danhSach.length / pageSize);
+
+    const startIdx = (page - 1) * pageSize;
+    const endIdx = startIdx + pageSize;
+    const pageBoDe = danhSach.slice(startIdx, endIdx);
+
     const tbody = $("#boDeTable tbody");
     tbody.empty();
 
-    for (let ma of danhSach) {
+    for (let ma of pageBoDe) {
         const bd = await layBoDe(ma);
         const row = $(`
             <tr>
@@ -107,12 +116,47 @@ async function loadBoDe() {
         row.find(".deleteBtn").click(async () => {
             if (confirm(`Xóa bộ đề ${ma}?`)) {
                 await xoaBoDe(ma);
-                await loadBoDe();
+                await loadBoDe(currentPage);
             }
         });
 
         tbody.append(row);
     }
+
+    renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+    const container = $("#pagination");
+    container.empty();
+    if (totalPages <= 1) return;
+
+    if (currentPage > 1) {
+        container.append(`<button class="pageBtn" data-page="1"><<</button>`);
+        container.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
+    }
+
+    const visibleRange = 2;
+    let start = Math.max(1, currentPage - visibleRange);
+    let end = Math.min(totalPages, currentPage + visibleRange);
+
+    if (start > 1) container.append(`<span>...</span>`);
+
+    for (let i = start; i <= end; i++) {
+        container.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
+    }
+
+    if (end < totalPages) container.append(`<span>...</span>`);
+
+    if (currentPage < totalPages) {
+        container.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
+        container.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
+    }
+
+    container.find(".pageBtn").click(function() {
+        const page = parseInt($(this).data("page"));
+        loadBoDe(page);
+    });
 }
 
 async function generateNextBoDeCode() {
