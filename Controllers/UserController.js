@@ -2,7 +2,7 @@ import { addData, getData, updateData, deleteData } from "../Models/firebase-CRU
 import { User } from "../Models/MODEL.js";
 
 export async function themNguoiDung(nguoiDung) {
-    await addData("Users", nguoiDung.TenNguoiDung, new User(
+    await addData("User", nguoiDung.TenNguoiDung, new User(
         nguoiDung.TenNguoiDung,
         nguoiDung.MatKhau,
         nguoiDung.HoTen,
@@ -25,7 +25,7 @@ export async function layNguoiDung(username) {
 }
 
 export async function layDanhSachNguoiDung() {
-    const data = await getData("Users","");
+    const data = await getData("User","");
     return data ? Object.keys(data) : [];
 }
 
@@ -38,9 +38,9 @@ export async function suaNguoiDung(username, newData) {
         newData.NgayDangKy,
         newData.VaiTro
     );
-    await updateData("Users", username, updatedUser.toJSON());
+    await updateData("User", username, updatedUser.toJSON());
 }
 
 export async function xoaNguoiDung(username) {
-    await deleteData("Users", username);
+    await deleteData("User", username);
 }
