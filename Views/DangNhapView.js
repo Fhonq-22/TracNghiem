@@ -22,7 +22,7 @@ $(document).ready(function() {
             if (user.VaiTro === "Admin") {
                 window.location.href = "admin.html";
             } else {
-                window.location.href = "user-home.html";
+                window.location.href = "index.html";
             }
         }
     });
