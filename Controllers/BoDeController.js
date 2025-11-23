@@ -2,12 +2,27 @@ import { addData, getData, updateData, deleteData } from "../Models/firebase-CRU
 import { BoDe } from "../Models/MODEL.js";
 
 export async function themBoDe(boDe) {
-    await addData("BoDe", boDe.MaBoDe, boDe.toJSON());
+    const boDeInstance = new BoDe(
+        boDe.MaBoDe,
+        boDe.TenBoDe,
+        boDe.DanhSachCauHoi,
+        boDe.ThoiGian,
+        boDe.NgayTao,
+        boDe.NguoiTao
+    );
+    await addData("BoDe", boDe.MaBoDe, boDeInstance.toJSON());
 }
 
 export async function layBoDe(maBoDe) {
     const data = await getData("BoDe", maBoDe);
-    return data ? new BoDe(maBoDe, data.TenBoDe, data.DanhSachCauHoi, data.ThoiGian, data.NgayTao, data.NguoiTao) : null;
+    return data ? new BoDe(
+        maBoDe,
+        data.TenBoDe,
+        data.DanhSachCauHoi,
+        data.ThoiGian,
+        data.NgayTao,
+        data.NguoiTao
+    ) : null;
 }
 
 export async function layDanhSachBoDe() {
@@ -16,7 +31,15 @@ export async function layDanhSachBoDe() {
 }
 
 export async function suaBoDe(maBoDe, boDeMoi) {
-    await updateData("BoDe", maBoDe, boDeMoi.toJSON());
+    const boDeInstance = new BoDe(
+        maBoDe,
+        boDeMoi.TenBoDe,
+        boDeMoi.DanhSachCauHoi,
+        boDeMoi.ThoiGian,
+        boDeMoi.NgayTao,
+        boDeMoi.NguoiTao
+    );
+    await updateData("BoDe", maBoDe, boDeInstance.toJSON());
 }
 
 export async function xoaBoDe(maBoDe) {
