@@ -13,7 +13,7 @@ export async function themNguoiDung(nguoiDung) {
 }
 
 export async function layNguoiDung(username) {
-    const data = await getData("Users", username);
+    const data = await getData("User", username);
     return data ? new User(
         username,
         data.MatKhau,
