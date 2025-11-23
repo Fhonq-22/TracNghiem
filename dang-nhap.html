@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập</title>
+</head>
+<body>
+    <h2>Đăng nhập</h2>
+
+    <form id="loginForm">
+        <label for="username">Tên người dùng:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Mật khẩu:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Đăng nhập</button>
+    </form>
+
+    <div id="loginMessage"></div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="module" src="./Views/loginView.js"></script>
+</body>
+</html>
