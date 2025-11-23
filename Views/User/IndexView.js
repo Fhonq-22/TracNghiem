@@ -1,4 +1,4 @@
-import { layDanhSachBoDe, layBoDe } from "../Controllers/BoDeController.js";
+import { layDanhSachBoDe, layBoDe } from "../../Controllers/BoDeController.js";
 
 $(document).ready(async function() {
     const username = localStorage.getItem("currentUser") || "Khách";
