@@ -127,15 +127,25 @@ function renderPagination(totalPages) {
     if (totalPages <= 1) return;
 
     if (currentPage > 1) {
+        container.append(`<button class="pageBtn" data-page="1"><<</button>`);
         container.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
     }
 
-    for (let i = 1; i <= totalPages; i++) {
+    const visibleRange = 2;
+    let start = Math.max(1, currentPage - visibleRange);
+    let end = Math.min(totalPages, currentPage + visibleRange);
+
+    if (start > 1) container.append(`<span>...</span>`);
+
+    for (let i = start; i <= end; i++) {
         container.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
     }
 
+    if (end < totalPages) container.append(`<span>...</span>`);
+
     if (currentPage < totalPages) {
         container.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
+        container.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
     }
 
     container.find(".pageBtn").click(function() {
