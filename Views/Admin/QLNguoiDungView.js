@@ -3,9 +3,13 @@ import { layDanhSachNguoiDung, layNguoiDung, themNguoiDung, suaNguoiDung, xoaNgu
 let editingUser = null;
 let currentPage = 1;
 const pageSize = 10;
+let cachedUsers = [];
 
 $(document).ready(async function() {
-    await loadUsers(currentPage);
+    const usernames = await layDanhSachNguoiDung();
+    cachedUsers = await Promise.all(usernames.map(u => layNguoiDung(u)));
+
+    renderUsers(currentPage);
 
     $("#btnAddUser").click(() => {
         editingUser = null;
@@ -37,32 +41,33 @@ $(document).ready(async function() {
 
         if (editingUser) {
             await suaNguoiDung(editingUser, userData);
+            const idx = cachedUsers.findIndex(u => u.TenNguoiDung === editingUser);
+            if (idx >= 0) cachedUsers[idx] = userData;
         } else {
             await themNguoiDung(userData);
+            cachedUsers.push(userData);
         }
 
         $("#userModal").hide();
-        await loadUsers(currentPage);
+        renderUsers(currentPage);
     });
 });
 
-async function loadUsers(page = 1) {
-    const danhSach = await layDanhSachNguoiDung();
-    currentPage = page;
-    const totalPages = Math.ceil(danhSach.length / pageSize);
-
-    const startIdx = (page - 1) * pageSize;
-    const endIdx = startIdx + pageSize;
-    const pageUsers = danhSach.slice(startIdx, endIdx);
-
+function renderUsers(page = 1) {
     const tbody = $("#userTable tbody");
     tbody.empty();
 
-    for (let username of pageUsers) {
-        const user = await layNguoiDung(username);
+    const totalPages = Math.ceil(cachedUsers.length / pageSize);
+    currentPage = Math.min(Math.max(page, 1), totalPages);
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, cachedUsers.length);
+    const pageUsers = cachedUsers.slice(startIndex, endIndex);
+
+    for (let user of pageUsers) {
         const row = $(`
             <tr>
-                <td>${username}</td>
+                <td>${user.TenNguoiDung}</td>
                 <td>${user.HoTen || ""}</td>
                 <td>${user.Email || ""}</td>
                 <td>${user.NgayDangKy || ""}</td>
@@ -75,7 +80,7 @@ async function loadUsers(page = 1) {
         `);
 
         row.find(".editBtn").click(() => {
-            editingUser = username;
+            editingUser = user.TenNguoiDung;
             $("#modalTitle").text("Sửa người dùng");
             $("#modalUsername").val(user.TenNguoiDung).prop("disabled", true);
             $("#modalHoTen").val(user.HoTen);
@@ -86,9 +91,10 @@ async function loadUsers(page = 1) {
         });
 
         row.find(".deleteBtn").click(async () => {
-            if (confirm(`Xóa người dùng ${username}?`)) {
-                await xoaNguoiDung(username);
-                await loadUsers(currentPage);
+            if (confirm(`Xóa người dùng ${user.TenNguoiDung}?`)) {
+                await xoaNguoiDung(user.TenNguoiDung);
+                cachedUsers = cachedUsers.filter(u => u.TenNguoiDung !== user.TenNguoiDung);
+                renderUsers(currentPage);
             }
         });
 
@@ -113,13 +119,10 @@ function renderPagination(totalPages) {
     let end = Math.min(totalPages, currentPage + visibleRange);
 
     if (start > 1) container.append(`<span>...</span>`);
-
     for (let i = start; i <= end; i++) {
         container.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
     }
-
     if (end < totalPages) container.append(`<span>...</span>`);
-
     if (currentPage < totalPages) {
         container.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
         container.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
@@ -127,6 +130,6 @@ function renderPagination(totalPages) {
 
     container.find(".pageBtn").click(function() {
         const page = parseInt($(this).data("page"));
-        loadUsers(page);
+        renderUsers(page);
     });
 }
