@@ -13,6 +13,7 @@ $(document).ready(async function() {
         $("#modalNoiDung").val("");
         $(".modalPhuongAn").val("");
         $("#modalDapAnDung").val("0");
+        $("#modalGiaiThich").val("");
         $("#autoCode").prop("checked", true).prop("disabled", false);
         $("#modalMaCauHoi").val("").prop("disabled", true);
 
@@ -44,11 +45,13 @@ $(document).ready(async function() {
         }
 
         const phuongAn = $(".modalPhuongAn").map((i, el) => $(el).val().trim()).get();
+
         const cauHoiData = {
             MaCauHoi: maCauHoi,
             NoiDung: $("#modalNoiDung").val().trim(),
             PhuongAn: phuongAn,
-            DapAnDung: parseInt($("#modalDapAnDung").val())
+            DapAnDung: parseInt($("#modalDapAnDung").val()),
+            GiaiThich: $("#modalGiaiThich").val().trim()
         };
 
         if (!cauHoiData.MaCauHoi || !cauHoiData.NoiDung) {
@@ -90,6 +93,7 @@ async function loadQuestions(page = 1) {
                 <td>${cauHoi.PhuongAn[2] || ""}</td>
                 <td>${cauHoi.PhuongAn[3] || ""}</td>
                 <td>${cauHoi.DapAnDung}</td>
+                <td>${cauHoi.GiaiThich || ""}</td>
                 <td>
                     <button class="editBtn">Sửa</button>
                     <button class="deleteBtn">Xóa</button>
@@ -104,6 +108,7 @@ async function loadQuestions(page = 1) {
             $("#modalNoiDung").val(cauHoi.NoiDung);
             $(".modalPhuongAn").each((i, el) => $(el).val(cauHoi.PhuongAn[i] || ""));
             $("#modalDapAnDung").val(cauHoi.DapAnDung);
+            $("#modalGiaiThich").val(cauHoi.GiaiThich || "");
             $("#autoCode").prop("checked", true).prop("disabled", true);
             $("#questionModal").show();
         });

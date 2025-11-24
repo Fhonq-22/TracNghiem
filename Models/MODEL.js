@@ -20,18 +20,20 @@ export class User {
 }
 
 export class CauHoi {
-    constructor(MaCauHoi, NoiDung, PhuongAn = [], DapAnDung = 0) {
+    constructor(MaCauHoi, NoiDung, PhuongAn = [], DapAnDung = 0, GiaiThich = "") {
         this.MaCauHoi = MaCauHoi;
         this.NoiDung = NoiDung;
         this.PhuongAn = PhuongAn;
         this.DapAnDung = DapAnDung;
+        this.GiaiThich = GiaiThich;
     }
 
     toJSON() {
         return {
             NoiDung: this.NoiDung,
             PhuongAn: this.PhuongAn,
-            DapAnDung: this.DapAnDung
+            DapAnDung: this.DapAnDung,
+            GiaiThich: this.GiaiThich
         };
     }
 }

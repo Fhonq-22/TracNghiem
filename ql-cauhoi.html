@@ -22,11 +22,11 @@
                 <th>Phương án 2</th>
                 <th>Phương án 3</th>
                 <th>Đáp án đúng</th>
+                <th>Giải thích</th>
                 <th>Hành động</th>
             </tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody></tbody>
     </table>
 
     <div id="pagination"></div>
@@ -35,11 +35,14 @@
         <h3 id="modalTitle">Thêm câu hỏi</h3>
         <label><input type="checkbox" id="autoCode" checked> Tạo mã tự động</label><br><br>
         <input type="text" id="modalMaCauHoi" placeholder="Mã câu hỏi"><br><br>
+
         <textarea id="modalNoiDung" placeholder="Nội dung câu hỏi" rows="3" cols="50"></textarea><br><br>
+
         <input type="text" class="modalPhuongAn" placeholder="Phương án 0"><br>
         <input type="text" class="modalPhuongAn" placeholder="Phương án 1"><br>
         <input type="text" class="modalPhuongAn" placeholder="Phương án 2"><br>
         <input type="text" class="modalPhuongAn" placeholder="Phương án 3"><br><br>
+
         <label>Đáp án đúng:</label>
         <select id="modalDapAnDung">
             <option value="0">0</option>
@@ -47,6 +50,9 @@
             <option value="2">2</option>
             <option value="3">3</option>
         </select><br><br>
+
+        <textarea id="modalGiaiThich" placeholder="Giải thích" rows="3" cols="50"></textarea><br><br>
+
         <button id="modalSave">Lưu</button>
         <button id="modalCancel">Hủy</button>
     </div>
