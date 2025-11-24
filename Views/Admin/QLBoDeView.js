@@ -4,24 +4,24 @@ import { layDanhSachCauHoi, layCauHoi } from "../../Controllers/CauHoiController
 let editingBoDe = null;
 let currentPage = 1;
 const pageSize = 10;
+let cachedCauHoiList = [];
 
 $(document).ready(async function() {
+    cachedCauHoiList = await Promise.all((await layDanhSachCauHoi()).map(ma => layCauHoi(ma)));
     await loadBoDe(currentPage);
 
-    $("#btnAddBoDe").click(async () => {
+    $("#btnAddBoDe").click(() => {
         editingBoDe = null;
         $("#modalTitle").text("Thêm bộ đề");
         $("#modalTenBoDe").val("");
         $("#modalThoiGian").val(30);
         $("#modalCauHoiList").empty();
 
-        const danhSachCauHoi = await layDanhSachCauHoi();
-        for (let ma of danhSachCauHoi) {
-            const ch = await layCauHoi(ma);
+        for (let ch of cachedCauHoiList) {
             $("#modalCauHoiList").append(`
                 <div>
-                    <input type="checkbox" class="chkCauHoi" value="${ma}">
-                    ${ma} - ${ch.NoiDung}
+                    <input type="checkbox" class="chkCauHoi" value="${ch.MaCauHoi}">
+                    ${ch.MaCauHoi} - ${ch.NoiDung}
                 </div>
             `);
         }
@@ -92,20 +92,18 @@ async function loadBoDe(page = 1) {
             </tr>
         `);
 
-        row.find(".editBtn").click(async () => {
+        row.find(".editBtn").click(() => {
             editingBoDe = ma;
             $("#modalTitle").text("Sửa bộ đề");
             $("#modalTenBoDe").val(bd.TenBoDe);
             $("#modalThoiGian").val(bd.ThoiGian);
             $("#modalCauHoiList").empty();
 
-            const danhSachCauHoi = await layDanhSachCauHoi();
-            for (let maC of danhSachCauHoi) {
-                const ch = await layCauHoi(maC);
+            for (let ch of cachedCauHoiList) {
                 $("#modalCauHoiList").append(`
                     <div>
-                        <input type="checkbox" class="chkCauHoi" value="${maC}" ${bd.DanhSachCauHoi.includes(maC) ? "checked" : ""}>
-                        ${maC} - ${ch.NoiDung}
+                        <input type="checkbox" class="chkCauHoi" value="${ch.MaCauHoi}" ${bd.DanhSachCauHoi.includes(ch.MaCauHoi) ? "checked" : ""}>
+                        ${ch.MaCauHoi} - ${ch.NoiDung}
                     </div>
                 `);
             }
