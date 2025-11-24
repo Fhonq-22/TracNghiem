@@ -5,10 +5,15 @@ let editingBoDe = null;
 let currentPage = 1;
 const pageSize = 10;
 let cachedCauHoiList = [];
+let cachedBoDe = [];
 
 $(document).ready(async function() {
     cachedCauHoiList = await Promise.all((await layDanhSachCauHoi()).map(ma => layCauHoi(ma)));
-    await loadBoDe(currentPage);
+
+    const maBoDeList = await layDanhSachBoDe();
+    cachedBoDe = await Promise.all(maBoDeList.map(ma => layBoDe(ma)));
+
+    renderBoDe(currentPage);
 
     $("#btnAddBoDe").click(() => {
         editingBoDe = null;
@@ -42,7 +47,6 @@ $(document).ready(async function() {
         }
 
         let maBoDe = editingBoDe || await generateNextBoDeCode();
-
         const boDeData = {
             MaBoDe: maBoDe,
             TenBoDe: tenBoDe,
@@ -54,32 +58,33 @@ $(document).ready(async function() {
 
         if (editingBoDe) {
             await suaBoDe(editingBoDe, boDeData);
+            const idx = cachedBoDe.findIndex(bd => bd.MaBoDe === editingBoDe);
+            if (idx >= 0) cachedBoDe[idx] = boDeData;
         } else {
             await themBoDe(boDeData);
+            cachedBoDe.push(boDeData);
         }
 
         $("#boDeModal").hide();
-        await loadBoDe(currentPage);
+        renderBoDe(currentPage);
     });
 });
 
-async function loadBoDe(page = 1) {
-    const danhSach = await layDanhSachBoDe();
-    currentPage = page;
-    const totalPages = Math.ceil(danhSach.length / pageSize);
-
-    const startIdx = (page - 1) * pageSize;
-    const endIdx = startIdx + pageSize;
-    const pageBoDe = danhSach.slice(startIdx, endIdx);
-
+function renderBoDe(page = 1) {
     const tbody = $("#boDeTable tbody");
     tbody.empty();
 
-    for (let ma of pageBoDe) {
-        const bd = await layBoDe(ma);
+    const totalPages = Math.ceil(cachedBoDe.length / pageSize);
+    currentPage = Math.min(Math.max(page, 1), totalPages);
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, cachedBoDe.length);
+    const pageItems = cachedBoDe.slice(startIndex, endIndex);
+
+    for (let bd of pageItems) {
         const row = $(`
             <tr>
-                <td>${ma}</td>
+                <td>${bd.MaBoDe}</td>
                 <td>${bd.TenBoDe}</td>
                 <td>${bd.SoCauHoi}</td>
                 <td>${bd.ThoiGian}</td>
@@ -93,7 +98,7 @@ async function loadBoDe(page = 1) {
         `);
 
         row.find(".editBtn").click(() => {
-            editingBoDe = ma;
+            editingBoDe = bd.MaBoDe;
             $("#modalTitle").text("Sửa bộ đề");
             $("#modalTenBoDe").val(bd.TenBoDe);
             $("#modalThoiGian").val(bd.ThoiGian);
@@ -112,9 +117,10 @@ async function loadBoDe(page = 1) {
         });
 
         row.find(".deleteBtn").click(async () => {
-            if (confirm(`Xóa bộ đề ${ma}?`)) {
-                await xoaBoDe(ma);
-                await loadBoDe(currentPage);
+            if (confirm(`Xóa bộ đề ${bd.MaBoDe}?`)) {
+                await xoaBoDe(bd.MaBoDe);
+                cachedBoDe = cachedBoDe.filter(b => b.MaBoDe !== bd.MaBoDe);
+                renderBoDe(currentPage);
             }
         });
 
@@ -131,35 +137,31 @@ function renderPagination(totalPages) {
 
     if (currentPage > 1) {
         container.append(`<button class="pageBtn" data-page="1"><<</button>`);
-        container.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
+        container.append(`<button class="pageBtn" data-page="${currentPage-1}">Prev</button>`);
     }
 
     const visibleRange = 2;
-    let start = Math.max(1, currentPage - visibleRange);
-    let end = Math.min(totalPages, currentPage + visibleRange);
+    let start = Math.max(1, currentPage-visibleRange);
+    let end = Math.min(totalPages, currentPage+visibleRange);
 
-    if (start > 1) container.append(`<span>...</span>`);
-
-    for (let i = start; i <= end; i++) {
-        container.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
+    if (start>1) container.append(`<span>...</span>`);
+    for (let i=start;i<=end;i++){
+        container.append(`<button class="pageBtn ${i===currentPage?"active":""}" data-page="${i}">${i}</button>`);
     }
-
-    if (end < totalPages) container.append(`<span>...</span>`);
-
-    if (currentPage < totalPages) {
-        container.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
+    if (end<totalPages) container.append(`<span>...</span>`);
+    if (currentPage<totalPages){
+        container.append(`<button class="pageBtn" data-page="${currentPage+1}">Next</button>`);
         container.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
     }
 
-    container.find(".pageBtn").click(function() {
+    container.find(".pageBtn").click(function(){
         const page = parseInt($(this).data("page"));
-        loadBoDe(page);
+        renderBoDe(page);
     });
 }
 
 async function generateNextBoDeCode() {
-    const danhSach = await layDanhSachBoDe();
-    let numbers = danhSach.map(code => parseInt(code.slice(2))).sort((a,b) => a-b);
+    let numbers = cachedBoDe.map(bd => parseInt(bd.MaBoDe.slice(2))).sort((a,b) => a-b);
     let nextNum = 1;
     for (let n of numbers) {
         if (n === nextNum) nextNum++;
