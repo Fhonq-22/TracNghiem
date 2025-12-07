@@ -7,7 +7,9 @@ export async function themCauHoi(cauHoi) {
         cauHoi.NoiDung,
         cauHoi.PhuongAn,
         cauHoi.DapAnDung,
-        cauHoi.GiaiThich
+        cauHoi.GiaiThich,
+        cauHoi.NguoiTao,
+        cauHoi.NgayTao
     ).toJSON());
 }
 
@@ -18,7 +20,9 @@ export async function layCauHoi(maCauHoi) {
         data.NoiDung,
         data.PhuongAn,
         data.DapAnDung,
-        data.GiaiThich || ""
+        data.GiaiThich || "",
+        data.NguoiTao || "",
+        data.NgayTao || ""
     ) : null;
 }
 
@@ -33,7 +37,9 @@ export async function suaCauHoi(maCauHoi, cauHoiMoi) {
         cauHoiMoi.NoiDung,
         cauHoiMoi.PhuongAn,
         cauHoiMoi.DapAnDung,
-        cauHoiMoi.GiaiThich
+        cauHoiMoi.GiaiThich,
+        cauHoiMoi.NguoiTao,
+        cauHoiMoi.NgayTao
     );
     await updateData("CauHoi", maCauHoi, updatedQuestion.toJSON());
 }

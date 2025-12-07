@@ -54,7 +54,9 @@ $(document).ready(async function() {
             NoiDung: $("#modalNoiDung").val().trim(),
             PhuongAn: phuongAn,
             DapAnDung: parseInt($("#modalDapAnDung").val()),
-            GiaiThich: $("#modalGiaiThich").val().trim()
+            GiaiThich: $("#modalGiaiThich").val().trim(),
+            NguoiTao: "",
+            NgayTao: new Date().toLocaleDateString()
         };
 
         if (!cauHoiData.MaCauHoi || !cauHoiData.NoiDung) {
@@ -98,6 +100,8 @@ async function renderQuestions(page = 1) {
                 <td>${cauHoi.PhuongAn[3]||""}</td>
                 <td>${cauHoi.DapAnDung}</td>
                 <td>${cauHoi.GiaiThich||""}</td>
+                <td>${cauHoi.NguoiTao||""}</td>
+                <td>${cauHoi.NgayTao||""}</td>
                 <td>
                     <button class="editBtn">Sửa</button>
                     <button class="deleteBtn">Xóa</button>

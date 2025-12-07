@@ -20,12 +20,14 @@ export class User {
 }
 
 export class CauHoi {
-    constructor(MaCauHoi, NoiDung, PhuongAn = [], DapAnDung = 0, GiaiThich = "") {
+    constructor(MaCauHoi, NoiDung, PhuongAn = [], DapAnDung = 0, GiaiThich = "", NguoiTao = "", NgayTao = "") {
         this.MaCauHoi = MaCauHoi;
         this.NoiDung = NoiDung;
         this.PhuongAn = PhuongAn;
         this.DapAnDung = DapAnDung;
         this.GiaiThich = GiaiThich;
+        this.NguoiTao = NguoiTao || "Admin";
+        this.NgayTao = NgayTao;
     }
 
     toJSON() {
@@ -33,7 +35,9 @@ export class CauHoi {
             NoiDung: this.NoiDung,
             PhuongAn: this.PhuongAn,
             DapAnDung: this.DapAnDung,
-            GiaiThich: this.GiaiThich
+            GiaiThich: this.GiaiThich,
+            NguoiTao: this.NguoiTao,
+            NgayTao: this.NgayTao
         };
     }
 }
