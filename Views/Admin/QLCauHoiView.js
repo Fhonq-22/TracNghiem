@@ -55,7 +55,7 @@ $(document).ready(async function() {
             PhuongAn: phuongAn,
             DapAnDung: parseInt($("#modalDapAnDung").val()),
             GiaiThich: $("#modalGiaiThich").val().trim(),
-            NguoiTao: "",
+            NguoiTao: "Admin",
             NgayTao: new Date().toLocaleDateString()
         };
 
