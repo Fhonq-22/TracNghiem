@@ -44,7 +44,7 @@ $(document).ready(async function() {
                 if (n === nextNum) nextNum++;
                 else if (n > nextNum) break;
             }
-            maCauHoi = "Q" + String(nextNum).padStart(4, "0");
+            maCauHoi = "Q" + String(nextNum).padStart(5, "0");
         }
 
         const phuongAn = $(".modalPhuongAn").map((i, el) => $(el).val().trim()).get();
