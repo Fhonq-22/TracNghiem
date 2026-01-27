@@ -85,3 +85,28 @@ export class KetQua {
         };
     }
 }
+
+export class PhienChoi {
+    constructor(MaPhienChoi, DanhSachNguoiChoi, SoVong, VongHienTai, NguoiChoiHienTai, ChuDeHienTai, NguoiTao, NgayTao) {
+        this.MaPhienChoi = MaPhienChoi;
+        this.DanhSachNguoiChoi = DanhSachNguoiChoi || {};
+        this.SoVong = SoVong || 1;
+        this.VongHienTai = VongHienTai || 1;
+        this.NguoiChoiHienTai = NguoiChoiHienTai;
+        this.ChuDeHienTai = ChuDeHienTai;
+        this.NguoiTao = NguoiTao;
+        this.NgayTao = NgayTao;
+    }
+
+    toJSON() {
+        return {
+            DanhSachNguoiChoi: this.DanhSachNguoiChoi,
+            SoVong: this.SoVong,
+            VongHienTai: this.VongHienTai,
+            NguoiChoiHienTai: this.NguoiChoiHienTai,
+            ChuDeHienTai: this.ChuDeHienTai,
+            NguoiTao: this.NguoiTao,
+            NgayTao: this.NgayTao
+        };
+    }
+}
