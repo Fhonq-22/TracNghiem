@@ -1,146 +1,124 @@
 import { themPhienChoi, layPhienChoi, suaPhienChoi } from "../../Controllers/PhienChoiController.js";
-import { layBoDeTheoChuDe } from "../../Controllers/BoDeController.js";
-import { layCauHoi } from "../../Controllers/CauHoiController.js";
 
 let phienChoi = null;
 let maPhienChoi = null;
-let boDe = null;
-let timerInterval = null;
-let timeLeft = 0;
-let userAnswers = {};
 
 $(document).ready(function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    maPhienChoi = urlParams.get("maPhienChoi");
 
-    $("#soNguoi").on("change", function () {
-        const n = parseInt($(this).val());
-        const box = $("#dsTen");
-        box.empty();
-        for (let i = 0; i < n; i++) {
-            box.append(`<input class="tenNguoi" placeholder="Tên người ${i + 1}">`);
-        }
+    if (maPhienChoi) {
+        vaoPhien(maPhienChoi);
+    }
+
+    $("#btnTaoDanhSach").click(taoDanhSachNhapTen);
+    $("#btnTaoPhien").click(taoPhienChoi);
+    $("#btnVaoPhien").click(() => {
+        const ma = $("#maPhienNhap").val().trim();
+        if (ma) vaoPhien(ma);
     });
 
-    $("#btnTaoPhien").click(async function () {
-        const soVong = parseInt($("#soVong").val());
-        const tenNguoi = $(".tenNguoi").map((i, e) => $(e).val()).get();
-
-        if (tenNguoi.some(t => !t)) return;
-
-        maPhienChoi = "PC" + Date.now();
-        const danhSach = {};
-        tenNguoi.forEach(t => danhSach[t] = 0);
-
-        phienChoi = {
-            MaPhienChoi: maPhienChoi,
-            DanhSachNguoiChoi: danhSach,
-            SoVong: soVong,
-            VongHienTai: 1,
-            NguoiChoiHienTai: tenNguoi[0],
-            ChuDeHienTai: "",
-            NguoiTao: "User",
-            NgayTao: new Date().toLocaleString("vi-VN")
-        };
-
-        await themPhienChoi(phienChoi);
-        hienPhien();
-    });
-
-    $("#btnVaoPhien").click(async function () {
-        maPhienChoi = $("#maPhienInput").val();
-        phienChoi = await layPhienChoi(maPhienChoi);
-        if (!phienChoi) return;
-        hienPhien();
-    });
-
-    $("#btnXacNhanChuDe").click(async function () {
-        const chuDe = $("#selectChuDe").val();
-        if (!chuDe) return;
-
-        phienChoi.ChuDeHienTai = chuDe;
-        await suaPhienChoi(maPhienChoi, phienChoi);
-
-        boDe = await layBoDeTheoChuDe(chuDe);
-        batDauLamBai();
-    });
-
-    $("#btnSubmit").click(nopBai);
+    $("#btnChonChuDe").click(chonChuDe);
+    $("#btnNext").click(nextLuot);
 });
 
-function hienPhien() {
-    $("#taoPhien, #vaoPhien").hide();
-    $("#phienContainer").show();
-    $("#thongTinPhien").text(
-        `Phiên ${maPhienChoi} - vòng ${phienChoi.VongHienTai}/${phienChoi.SoVong} - lượt ${phienChoi.NguoiChoiHienTai}`
-    );
-}
+function taoDanhSachNhapTen() {
+    const soNguoi = parseInt($("#soNguoiChoi").val());
+    const container = $("#dsNhapTen");
+    container.empty();
 
-async function batDauLamBai() {
-    $("#lamBai").show();
-    $("#chonChuDe").hide();
-    $("#questionContainer").empty();
-    userAnswers = {};
+    if (!soNguoi || soNguoi < 1) return;
 
-    timeLeft = boDe.ThoiGian * 60;
-    startTimer();
-
-    for (let i = 0; i < boDe.DanhSachCauHoi.length; i++) {
-        const ma = boDe.DanhSachCauHoi[i];
-        const cauHoi = await layCauHoi(ma);
-
-        $("#questionContainer").append(`
-            <div class="question" data-ma="${ma}">
-                <p><b>Câu ${i + 1}:</b> ${cauHoi.NoiDung}</p>
-                ${cauHoi.PhuongAn.map((pa, idx) => `
-                    <div>
-                        <input type="radio" name="q${i}" value="${idx}">
-                        ${pa}
-                    </div>
-                `).join("")}
+    for (let i = 1; i <= soNguoi; i++) {
+        container.append(`
+            <div>
+                <label>Người chơi ${i}:</label>
+                <input type="text" class="tenNguoiChoi">
             </div>
         `);
     }
 }
 
-function startTimer() {
-    updateTimer();
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            nopBai();
-        }
-        updateTimer();
-    }, 1000);
-}
+async function taoPhienChoi() {
+    const soVong = parseInt($("#soVong").val());
+    if (soVong < 1 || soVong > 4) return;
 
-function updateTimer() {
-    const m = Math.floor(timeLeft / 60);
-    const s = timeLeft % 60;
-    $("#timer").text(`${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`);
-}
-
-async function nopBai() {
-    $(".question").each(function (_, el) {
-        const ma = $(el).data("ma");
-        const ans = $(el).find("input:checked").val();
-        userAnswers[ma] = ans !== undefined ? parseInt(ans) : null;
+    const dsNguoiChoi = {};
+    $(".tenNguoiChoi").each(function () {
+        const ten = $(this).val().trim();
+        if (ten) dsNguoiChoi[ten] = 0;
     });
 
-    clearInterval(timerInterval);
+    const tenNguoi = Object.keys(dsNguoiChoi);
+    if (tenNguoi.length === 0) return;
 
-    let dung = 0;
-    for (let ma of boDe.DanhSachCauHoi) {
-        const ch = await layCauHoi(ma);
-        if (userAnswers[ma] === ch.DapAnDung) dung++;
+    const maPhien = "PC" + Date.now();
+    const now = new Date();
+    const ngayTao = now.toLocaleDateString("vi-VN") + " " + now.toLocaleTimeString("vi-VN");
+
+    const data = {
+        MaPhienChoi: maPhien,
+        DanhSachNguoiChoi: dsNguoiChoi,
+        SoVong: soVong,
+        VongHienTai: 1,
+        NguoiChoiHienTai: tenNguoi[0],
+        ChuDeHienTai: "",
+        NguoiTao: localStorage.getItem("currentUser") || "Admin",
+        NgayTao: ngayTao
+    };
+
+    await themPhienChoi(data);
+    window.location.href = `u-phienchoi.html?maPhienChoi=${maPhien}`;
+}
+
+async function vaoPhien(ma) {
+    phienChoi = await layPhienChoi(ma);
+    if (!phienChoi) return;
+
+    maPhienChoi = ma;
+    $("#chonPhienSection").hide();
+    $("#dieuKhienSection").show();
+    render();
+}
+
+function render() {
+    $("#vongHienTai").text(phienChoi.VongHienTai);
+    $("#soVongHienThi").text(phienChoi.SoVong);
+    $("#nguoiChoiHienTai").text(phienChoi.NguoiChoiHienTai);
+    $("#chuDeHienTai").text(phienChoi.ChuDeHienTai || "(chưa chọn)");
+
+    const ul = $("#dsNguoiChoi");
+    ul.empty();
+    Object.entries(phienChoi.DanhSachNguoiChoi).forEach(([ten, diem]) => {
+        ul.append(`<li>${ten}: ${diem} điểm</li>`);
+    });
+}
+
+async function chonChuDe() {
+    const chuDe = $("#selectChuDe").val();
+    if (!chuDe) return;
+
+    phienChoi.ChuDeHienTai = chuDe;
+    await suaPhienChoi(maPhienChoi, phienChoi);
+    render();
+}
+
+async function nextLuot() {
+    const dsTen = Object.keys(phienChoi.DanhSachNguoiChoi);
+    let idx = dsTen.indexOf(phienChoi.NguoiChoiHienTai);
+
+    if (idx === -1 || idx === dsTen.length - 1) {
+        phienChoi.VongHienTai++;
+        idx = 0;
+    } else {
+        idx++;
     }
 
-    const diem = Math.round((dung / boDe.SoCauHoi * 10) * 100) / 100;
-    phienChoi.DanhSachNguoiChoi[phienChoi.NguoiChoiHienTai] += diem;
+    if (phienChoi.VongHienTai > phienChoi.SoVong) return;
+
+    phienChoi.NguoiChoiHienTai = dsTen[idx];
     phienChoi.ChuDeHienTai = "";
 
     await suaPhienChoi(maPhienChoi, phienChoi);
-
-    $("#lamBai").hide();
-    $("#chonChuDe").show();
-    hienPhien();
+    render();
 }
