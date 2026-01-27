@@ -8,57 +8,44 @@
 </head>
 <body>
     <h1>Phiên chơi</h1>
-    <a href="index.html">← Quay về trang chủ</a>
+    <a href="index.html">← quay về</a>
+
+    <div id="taoPhien">
+        <h3>Tạo phiên chơi</h3>
+        <input id="soNguoi" type="number" min="1" placeholder="Số người chơi">
+        <div id="dsTen"></div>
+        <input id="soVong" type="number" min="1" max="4" value="1">
+        <button id="btnTaoPhien">Tạo phiên</button>
+    </div>
+
+    <div id="vaoPhien">
+        <h3>Vào phiên</h3>
+        <input id="maPhienInput" placeholder="Mã phiên chơi">
+        <button id="btnVaoPhien">Vào</button>
+    </div>
 
     <hr>
 
-    <div id="chonPhienSection">
-        <h3>Tạo phiên chơi mới</h3>
+    <div id="phienContainer" style="display:none">
+        <h3 id="thongTinPhien"></h3>
 
-        <div>
-            <label>Số người chơi:</label>
-            <input type="number" id="soNguoiChoi" min="1" max="10">
-            <button id="btnTaoDanhSach">Tạo danh sách</button>
-        </div>
-
-        <div id="dsNhapTen"></div>
-
-        <div>
-            <label>Số vòng chơi (1–4):</label>
-            <input type="number" id="soVong" min="1" max="4" value="1">
-        </div>
-
-        <button id="btnTaoPhien">Tạo phiên chơi</button>
-
-        <hr>
-
-        <h3>Tiếp tục phiên chơi</h3>
-        <input type="text" id="maPhienNhap" placeholder="Nhập mã phiên chơi">
-        <button id="btnVaoPhien">Vào phiên</button>
-    </div>
-
-    <div id="dieuKhienSection" style="display:none">
-        <h2>Điều khiển phiên chơi</h2>
-
-        <p><b>Vòng:</b> <span id="vongHienTai"></span> / <span id="soVongHienThi"></span></p>
-        <p><b>Người chơi:</b> <span id="nguoiChoiHienTai"></span></p>
-        <p><b>Chủ đề:</b> <span id="chuDeHienTai"></span></p>
-
-        <div>
+        <div id="chonChuDe">
             <select id="selectChuDe">
                 <option value="">-- chọn chủ đề --</option>
-                <option value="lich-su">Lịch sử</option>
-                <option value="dia-ly">Địa lý</option>
-                <option value="toan-hoc">Toán học</option>
+                <option value="toan">Toán</option>
+                <option value="tieng-viet">Tiếng Việt</option>
                 <option value="khoa-hoc">Khoa học</option>
             </select>
-            <button id="btnChonChuDe">Xác nhận chủ đề</button>
+            <button id="btnXacNhanChuDe">Xác nhận chủ đề</button>
         </div>
 
-        <button id="btnNext">Sang lượt tiếp theo</button>
-
-        <h3>Danh sách người chơi</h3>
-        <ul id="dsNguoiChoi"></ul>
+        <div id="lamBai" style="display:none">
+            <div>
+                <span>Thời gian: </span><span id="timer"></span>
+            </div>
+            <div id="questionContainer"></div>
+            <button id="btnSubmit">Nộp bài</button>
+        </div>
     </div>
 </body>
 </html>
