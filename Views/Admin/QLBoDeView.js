@@ -167,5 +167,5 @@ async function generateNextBoDeCode() {
         if (n === nextNum) nextNum++;
         else if (n > nextNum) break;
     }
-    return "BD" + String(nextNum).padStart(3, "0");
+    return "BD" + String(nextNum).padStart(4, "0");
 }
