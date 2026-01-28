@@ -194,6 +194,7 @@ function traLoiCauHoi() {
         } else {
             ans.prop("disabled", true);
             $("#ketQuaTraLoi").text("Sai – người khác được trả lời");
+            $("#btnNextCauHoi").prop("disabled", false);
             hienTraLoiPhu();
         }
         return;
