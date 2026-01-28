@@ -115,7 +115,7 @@ export class PhienChoi {
     }
 }
 
-export class CauHinhCapDo {
+export class CapDo {
     constructor(MaCapDo, TenCapDo, DiemMoiCau, HeSoTraLoiPhu, NgayCapNhat) {
         this.MaCapDo = MaCapDo;
         this.TenCapDo = TenCapDo;
