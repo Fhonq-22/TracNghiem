@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý cấp độ</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="module" src="./Views/Admin/QLCapDoView.js"></script>
+</head>
+<body>
+    <h1>Quản lý cấp độ</h1>
+    <a href="admin.html">← Quay về trang quản trị</a>
+    <button id="btnAddCapDo">Thêm cấp độ</button>
+
+    <table border="1" id="capDoTable">
+        <thead>
+            <tr>
+                <th>Mã cấp độ</th>
+                <th>Tên cấp độ</th>
+                <th>Điểm mỗi câu</th>
+                <th>Hệ số trả lời phụ</th>
+                <th>Ngày cập nhật</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div id="capDoModal" style="display:none; position:fixed; top:20%; left:30%; width:40%; background:#fff; padding:20px; border:1px solid #000;">
+        <h3 id="modalTitle">Thêm cấp độ</h3>
+
+        <label>Tên cấp độ</label><br>
+        <input type="text" id="modalTenCapDo"><br><br>
+
+        <label>Điểm mỗi câu</label><br>
+        <input type="number" id="modalDiemMoiCau"><br><br>
+
+        <label>Hệ số trả lời phụ</label><br>
+        <input type="number" step="0.1" id="modalHeSoTraLoiPhu" value="0.5"><br><br>
+
+        <button id="modalSave">Lưu</button>
+        <button id="modalCancel">Hủy</button>
+    </div>
+</body>
+</html>
