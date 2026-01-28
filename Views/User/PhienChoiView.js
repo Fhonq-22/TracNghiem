@@ -169,10 +169,12 @@ async function ketThucLuot() {
 
     $("#lamCauHoiSection").hide();
     await suaPhienChoi(maPhienChoi, phienChoi);
+    $("#btnNext").prop("disabled", false);
     render();
 }
 
 async function nextLuot() {
+    $("#btnNext").prop("disabled", true);
     $("#selectChuDe, #btnChonChuDe").prop("disabled", false);
 
     const dsTen = Object.keys(phienChoi.DanhSachNguoiChoi);
