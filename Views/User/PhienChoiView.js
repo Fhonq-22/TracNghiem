@@ -98,16 +98,8 @@ async function vaoPhien(ma) {
 
     await loadDanhSachBoDe();
 
-    if (phienChoi.DaKetThuc) {
-        $("#selectChuDe, #btnChonChuDe, #btnNext").prop("disabled", true);
-        $("#lamCauHoiSection").hide();
-        alert("Phiên chơi đã kết thúc");
-    } else {
-        $("#selectChuDe, #btnChonChuDe").prop("disabled", false);
-        $("#btnNext").prop("disabled", true);
-        $("#lamCauHoiSection").hide();
-    }
-
+    $("#btnNext").prop("disabled", true);
+    $("#lamCauHoiSection").hide();
     render();
 }
 
@@ -124,8 +116,6 @@ function render() {
 }
 
 async function chonChuDe() {
-    if (phienChoi.DaKetThuc) return;
-
     const chuDe = $("#selectChuDe").val();
     if (!chuDe) return;
 
@@ -141,20 +131,19 @@ async function chonChuDe() {
     }
 
     cauHoiIndex = 0;
-    daTraLoiChinh = false;
-    dangTraLoiPhu = false;
-
-    $("#lamCauHoiSection").show();
     hienCauHoi();
-    render();
 }
 
 function hienCauHoi() {
     const ch = dsCauHoi[cauHoiIndex];
     if (!ch) return;
 
-    $("#ketQuaTraLoi").text("");
+    daTraLoiChinh = false;
+    dangTraLoiPhu = false;
+
+    $("#btnTraLoi").prop("disabled", false);
     $("#btnNextCauHoi").prop("disabled", true);
+    $("#ketQuaTraLoi").text("");
     $("#traLoiPhuSection").hide();
 
     $("#tieuDeCauHoi").text(`Câu ${cauHoiIndex + 1} / ${dsCauHoi.length}`);
@@ -170,25 +159,29 @@ function hienCauHoi() {
         `);
     });
 
-    daTraLoiChinh = false;
-    dangTraLoiPhu = false;
+    $("#lamCauHoiSection").show();
 }
 
 function traLoiCauHoi() {
     const ch = dsCauHoi[cauHoiIndex];
-    const ans = $("input[name=pa]:checked").val();
-    if (ans === undefined) return;
+    const ans = $("input[name=pa]:checked");
+    if (ans.length === 0) return;
+
+    const value = parseInt(ans.val());
 
     if (!daTraLoiChinh) {
         daTraLoiChinh = true;
-        if (parseInt(ans) === ch.DapAnDung) {
+
+        if (value === ch.DapAnDung) {
             phienChoi.DanhSachNguoiChoi[phienChoi.NguoiChoiHienTai] += 1;
             $("#ketQuaTraLoi").text("Đúng (+1 điểm)");
             $("#btnNextCauHoi").prop("disabled", false);
+            $("#btnTraLoi").prop("disabled", true);
             render();
         } else {
+            ans.prop("disabled", true);
             $("#ketQuaTraLoi").text("Sai – người khác được trả lời");
-            hienChonNguoiTraLoiPhu();
+            hienTraLoiPhu();
         }
         return;
     }
@@ -197,7 +190,7 @@ function traLoiCauHoi() {
         const nguoi = $("#selectNguoiTraLoiPhu").val();
         if (!nguoi) return;
 
-        if (parseInt(ans) === ch.DapAnDung) {
+        if (value === ch.DapAnDung) {
             phienChoi.DanhSachNguoiChoi[nguoi] += 0.5;
             $("#ketQuaTraLoi").text(`${nguoi} trả lời đúng (+0.5 điểm)`);
         } else {
@@ -205,12 +198,13 @@ function traLoiCauHoi() {
             $("#ketQuaTraLoi").text(`${nguoi} trả lời sai (-0.5 điểm)`);
         }
 
+        $("#btnTraLoi").prop("disabled", true);
         $("#btnNextCauHoi").prop("disabled", false);
         render();
     }
 }
 
-function hienChonNguoiTraLoiPhu() {
+function hienTraLoiPhu() {
     dangTraLoiPhu = true;
     const select = $("#selectNguoiTraLoiPhu").empty();
     Object.keys(phienChoi.DanhSachNguoiChoi)
@@ -236,8 +230,6 @@ async function ketThucLuot() {
 }
 
 async function nextLuot() {
-    if (phienChoi.DaKetThuc) return;
-
     const dsTen = Object.keys(phienChoi.DanhSachNguoiChoi);
     const idxHienTai = dsTen.indexOf(phienChoi.NguoiChoiHienTai);
 
@@ -252,17 +244,16 @@ async function nextLuot() {
     if (nextVong > phienChoi.SoVong) {
         phienChoi.DaKetThuc = true;
         await suaPhienChoi(maPhienChoi, phienChoi);
-        $("#selectChuDe, #btnChonChuDe, #btnNext").prop("disabled", true);
         alert("Phiên chơi đã kết thúc");
         return;
     }
 
-    $("#btnNext").prop("disabled", true);
-    $("#selectChuDe, #btnChonChuDe").prop("disabled", false);
-
     phienChoi.VongHienTai = nextVong;
     phienChoi.NguoiChoiHienTai = dsTen[nextIdx];
     phienChoi.ChuDeHienTai = "";
+
+    $("#btnNext").prop("disabled", true);
+    $("#selectChuDe, #btnChonChuDe").prop("disabled", false);
 
     await suaPhienChoi(maPhienChoi, phienChoi);
     render();
