@@ -1,14 +1,19 @@
 import { layDanhSachBoDe, layBoDe, themBoDe, suaBoDe, xoaBoDe } from "../../Controllers/BoDeController.js";
 import { layDanhSachCauHoi, layCauHoi } from "../../Controllers/CauHoiController.js";
+import { layDanhSachCapDo, layCapDo } from "../../Controllers/CapDoController.js";
 
 let editingBoDe = null;
 let currentPage = 1;
 const pageSize = 10;
 let cachedCauHoiList = [];
 let cachedBoDe = [];
+let cachedCapDo = [];
 
 $(document).ready(async function() {
     cachedCauHoiList = await Promise.all((await layDanhSachCauHoi()).map(ma => layCauHoi(ma)));
+
+    const maCapDoList = await layDanhSachCapDo();
+    cachedCapDo = await Promise.all(maCapDoList.map(ma => layCapDo(ma)));
 
     const maBoDeList = await layDanhSachBoDe();
     cachedBoDe = await Promise.all(maBoDeList.map(ma => layBoDe(ma)));
@@ -19,9 +24,9 @@ $(document).ready(async function() {
         editingBoDe = null;
         $("#modalTitle").text("Thêm bộ đề");
         $("#modalTenBoDe").val("");
-        $("#modalCapDo").val("De");
         $("#modalThoiGian").val(30);
         $("#modalCauHoiList").empty();
+        renderCapDoSelect();
 
         for (let ch of cachedCauHoiList) {
             $("#modalCauHoiList").append(`
@@ -73,6 +78,21 @@ $(document).ready(async function() {
     });
 });
 
+function renderCapDoSelect(selected = null) {
+    const select = $("#modalCapDo");
+    select.empty();
+
+    for (let cd of cachedCapDo) {
+        select.append(`
+            <option value="${cd.MaCapDo}">
+                ${cd.TenCapDo}
+            </option>
+        `);
+    }
+
+    if (selected) select.val(selected);
+}
+
 function renderBoDe(page = 1) {
     const tbody = $("#boDeTable tbody");
     tbody.empty();
@@ -90,7 +110,7 @@ function renderBoDe(page = 1) {
                 <td>${bd.MaBoDe}</td>
                 <td>${bd.TenBoDe}</td>
                 <td>${bd.CapDo}</td>
-                <td>${bd.SoCauHoi}</td>
+                <td>${bd.DanhSachCauHoi?.length || 0}</td>
                 <td>${bd.ThoiGian}</td>
                 <td>${bd.NgayTao}</td>
                 <td>${bd.NguoiTao}</td>
@@ -105,9 +125,9 @@ function renderBoDe(page = 1) {
             editingBoDe = bd.MaBoDe;
             $("#modalTitle").text("Sửa bộ đề");
             $("#modalTenBoDe").val(bd.TenBoDe);
-            $("#modalCapDo").val(bd.CapDo);
             $("#modalThoiGian").val(bd.ThoiGian);
             $("#modalCauHoiList").empty();
+            renderCapDoSelect(bd.CapDo);
 
             for (let ch of cachedCauHoiList) {
                 $("#modalCauHoiList").append(`
@@ -146,12 +166,12 @@ function renderPagination(totalPages) {
     }
 
     const range = 2;
-    let start = Math.max(1, currentPage-range);
-    let end = Math.min(totalPages, currentPage+range);
+    let start = Math.max(1, currentPage - range);
+    let end = Math.min(totalPages, currentPage + range);
 
     if (start > 1) container.append(`<span>...</span>`);
     for (let i = start; i <= end; i++) {
-        container.append(`<button class="pageBtn ${i===currentPage?"active":""}" data-page="${i}">${i}</button>`);
+        container.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
     }
     if (end < totalPages) container.append(`<span>...</span>`);
 
