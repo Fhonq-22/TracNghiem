@@ -9,7 +9,9 @@ let mapBoDe = {};
 let boDeDangChoi = null;
 let dsCauHoi = [];
 let cauHoiIndex = 0;
-let dapAnNguoiChoi = {};
+
+let daTraLoiChinh = false;
+let dangTraLoiPhu = false;
 
 $(document).ready(function () {
     const urlParams = new URLSearchParams(window.location.search);
@@ -27,6 +29,7 @@ $(document).ready(function () {
     $("#btnChonChuDe").click(chonChuDe);
     $("#btnTraLoi").click(traLoiCauHoi);
     $("#btnNext").click(nextLuot);
+    $("#btnNextCauHoi").click(sangCauHoi);
 });
 
 function taoDanhSachNhapTen() {
@@ -138,7 +141,9 @@ async function chonChuDe() {
     }
 
     cauHoiIndex = 0;
-    dapAnNguoiChoi = {};
+    daTraLoiChinh = false;
+    dangTraLoiPhu = false;
+
     $("#lamCauHoiSection").show();
     hienCauHoi();
     render();
@@ -147,8 +152,14 @@ async function chonChuDe() {
 function hienCauHoi() {
     const ch = dsCauHoi[cauHoiIndex];
     if (!ch) return;
+
+    $("#ketQuaTraLoi").text("");
+    $("#btnNextCauHoi").prop("disabled", true);
+    $("#traLoiPhuSection").hide();
+
     $("#tieuDeCauHoi").text(`Câu ${cauHoiIndex + 1} / ${dsCauHoi.length}`);
     $("#noiDungCauHoi").html(`<p>${ch.NoiDung}</p>`);
+
     const pa = $("#dsPhuongAn").empty();
     ch.PhuongAn.forEach((p, i) => {
         pa.append(`
@@ -158,18 +169,58 @@ function hienCauHoi() {
             </div>
         `);
     });
+
+    daTraLoiChinh = false;
+    dangTraLoiPhu = false;
 }
 
 function traLoiCauHoi() {
-    if (phienChoi.DaKetThuc) return;
-
     const ch = dsCauHoi[cauHoiIndex];
     const ans = $("input[name=pa]:checked").val();
     if (ans === undefined) return;
 
-    dapAnNguoiChoi[ch.MaCauHoi] = parseInt(ans);
-    cauHoiIndex++;
+    if (!daTraLoiChinh) {
+        daTraLoiChinh = true;
+        if (parseInt(ans) === ch.DapAnDung) {
+            phienChoi.DanhSachNguoiChoi[phienChoi.NguoiChoiHienTai] += 1;
+            $("#ketQuaTraLoi").text("Đúng (+1 điểm)");
+            $("#btnNextCauHoi").prop("disabled", false);
+            render();
+        } else {
+            $("#ketQuaTraLoi").text("Sai – người khác được trả lời");
+            hienChonNguoiTraLoiPhu();
+        }
+        return;
+    }
 
+    if (dangTraLoiPhu) {
+        const nguoi = $("#selectNguoiTraLoiPhu").val();
+        if (!nguoi) return;
+
+        if (parseInt(ans) === ch.DapAnDung) {
+            phienChoi.DanhSachNguoiChoi[nguoi] += 0.5;
+            $("#ketQuaTraLoi").text(`${nguoi} trả lời đúng (+0.5 điểm)`);
+        } else {
+            phienChoi.DanhSachNguoiChoi[nguoi] -= 0.5;
+            $("#ketQuaTraLoi").text(`${nguoi} trả lời sai (-0.5 điểm)`);
+        }
+
+        $("#btnNextCauHoi").prop("disabled", false);
+        render();
+    }
+}
+
+function hienChonNguoiTraLoiPhu() {
+    dangTraLoiPhu = true;
+    const select = $("#selectNguoiTraLoiPhu").empty();
+    Object.keys(phienChoi.DanhSachNguoiChoi)
+        .filter(t => t !== phienChoi.NguoiChoiHienTai)
+        .forEach(t => select.append(`<option value="${t}">${t}</option>`));
+    $("#traLoiPhuSection").show();
+}
+
+function sangCauHoi() {
+    cauHoiIndex++;
     if (cauHoiIndex >= dsCauHoi.length) {
         ketThucLuot();
         return;
@@ -178,16 +229,8 @@ function traLoiCauHoi() {
 }
 
 async function ketThucLuot() {
-    let dung = 0;
-    dsCauHoi.forEach(ch => {
-        if (dapAnNguoiChoi[ch.MaCauHoi] === ch.DapAnDung) dung++;
-    });
-
-    phienChoi.DanhSachNguoiChoi[phienChoi.NguoiChoiHienTai] += dung;
-
     $("#lamCauHoiSection").hide();
     await suaPhienChoi(maPhienChoi, phienChoi);
-
     $("#btnNext").prop("disabled", false);
     render();
 }
