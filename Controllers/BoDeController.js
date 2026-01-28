@@ -6,6 +6,7 @@ export async function themBoDe(boDe) {
         boDe.MaBoDe,
         boDe.TenBoDe,
         boDe.DanhSachCauHoi,
+        boDe.CapDo,
         boDe.ThoiGian,
         boDe.NgayTao,
         boDe.NguoiTao
@@ -19,6 +20,7 @@ export async function layBoDe(maBoDe) {
         maBoDe,
         data.TenBoDe,
         data.DanhSachCauHoi,
+        data.CapDo,
         data.ThoiGian,
         data.NgayTao,
         data.NguoiTao
@@ -40,6 +42,7 @@ export async function suaBoDe(maBoDe, boDeMoi) {
         maBoDe,
         boDeMoi.TenBoDe,
         boDeMoi.DanhSachCauHoi,
+        boDeMoi.CapDo,
         boDeMoi.ThoiGian,
         boDeMoi.NgayTao,
         boDeMoi.NguoiTao
