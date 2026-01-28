@@ -1,17 +1,21 @@
 import { themPhienChoi, layPhienChoi, suaPhienChoi } from "../../Controllers/PhienChoiController.js";
-import { layDanhSachBoDeDayDu } from "../../Controllers/BoDeController.js";
+import { layDanhSachBoDeDayDu, layBoDe } from "../../Controllers/BoDeController.js";
+import { layCauHoi } from "../../Controllers/CauHoiController.js";
 
 let phienChoi = null;
 let maPhienChoi = null;
 let mapBoDe = {};
 
+let boDeDangChoi = null;
+let dsCauHoi = [];
+let cauHoiIndex = 0;
+let dapAnNguoiChoi = {};
+
 $(document).ready(function () {
     const urlParams = new URLSearchParams(window.location.search);
     maPhienChoi = urlParams.get("maPhienChoi");
 
-    if (maPhienChoi) {
-        vaoPhien(maPhienChoi);
-    }
+    if (maPhienChoi) vaoPhien(maPhienChoi);
 
     $("#btnTaoDanhSach").click(taoDanhSachNhapTen);
     $("#btnTaoPhien").click(taoPhienChoi);
@@ -21,16 +25,14 @@ $(document).ready(function () {
     });
 
     $("#btnChonChuDe").click(chonChuDe);
+    $("#btnTraLoi").click(traLoiCauHoi);
     $("#btnNext").click(nextLuot);
 });
 
 function taoDanhSachNhapTen() {
     const soNguoi = parseInt($("#soNguoiChoi").val());
-    const container = $("#dsNhapTen");
-    container.empty();
-
+    const container = $("#dsNhapTen").empty();
     if (!soNguoi || soNguoi < 1) return;
-
     for (let i = 1; i <= soNguoi; i++) {
         container.append(`
             <div>
@@ -56,9 +58,8 @@ async function taoPhienChoi() {
 
     const maPhien = "PC" + Date.now();
     const now = new Date();
-    const ngayTao = now.toLocaleDateString("vi-VN") + " " + now.toLocaleTimeString("vi-VN");
 
-    const data = {
+    await themPhienChoi({
         MaPhienChoi: maPhien,
         DanhSachNguoiChoi: dsNguoiChoi,
         SoVong: soVong,
@@ -66,41 +67,30 @@ async function taoPhienChoi() {
         NguoiChoiHienTai: tenNguoi[0],
         ChuDeHienTai: "",
         NguoiTao: localStorage.getItem("currentUser") || "Admin",
-        NgayTao: ngayTao
-    };
+        NgayTao: now.toLocaleDateString("vi-VN") + " " + now.toLocaleTimeString("vi-VN")
+    });
 
-    await themPhienChoi(data);
     window.location.href = `u-phienchoi.html?maPhienChoi=${maPhien}`;
 }
 
 async function loadDanhSachBoDe() {
     if (Object.keys(mapBoDe).length > 0) return;
-
-    const select = $("#selectChuDe");
-    select.empty();
-    select.append(`<option value="">-- chọn chủ đề --</option>`);
-
+    const select = $("#selectChuDe").empty().append(`<option value="">-- chọn chủ đề --</option>`);
     const dsBoDe = await layDanhSachBoDeDayDu();
     mapBoDe = {};
-
     dsBoDe.forEach(bd => {
         mapBoDe[bd.MaBoDe] = bd.TenBoDe;
-        select.append(
-            `<option value="${bd.MaBoDe}">${bd.TenBoDe}</option>`
-        );
+        select.append(`<option value="${bd.MaBoDe}">${bd.TenBoDe}</option>`);
     });
-
     $("#btnChonChuDe").prop("disabled", false);
 }
 
 async function vaoPhien(ma) {
     phienChoi = await layPhienChoi(ma);
     if (!phienChoi) return;
-
     maPhienChoi = ma;
     $("#chonPhienSection").hide();
     $("#dieuKhienSection").show();
-
     await loadDanhSachBoDe();
     render();
 }
@@ -110,9 +100,7 @@ function render() {
     $("#soVongHienThi").text(phienChoi.SoVong);
     $("#nguoiChoiHienTai").text(phienChoi.NguoiChoiHienTai);
     $("#chuDeHienTai").text(phienChoi.ChuDeHienTai ? mapBoDe[phienChoi.ChuDeHienTai] : "(chưa chọn)");
-
-    const ul = $("#dsNguoiChoi");
-    ul.empty();
+    const ul = $("#dsNguoiChoi").empty();
     Object.entries(phienChoi.DanhSachNguoiChoi).forEach(([ten, diem]) => {
         ul.append(`<li>${ten}: ${diem} điểm</li>`);
     });
@@ -125,14 +113,67 @@ async function chonChuDe() {
     phienChoi.ChuDeHienTai = chuDe;
     await suaPhienChoi(maPhienChoi, phienChoi);
 
-    $("#selectChuDe").prop("disabled", true);
-    $("#btnChonChuDe").prop("disabled", true);
+    $("#selectChuDe, #btnChonChuDe").prop("disabled", true);
+
+    boDeDangChoi = await layBoDe(chuDe);
+    dsCauHoi = [];
+    for (let ma of boDeDangChoi.DanhSachCauHoi) {
+        dsCauHoi.push(await layCauHoi(ma));
+    }
+
+    cauHoiIndex = 0;
+    dapAnNguoiChoi = {};
+    $("#lamCauHoiSection").show();
+    hienCauHoi();
+    render();
+}
+
+function hienCauHoi() {
+    const ch = dsCauHoi[cauHoiIndex];
+    if (!ch) return;
+    $("#tieuDeCauHoi").text(`Câu ${cauHoiIndex + 1} / ${dsCauHoi.length}`);
+    $("#noiDungCauHoi").html(`<p>${ch.NoiDung}</p>`);
+    const pa = $("#dsPhuongAn").empty();
+    ch.PhuongAn.forEach((p, i) => {
+        pa.append(`
+            <div>
+                <input type="radio" name="pa" value="${i}">
+                ${p}
+            </div>
+        `);
+    });
+}
+
+function traLoiCauHoi() {
+    const ch = dsCauHoi[cauHoiIndex];
+    const ans = $("input[name=pa]:checked").val();
+    if (ans === undefined) return;
+
+    dapAnNguoiChoi[ch.MaCauHoi] = parseInt(ans);
+    cauHoiIndex++;
+
+    if (cauHoiIndex >= dsCauHoi.length) {
+        ketThucLuot();
+        return;
+    }
+    hienCauHoi();
+}
+
+async function ketThucLuot() {
+    let dung = 0;
+    dsCauHoi.forEach(ch => {
+        if (dapAnNguoiChoi[ch.MaCauHoi] === ch.DapAnDung) dung++;
+    });
+
+    phienChoi.DanhSachNguoiChoi[phienChoi.NguoiChoiHienTai] += dung;
+
+    $("#lamCauHoiSection").hide();
+    await suaPhienChoi(maPhienChoi, phienChoi);
     render();
 }
 
 async function nextLuot() {
-    $("#selectChuDe").prop("disabled", false);
-    $("#btnChonChuDe").prop("disabled", false);
+    $("#selectChuDe, #btnChonChuDe").prop("disabled", false);
 
     const dsTen = Object.keys(phienChoi.DanhSachNguoiChoi);
     let idx = dsTen.indexOf(phienChoi.NguoiChoiHienTai);
@@ -140,9 +181,7 @@ async function nextLuot() {
     if (idx === -1 || idx === dsTen.length - 1) {
         phienChoi.VongHienTai++;
         idx = 0;
-    } else {
-        idx++;
-    }
+    } else idx++;
 
     if (phienChoi.VongHienTai > phienChoi.SoVong) return;
 
