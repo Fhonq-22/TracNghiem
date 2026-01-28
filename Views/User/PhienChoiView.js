@@ -174,20 +174,29 @@ async function ketThucLuot() {
 }
 
 async function nextLuot() {
+    const dsTen = Object.keys(phienChoi.DanhSachNguoiChoi);
+    const idxHienTai = dsTen.indexOf(phienChoi.NguoiChoiHienTai);
+
+    let nextIdx = idxHienTai + 1;
+    let nextVong = phienChoi.VongHienTai;
+
+    if (nextIdx >= dsTen.length) {
+        nextIdx = 0;
+        nextVong++;
+    }
+
+    if (nextVong > phienChoi.SoVong) {
+        alert("Phiên chơi đã kết thúc");
+        $("#btnNext").prop("disabled", true);
+        $("#selectChuDe, #btnChonChuDe").prop("disabled", true);
+        return;
+    }
+
     $("#btnNext").prop("disabled", true);
     $("#selectChuDe, #btnChonChuDe").prop("disabled", false);
 
-    const dsTen = Object.keys(phienChoi.DanhSachNguoiChoi);
-    let idx = dsTen.indexOf(phienChoi.NguoiChoiHienTai);
-
-    if (idx === -1 || idx === dsTen.length - 1) {
-        phienChoi.VongHienTai++;
-        idx = 0;
-    } else idx++;
-
-    if (phienChoi.VongHienTai > phienChoi.SoVong) return;
-
-    phienChoi.NguoiChoiHienTai = dsTen[idx];
+    phienChoi.VongHienTai = nextVong;
+    phienChoi.NguoiChoiHienTai = dsTen[nextIdx];
     phienChoi.ChuDeHienTai = "";
 
     await suaPhienChoi(maPhienChoi, phienChoi);
