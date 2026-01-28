@@ -3,10 +3,14 @@ import { layDanhSachCapDo, layCapDo, themCapDo, suaCapDo, xoaCapDo } from "../..
 let cachedCapDo = [];
 let editingCapDo = null;
 
+let currentPage = 1;
+const pageSize = 10;
+
 $(document).ready(async function () {
     const maList = await layDanhSachCapDo();
     cachedCapDo = await Promise.all(maList.map(ma => layCapDo(ma)));
-    renderCapDo();
+
+    renderCapDo(currentPage);
 
     $("#btnAddCapDo").click(() => {
         editingCapDo = null;
@@ -48,14 +52,22 @@ $(document).ready(async function () {
         }
 
         $("#capDoModal").hide();
-        renderCapDo();
+        renderCapDo(currentPage);
     });
 });
 
-function renderCapDo() {
-    const tbody = $("#capDoTable tbody").empty();
+function renderCapDo(page = 1) {
+    const tbody = $("#capDoTable tbody");
+    tbody.empty();
 
-    for (let cd of cachedCapDo) {
+    const totalPages = Math.ceil(cachedCapDo.length / pageSize);
+    currentPage = Math.min(Math.max(page, 1), totalPages);
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, cachedCapDo.length);
+    const pageItems = cachedCapDo.slice(startIndex, endIndex);
+
+    for (let cd of pageItems) {
         const row = $(`
             <tr>
                 <td>${cd.MaCapDo}</td>
@@ -83,12 +95,45 @@ function renderCapDo() {
             if (confirm(`Xóa cấp độ ${cd.MaCapDo}?`)) {
                 await xoaCapDo(cd.MaCapDo);
                 cachedCapDo = cachedCapDo.filter(c => c.MaCapDo !== cd.MaCapDo);
-                renderCapDo();
+                renderCapDo(currentPage);
             }
         });
 
         tbody.append(row);
     }
+
+    renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+    const container = $("#pagination");
+    container.empty();
+    if (totalPages <= 1) return;
+
+    if (currentPage > 1) {
+        container.append(`<button class="pageBtn" data-page="1"><<</button>`);
+        container.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
+    }
+
+    const visibleRange = 2;
+    let start = Math.max(1, currentPage - visibleRange);
+    let end = Math.min(totalPages, currentPage + visibleRange);
+
+    if (start > 1) container.append(`<span>...</span>`);
+    for (let i = start; i <= end; i++) {
+        container.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
+    }
+    if (end < totalPages) container.append(`<span>...</span>`);
+
+    if (currentPage < totalPages) {
+        container.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
+        container.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
+    }
+
+    container.find(".pageBtn").click(function () {
+        const page = parseInt($(this).data("page"));
+        renderCapDo(page);
+    });
 }
 
 async function generateNextCapDoCode() {
