@@ -10,7 +10,8 @@ export async function themPhienChoi(phienChoi) {
         phienChoi.NguoiChoiHienTai,
         phienChoi.ChuDeHienTai,
         phienChoi.NguoiTao,
-        phienChoi.NgayTao
+        phienChoi.NgayTao,
+        phienChoi.DangLam ?? false
     );
     await addData("PhienChoi", newPhienChoi.MaPhienChoi, newPhienChoi.toJSON());
 }
@@ -25,7 +26,8 @@ export async function layPhienChoi(maPhienChoi) {
         data.NguoiChoiHienTai,
         data.ChuDeHienTai,
         data.NguoiTao,
-        data.NgayTao
+        data.NgayTao,
+        data.DangLam ?? false
     ) : null;
 }
 
@@ -43,7 +45,8 @@ export async function suaPhienChoi(maPhienChoi, phienChoiMoi) {
         phienChoiMoi.NguoiChoiHienTai,
         phienChoiMoi.ChuDeHienTai,
         phienChoiMoi.NguoiTao,
-        phienChoiMoi.NgayTao
+        phienChoiMoi.NgayTao,
+        phienChoiMoi.DangLam ?? false
     );
     await updateData("PhienChoi", maPhienChoi, updatedPhienChoi.toJSON());
 }

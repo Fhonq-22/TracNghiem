@@ -66,6 +66,7 @@ async function taoPhienChoi() {
         VongHienTai: 1,
         NguoiChoiHienTai: tenNguoi[0],
         ChuDeHienTai: "",
+        DangLam: false,
         NguoiTao: localStorage.getItem("currentUser") || "Admin",
         NgayTao: now.toLocaleDateString("vi-VN") + " " + now.toLocaleTimeString("vi-VN")
     });
@@ -82,16 +83,26 @@ async function loadDanhSachBoDe() {
         mapBoDe[bd.MaBoDe] = bd.TenBoDe;
         select.append(`<option value="${bd.MaBoDe}">${bd.TenBoDe}</option>`);
     });
-    $("#btnChonChuDe").prop("disabled", false);
 }
 
 async function vaoPhien(ma) {
     phienChoi = await layPhienChoi(ma);
     if (!phienChoi) return;
+
     maPhienChoi = ma;
     $("#chonPhienSection").hide();
     $("#dieuKhienSection").show();
+
     await loadDanhSachBoDe();
+
+    if (phienChoi.DangLam) {
+        $("#selectChuDe, #btnChonChuDe").prop("disabled", true);
+        $("#lamCauHoiSection").show();
+    } else {
+        $("#selectChuDe, #btnChonChuDe").prop("disabled", false);
+        $("#lamCauHoiSection").hide();
+    }
+
     render();
 }
 
@@ -100,6 +111,7 @@ function render() {
     $("#soVongHienThi").text(phienChoi.SoVong);
     $("#nguoiChoiHienTai").text(phienChoi.NguoiChoiHienTai);
     $("#chuDeHienTai").text(phienChoi.ChuDeHienTai ? mapBoDe[phienChoi.ChuDeHienTai] : "(chưa chọn)");
+
     const ul = $("#dsNguoiChoi").empty();
     Object.entries(phienChoi.DanhSachNguoiChoi).forEach(([ten, diem]) => {
         ul.append(`<li>${ten}: ${diem} điểm</li>`);
@@ -111,6 +123,7 @@ async function chonChuDe() {
     if (!chuDe) return;
 
     phienChoi.ChuDeHienTai = chuDe;
+    phienChoi.DangLam = true;
     await suaPhienChoi(maPhienChoi, phienChoi);
 
     $("#selectChuDe, #btnChonChuDe").prop("disabled", true);
@@ -166,9 +179,11 @@ async function ketThucLuot() {
     });
 
     phienChoi.DanhSachNguoiChoi[phienChoi.NguoiChoiHienTai] += dung;
+    phienChoi.DangLam = false;
 
     $("#lamCauHoiSection").hide();
     await suaPhienChoi(maPhienChoi, phienChoi);
+
     $("#btnNext").prop("disabled", false);
     render();
 }
@@ -198,6 +213,7 @@ async function nextLuot() {
     phienChoi.VongHienTai = nextVong;
     phienChoi.NguoiChoiHienTai = dsTen[nextIdx];
     phienChoi.ChuDeHienTai = "";
+    phienChoi.DangLam = false;
 
     await suaPhienChoi(maPhienChoi, phienChoi);
     render();
