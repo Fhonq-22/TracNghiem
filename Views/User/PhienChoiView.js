@@ -1,7 +1,9 @@
 import { themPhienChoi, layPhienChoi, suaPhienChoi } from "../../Controllers/PhienChoiController.js";
+import { layDanhSachBoDeDayDu } from "../../Controllers/BoDeController.js";
 
 let phienChoi = null;
 let maPhienChoi = null;
+let mapBoDe = {};
 
 $(document).ready(function () {
     const urlParams = new URLSearchParams(window.location.search);
@@ -71,6 +73,26 @@ async function taoPhienChoi() {
     window.location.href = `u-phienchoi.html?maPhienChoi=${maPhien}`;
 }
 
+async function loadDanhSachBoDe() {
+    if (Object.keys(mapBoDe).length > 0) return;
+
+    const select = $("#selectChuDe");
+    select.empty();
+    select.append(`<option value="">-- chọn chủ đề --</option>`);
+
+    const dsBoDe = await layDanhSachBoDeDayDu();
+    mapBoDe = {};
+
+    dsBoDe.forEach(bd => {
+        mapBoDe[bd.MaBoDe] = bd.TenBoDe;
+        select.append(
+            `<option value="${bd.MaBoDe}">${bd.TenBoDe}</option>`
+        );
+    });
+
+    $("#btnChonChuDe").prop("disabled", false);
+}
+
 async function vaoPhien(ma) {
     phienChoi = await layPhienChoi(ma);
     if (!phienChoi) return;
@@ -78,6 +100,8 @@ async function vaoPhien(ma) {
     maPhienChoi = ma;
     $("#chonPhienSection").hide();
     $("#dieuKhienSection").show();
+
+    await loadDanhSachBoDe();
     render();
 }
 
@@ -85,7 +109,7 @@ function render() {
     $("#vongHienTai").text(phienChoi.VongHienTai);
     $("#soVongHienThi").text(phienChoi.SoVong);
     $("#nguoiChoiHienTai").text(phienChoi.NguoiChoiHienTai);
-    $("#chuDeHienTai").text(phienChoi.ChuDeHienTai || "(chưa chọn)");
+    $("#chuDeHienTai").text(phienChoi.ChuDeHienTai ? mapBoDe[phienChoi.ChuDeHienTai] : "(chưa chọn)");
 
     const ul = $("#dsNguoiChoi");
     ul.empty();
@@ -100,10 +124,16 @@ async function chonChuDe() {
 
     phienChoi.ChuDeHienTai = chuDe;
     await suaPhienChoi(maPhienChoi, phienChoi);
+
+    $("#selectChuDe").prop("disabled", true);
+    $("#btnChonChuDe").prop("disabled", true);
     render();
 }
 
 async function nextLuot() {
+    $("#selectChuDe").prop("disabled", false);
+    $("#btnChonChuDe").prop("disabled", false);
+
     const dsTen = Object.keys(phienChoi.DanhSachNguoiChoi);
     let idx = dsTen.indexOf(phienChoi.NguoiChoiHienTai);
 

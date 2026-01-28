@@ -30,6 +30,11 @@ export async function layDanhSachBoDe() {
     return data ? Object.keys(data) : [];
 }
 
+export async function layDanhSachBoDeDayDu() {
+    const maList = await layDanhSachBoDe();
+    return await Promise.all(maList.map(ma => layBoDe(ma)));
+}
+
 export async function suaBoDe(maBoDe, boDeMoi) {
     const updatedBoDe = new BoDe(
         maBoDe,
