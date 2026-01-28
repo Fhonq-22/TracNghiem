@@ -66,7 +66,7 @@ async function taoPhienChoi() {
         VongHienTai: 1,
         NguoiChoiHienTai: tenNguoi[0],
         ChuDeHienTai: "",
-        DangLam: false,
+        DaKetThuc: false,
         NguoiTao: localStorage.getItem("currentUser") || "Admin",
         NgayTao: now.toLocaleDateString("vi-VN") + " " + now.toLocaleTimeString("vi-VN")
     });
@@ -95,11 +95,13 @@ async function vaoPhien(ma) {
 
     await loadDanhSachBoDe();
 
-    if (phienChoi.DangLam) {
-        $("#selectChuDe, #btnChonChuDe").prop("disabled", true);
-        $("#lamCauHoiSection").show();
+    if (phienChoi.DaKetThuc) {
+        $("#selectChuDe, #btnChonChuDe, #btnNext").prop("disabled", true);
+        $("#lamCauHoiSection").hide();
+        alert("Phiên chơi đã kết thúc");
     } else {
         $("#selectChuDe, #btnChonChuDe").prop("disabled", false);
+        $("#btnNext").prop("disabled", true);
         $("#lamCauHoiSection").hide();
     }
 
@@ -119,11 +121,12 @@ function render() {
 }
 
 async function chonChuDe() {
+    if (phienChoi.DaKetThuc) return;
+
     const chuDe = $("#selectChuDe").val();
     if (!chuDe) return;
 
     phienChoi.ChuDeHienTai = chuDe;
-    phienChoi.DangLam = true;
     await suaPhienChoi(maPhienChoi, phienChoi);
 
     $("#selectChuDe, #btnChonChuDe").prop("disabled", true);
@@ -158,6 +161,8 @@ function hienCauHoi() {
 }
 
 function traLoiCauHoi() {
+    if (phienChoi.DaKetThuc) return;
+
     const ch = dsCauHoi[cauHoiIndex];
     const ans = $("input[name=pa]:checked").val();
     if (ans === undefined) return;
@@ -179,7 +184,6 @@ async function ketThucLuot() {
     });
 
     phienChoi.DanhSachNguoiChoi[phienChoi.NguoiChoiHienTai] += dung;
-    phienChoi.DangLam = false;
 
     $("#lamCauHoiSection").hide();
     await suaPhienChoi(maPhienChoi, phienChoi);
@@ -189,6 +193,8 @@ async function ketThucLuot() {
 }
 
 async function nextLuot() {
+    if (phienChoi.DaKetThuc) return;
+
     const dsTen = Object.keys(phienChoi.DanhSachNguoiChoi);
     const idxHienTai = dsTen.indexOf(phienChoi.NguoiChoiHienTai);
 
@@ -201,9 +207,10 @@ async function nextLuot() {
     }
 
     if (nextVong > phienChoi.SoVong) {
+        phienChoi.DaKetThuc = true;
+        await suaPhienChoi(maPhienChoi, phienChoi);
+        $("#selectChuDe, #btnChonChuDe, #btnNext").prop("disabled", true);
         alert("Phiên chơi đã kết thúc");
-        $("#btnNext").prop("disabled", true);
-        $("#selectChuDe, #btnChonChuDe").prop("disabled", true);
         return;
     }
 
@@ -213,7 +220,6 @@ async function nextLuot() {
     phienChoi.VongHienTai = nextVong;
     phienChoi.NguoiChoiHienTai = dsTen[nextIdx];
     phienChoi.ChuDeHienTai = "";
-    phienChoi.DangLam = false;
 
     await suaPhienChoi(maPhienChoi, phienChoi);
     render();

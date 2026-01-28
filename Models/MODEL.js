@@ -87,7 +87,7 @@ export class KetQua {
 }
 
 export class PhienChoi {
-    constructor(MaPhienChoi, DanhSachNguoiChoi, SoVong, VongHienTai, NguoiChoiHienTai, ChuDeHienTai, NguoiTao, NgayTao, DangLam = false) {
+    constructor(MaPhienChoi, DanhSachNguoiChoi, SoVong, VongHienTai, NguoiChoiHienTai, ChuDeHienTai, NguoiTao, NgayTao, DaKetThuc  = false) {
         this.MaPhienChoi = MaPhienChoi;
         this.DanhSachNguoiChoi = DanhSachNguoiChoi || {};
         this.SoVong = SoVong || 1;
@@ -96,7 +96,7 @@ export class PhienChoi {
         this.ChuDeHienTai = ChuDeHienTai;
         this.NguoiTao = NguoiTao;
         this.NgayTao = NgayTao;
-        this.DangLam = DangLam;
+        this.DaKetThuc  = DaKetThuc ;
     }
 
     toJSON() {
@@ -108,7 +108,7 @@ export class PhienChoi {
             ChuDeHienTai: this.ChuDeHienTai,
             NguoiTao: this.NguoiTao,
             NgayTao: this.NgayTao,
-            DangLam: this.DangLam
+            DaKetThuc : this.DaKetThuc 
         };
     }
 }
