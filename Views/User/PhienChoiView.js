@@ -98,7 +98,16 @@ async function vaoPhien(ma) {
 
     await loadDanhSachBoDe();
 
+    if (phienChoi.DaKetThuc) {
+        $("#selectChuDe, #btnChonChuDe, #btnTraLoi, #btnNext, #btnNextCauHoi").prop("disabled", true);
+        $("#lamCauHoiSection").hide();
+        alert("Phiên chơi đã kết thúc");
+        render();
+        return;
+    }
+
     $("#btnNext").prop("disabled", true);
+    $("#selectChuDe, #btnChonChuDe").prop("disabled", false);
     $("#lamCauHoiSection").hide();
     render();
 }
@@ -116,6 +125,8 @@ function render() {
 }
 
 async function chonChuDe() {
+    if (phienChoi.DaKetThuc) return;
+
     const chuDe = $("#selectChuDe").val();
     if (!chuDe) return;
 
@@ -136,7 +147,7 @@ async function chonChuDe() {
 
 function hienCauHoi() {
     const ch = dsCauHoi[cauHoiIndex];
-    if (!ch) return;
+    if (!ch || phienChoi.DaKetThuc) return;
 
     daTraLoiChinh = false;
     dangTraLoiPhu = false;
@@ -163,6 +174,8 @@ function hienCauHoi() {
 }
 
 function traLoiCauHoi() {
+    if (phienChoi.DaKetThuc) return;
+
     const ch = dsCauHoi[cauHoiIndex];
     const ans = $("input[name=pa]:checked");
     if (ans.length === 0) return;
@@ -230,6 +243,8 @@ async function ketThucLuot() {
 }
 
 async function nextLuot() {
+    if (phienChoi.DaKetThuc) return;
+
     const dsTen = Object.keys(phienChoi.DanhSachNguoiChoi);
     const idxHienTai = dsTen.indexOf(phienChoi.NguoiChoiHienTai);
 
@@ -244,6 +259,7 @@ async function nextLuot() {
     if (nextVong > phienChoi.SoVong) {
         phienChoi.DaKetThuc = true;
         await suaPhienChoi(maPhienChoi, phienChoi);
+        $("#selectChuDe, #btnChonChuDe, #btnNext").prop("disabled", true);
         alert("Phiên chơi đã kết thúc");
         return;
     }
