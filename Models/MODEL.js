@@ -43,11 +43,12 @@ export class CauHoi {
 }
 
 export class BoDe {
-    constructor(MaBoDe, TenBoDe, DanhSachCauHoi, ThoiGian, NgayTao, NguoiTao) {
+    constructor(MaBoDe, TenBoDe, DanhSachCauHoi, CapDo, ThoiGian, NgayTao, NguoiTao) {
         this.MaBoDe = MaBoDe;
         this.TenBoDe = TenBoDe;
         this.DanhSachCauHoi = DanhSachCauHoi || [];
         this.SoCauHoi = DanhSachCauHoi ? DanhSachCauHoi.length : 0;
+        this.CapDo = CapDo || "DE";
         this.ThoiGian = ThoiGian || 30;
         this.NgayTao = NgayTao;
         this.NguoiTao = NguoiTao || "Admin";
@@ -58,6 +59,7 @@ export class BoDe {
             TenBoDe: this.TenBoDe,
             DanhSachCauHoi: this.DanhSachCauHoi,
             SoCauHoi: this.SoCauHoi,
+            CapDo: this.CapDo,
             ThoiGian: this.ThoiGian,
             NgayTao: this.NgayTao,
             NguoiTao: this.NguoiTao
@@ -109,6 +111,25 @@ export class PhienChoi {
             NguoiTao: this.NguoiTao,
             NgayTao: this.NgayTao,
             DaKetThuc : this.DaKetThuc 
+        };
+    }
+}
+
+export class CauHinhCapDo {
+    constructor(MaCapDo, TenCapDo, DiemMoiCau, HeSoTraLoiPhu, NgayCapNhat) {
+        this.MaCapDo = MaCapDo;
+        this.TenCapDo = TenCapDo;
+        this.DiemMoiCau = DiemMoiCau;
+        this.HeSoTraLoiPhu = HeSoTraLoiPhu ?? 0.5;
+        this.NgayCapNhat = NgayCapNhat;
+    }
+
+    toJSON() {
+        return {
+            TenCapDo: this.TenCapDo,
+            DiemMoiCau: this.DiemMoiCau,
+            HeSoTraLoiPhu: this.HeSoTraLoiPhu,
+            NgayCapNhat: this.NgayCapNhat
         };
     }
 }
