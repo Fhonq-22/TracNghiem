@@ -48,7 +48,7 @@ export class BoDe {
         this.TenBoDe = TenBoDe;
         this.DanhSachCauHoi = DanhSachCauHoi || [];
         this.SoCauHoi = DanhSachCauHoi ? DanhSachCauHoi.length : 0;
-        this.CapDo = CapDo || "DE";
+        this.CapDo = CapDo || "De";
         this.ThoiGian = ThoiGian || 30;
         this.NgayTao = NgayTao;
         this.NguoiTao = NguoiTao || "Admin";
