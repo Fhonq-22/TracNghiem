@@ -19,6 +19,7 @@ $(document).ready(async function() {
         editingBoDe = null;
         $("#modalTitle").text("Thêm bộ đề");
         $("#modalTenBoDe").val("");
+        $("#modalCapDo").val("De");
         $("#modalThoiGian").val(30);
         $("#modalCauHoiList").empty();
 
@@ -38,6 +39,7 @@ $(document).ready(async function() {
 
     $("#modalSave").click(async function() {
         const tenBoDe = $("#modalTenBoDe").val().trim();
+        const capDo = $("#modalCapDo").val();
         const thoiGian = parseInt($("#modalThoiGian").val());
         const danhSachCauHoi = $(".chkCauHoi:checked").map((i, el) => $(el).val()).get();
 
@@ -50,6 +52,7 @@ $(document).ready(async function() {
         const boDeData = {
             MaBoDe: maBoDe,
             TenBoDe: tenBoDe,
+            CapDo: capDo,
             DanhSachCauHoi: danhSachCauHoi,
             ThoiGian: thoiGian,
             NgayTao: new Date().toLocaleDateString(),
@@ -86,6 +89,7 @@ function renderBoDe(page = 1) {
             <tr>
                 <td>${bd.MaBoDe}</td>
                 <td>${bd.TenBoDe}</td>
+                <td>${bd.CapDo}</td>
                 <td>${bd.SoCauHoi}</td>
                 <td>${bd.ThoiGian}</td>
                 <td>${bd.NgayTao}</td>
@@ -101,6 +105,7 @@ function renderBoDe(page = 1) {
             editingBoDe = bd.MaBoDe;
             $("#modalTitle").text("Sửa bộ đề");
             $("#modalTenBoDe").val(bd.TenBoDe);
+            $("#modalCapDo").val(bd.CapDo);
             $("#modalThoiGian").val(bd.ThoiGian);
             $("#modalCauHoiList").empty();
 
@@ -140,23 +145,23 @@ function renderPagination(totalPages) {
         container.append(`<button class="pageBtn" data-page="${currentPage-1}">Prev</button>`);
     }
 
-    const visibleRange = 2;
-    let start = Math.max(1, currentPage-visibleRange);
-    let end = Math.min(totalPages, currentPage+visibleRange);
+    const range = 2;
+    let start = Math.max(1, currentPage-range);
+    let end = Math.min(totalPages, currentPage+range);
 
-    if (start>1) container.append(`<span>...</span>`);
-    for (let i=start;i<=end;i++){
+    if (start > 1) container.append(`<span>...</span>`);
+    for (let i = start; i <= end; i++) {
         container.append(`<button class="pageBtn ${i===currentPage?"active":""}" data-page="${i}">${i}</button>`);
     }
-    if (end<totalPages) container.append(`<span>...</span>`);
-    if (currentPage<totalPages){
+    if (end < totalPages) container.append(`<span>...</span>`);
+
+    if (currentPage < totalPages) {
         container.append(`<button class="pageBtn" data-page="${currentPage+1}">Next</button>`);
         container.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
     }
 
-    container.find(".pageBtn").click(function(){
-        const page = parseInt($(this).data("page"));
-        renderBoDe(page);
+    container.find(".pageBtn").click(function() {
+        renderBoDe(parseInt($(this).data("page")));
     });
 }
 
