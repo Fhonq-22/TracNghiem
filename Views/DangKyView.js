@@ -1,8 +1,11 @@
 import { layNguoiDung, themNguoiDung } from "../Controllers/UserController.js";
 
-$(document).ready(function() {
-    $("#registerForm").submit(async function(e) {
+$(document).ready(function () {
+    $("#registerForm").submit(async function (e) {
         e.preventDefault();
+
+        const btn = $("#registerForm button[type=submit]");
+        btn.prop("disabled", true);
 
         const username = $("#username").val().trim();
         const fullName = $("#fullName").val().trim();
@@ -12,17 +15,19 @@ $(document).ready(function() {
 
         if (!username || !password) {
             alert("Tên người dùng và mật khẩu không được để trống");
+            btn.prop("disabled", false);
             return;
         }
 
         if (password !== confirmPassword) {
             alert("Mật khẩu và xác nhận mật khẩu không khớp");
+            btn.prop("disabled", false);
             return;
         }
 
-        const existingUser = await layNguoiDung(username);
-        if (existingUser) {
+        if (await layNguoiDung(username)) {
             alert("Tên người dùng đã tồn tại");
+            btn.prop("disabled", false);
             return;
         }
 
@@ -31,11 +36,11 @@ $(document).ready(function() {
             HoTen: fullName,
             Email: email,
             MatKhau: password,
-            NgayDangKy: new Date().toLocaleDateString(),
+            NgayDangKy: new Date().toISOString(),
             VaiTro: "User"
         });
 
         alert("Đăng ký thành công");
-        window.location.href = "dang-nhap.html";
+        window.location.replace("dang-nhap.html");
     });
 });
