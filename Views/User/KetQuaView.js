@@ -1,6 +1,9 @@
 import { layKetQua } from "../../Controllers/KetQuaController.js";
+import { yeuCauDangNhap } from "../../Utils/AUTH.js";
 
 $(document).ready(async function() {
+    if (!yeuCauDangNhap()) return;
+
     const urlParams = new URLSearchParams(window.location.search);
     const maKetQua = urlParams.get("maKetQua");
     if (!maKetQua) {
