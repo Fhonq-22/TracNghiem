@@ -18,10 +18,8 @@ let dangTraLoiPhu = false;
 
 $(document).ready(function () {
     if (!yeuCauDangNhap()) return;
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    maPhienChoi = urlParams.get("maPhienChoi");
 
+    maPhienChoi = new URLSearchParams(window.location.search).get("maPhienChoi");
     if (maPhienChoi) vaoPhien(maPhienChoi);
 
     $("#btnTaoDanhSach").click(taoDanhSachNhapTen);
@@ -84,10 +82,9 @@ async function taoPhienChoi() {
 }
 
 async function loadDanhSachBoDe() {
-    if (Object.keys(mapBoDe).length > 0) return;
+    if (Object.keys(mapBoDe).length) return;
     const select = $("#selectChuDe").empty().append(`<option value="">-- chọn chủ đề --</option>`);
     const dsBoDe = await layDanhSachBoDeDayDu();
-    mapBoDe = {};
     dsBoDe.forEach(bd => {
         mapBoDe[bd.MaBoDe] = bd.TenBoDe;
         select.append(`<option value="${bd.MaBoDe}">${bd.TenBoDe}</option>`);
@@ -144,10 +141,9 @@ async function chonChuDe() {
     boDeDangChoi = await layBoDe(chuDe);
     capDoDangChoi = await layCapDo(boDeDangChoi.CapDo);
 
-    dsCauHoi = [];
-    for (let ma of boDeDangChoi.DanhSachCauHoi) {
-        dsCauHoi.push(await layCauHoi(ma));
-    }
+    dsCauHoi = await Promise.all(
+        boDeDangChoi.DanhSachCauHoi.map(ma => layCauHoi(ma))
+    );
 
     cauHoiIndex = 0;
     hienCauHoi();
@@ -186,7 +182,7 @@ function traLoiCauHoi() {
 
     const ch = dsCauHoi[cauHoiIndex];
     const ans = $("input[name=pa]:checked");
-    if (ans.length === 0) return;
+    if (!ans.length) return;
 
     const value = parseInt(ans.val());
     const diemMoiCau = capDoDangChoi.DiemMoiCau;
