@@ -1,19 +1,18 @@
 import { layDanhSachBoDe, layBoDe } from "../../Controllers/BoDeController.js";
-import { yeuCauDangNhap } from "../../Utils/AUTH.js";
+import { yeuCauDangNhap, removeAuth, getUserHienTai } from "../../Utils/AUTH.js";
 
 let currentPage = 1;
 const pageSize = 10;
 let cachedBoDe = [];
 
-$(document).ready(async function() {
+$(document).ready(async function () {
     if (!yeuCauDangNhap()) return;
 
-    const username = localStorage.getItem("currentUser") || "Khách";
-    $("#userDisplay").text(username);
+    $("#userDisplay").text(getUserHienTai()?.TenNguoiDung || "");
 
     $("#btnLogout").click(() => {
-        localStorage.removeItem("currentUser");
-        window.location.href = "dang-nhap.html";
+        removeAuth();
+        window.location.replace("dang-nhap.html");
     });
 
     const maList = await layDanhSachBoDe();
@@ -23,25 +22,23 @@ $(document).ready(async function() {
 });
 
 function renderBoDe(page = 1) {
-    const tbody = $("#boDeTable tbody");
-    tbody.empty();
+    const tbody = $("#boDeTable tbody").empty();
 
-    const totalPages = Math.ceil(cachedBoDe.length / pageSize);
-    currentPage = Math.min(Math.max(page,1), totalPages);
+    const totalPages = Math.ceil(cachedBoDe.length / pageSize) || 1;
+    currentPage = Math.min(Math.max(page, 1), totalPages);
 
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, cachedBoDe.length);
-    const pageItems = cachedBoDe.slice(startIndex, endIndex);
+    const start = (currentPage - 1) * pageSize;
+    const pageItems = cachedBoDe.slice(start, start + pageSize);
 
     for (let bd of pageItems) {
         const row = $(`
             <tr>
                 <td>${bd.MaBoDe}</td>
                 <td>${bd.TenBoDe}</td>
-                <td>${bd.SoCauHoi}</td>
+                <td>${bd.SoCauHoi ?? bd.DanhSachCauHoi?.length ?? 0}</td>
                 <td>${bd.ThoiGian}</td>
-                <td>${bd.NgayTao}</td>
-                <td>${bd.NguoiTao}</td>
+                <td>${bd.NgayTao || ""}</td>
+                <td>${bd.NguoiTao || ""}</td>
                 <td>
                     <button class="startBtn">Bắt đầu</button>
                 </td>
@@ -59,31 +56,30 @@ function renderBoDe(page = 1) {
 }
 
 function renderPagination(totalPages) {
-    const container = $("#pagination");
-    container.empty();
+    const container = $("#pagination").empty();
     if (totalPages <= 1) return;
 
     if (currentPage > 1) {
         container.append(`<button class="pageBtn" data-page="1"><<</button>`);
-        container.append(`<button class="pageBtn" data-page="${currentPage-1}">Prev</button>`);
+        container.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
     }
 
-    const visibleRange = 2;
-    let start = Math.max(1, currentPage-visibleRange);
-    let end = Math.min(totalPages, currentPage+visibleRange);
+    const range = 2;
+    const start = Math.max(1, currentPage - range);
+    const end = Math.min(totalPages, currentPage + range);
 
-    if (start>1) container.append(`<span>...</span>`);
-    for (let i=start;i<=end;i++){
-        container.append(`<button class="pageBtn ${i===currentPage?"active":""}" data-page="${i}">${i}</button>`);
+    if (start > 1) container.append(`<span>...</span>`);
+    for (let i = start; i <= end; i++) {
+        container.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
     }
-    if (end<totalPages) container.append(`<span>...</span>`);
-    if (currentPage<totalPages){
-        container.append(`<button class="pageBtn" data-page="${currentPage+1}">Next</button>`);
+    if (end < totalPages) container.append(`<span>...</span>`);
+
+    if (currentPage < totalPages) {
+        container.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
         container.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
     }
 
-    container.find(".pageBtn").click(function(){
-        const page = parseInt($(this).data("page"));
-        renderBoDe(page);
+    container.find(".pageBtn").click(function () {
+        renderBoDe(parseInt($(this).data("page")));
     });
 }
