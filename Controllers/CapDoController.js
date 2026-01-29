@@ -1,5 +1,6 @@
 import { addData, getData, updateData, deleteData } from "../Models/firebase-CRUD.js";
 import { CapDo } from "../Models/MODEL.js";
+import { kiemTraThamChieu } from "./REFERENCE.js";
 
 export async function themCapDo(capDo) {
     const newCapDo = new CapDo(
@@ -45,5 +46,16 @@ export async function suaCapDo(maCapDo, capDoMoi) {
 }
 
 export async function xoaCapDo(maCapDo) {
+    const refs = await kiemTraThamChieu("CapDo", maCapDo);
+
+    if (refs.length > 0) {
+        return {
+            success: false,
+            message: "Không thể xóa cấp độ vì đang được sử dụng",
+            refs
+        };
+    }
+
     await deleteData("CapDo", maCapDo);
+    return { success: true };
 }

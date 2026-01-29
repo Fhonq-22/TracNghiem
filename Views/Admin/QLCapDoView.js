@@ -92,11 +92,24 @@ function renderCapDo(page = 1) {
         });
 
         row.find(".deleteBtn").click(async () => {
-            if (confirm(`Xóa cấp độ ${cd.MaCapDo}?`)) {
-                await xoaCapDo(cd.MaCapDo);
-                cachedCapDo = cachedCapDo.filter(c => c.MaCapDo !== cd.MaCapDo);
-                renderCapDo(currentPage);
+            if (!confirm(`Xóa cấp độ ${cd.MaCapDo}?`)) return;
+
+            const res = await xoaCapDo(cd.MaCapDo);
+
+            if (!res.success) {
+                let msg = res.message || "Không thể xóa cấp độ";
+                if (res.refs?.length) {
+                    msg += "\n\nĐang được sử dụng tại:";
+                    res.refs.forEach(r => {
+                        msg += `\n- ${r.collection} (${r.ma})`;
+                    });
+                }
+                alert(msg);
+                return;
             }
+
+            cachedCapDo = cachedCapDo.filter(c => c.MaCapDo !== cd.MaCapDo);
+            renderCapDo(currentPage);
         });
 
         tbody.append(row);
