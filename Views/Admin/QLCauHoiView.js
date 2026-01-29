@@ -1,5 +1,5 @@
 import { layDanhSachCauHoi, layCauHoi, themCauHoi, suaCauHoi, xoaCauHoi } from "../../Controllers/CauHoiController.js";
-import { yeuCauAdmin } from "../../Utils/AUTH.js";
+import { yeuCauAdmin, getUserHienTai } from "../../Utils/AUTH.js";
 
 let editingQuestion = null;
 let currentPage = 1;
@@ -58,7 +58,7 @@ $(document).ready(async function() {
             PhuongAn: phuongAn,
             DapAnDung: parseInt($("#modalDapAnDung").val()),
             GiaiThich: $("#modalGiaiThich").val().trim(),
-            NguoiTao: "Admin",
+            NguoiTao: getUserHienTai()?.TenNguoiDung || "",
             NgayTao: new Date().toLocaleDateString()
         };
 
@@ -68,9 +68,20 @@ $(document).ready(async function() {
         }
 
         if (editingQuestion) {
-            await suaCauHoi(editingQuestion, cauHoiData);
+            const old = cachedQuestions.find(q => q.MaCauHoi === editingQuestion);
+
+            const newData = {
+                ...old,
+                NoiDung: cauHoiData.NoiDung,
+                PhuongAn: cauHoiData.PhuongAn,
+                DapAnDung: cauHoiData.DapAnDung,
+                GiaiThich: cauHoiData.GiaiThich
+            };
+
+            await suaCauHoi(editingQuestion, newData);
+
             const index = cachedQuestions.findIndex(q => q.MaCauHoi === editingQuestion);
-            cachedQuestions[index] = cauHoiData;
+            cachedQuestions[index] = newData;
         } else {
             await themCauHoi(cauHoiData);
             cachedQuestions.push(cauHoiData);
