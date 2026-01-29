@@ -1,7 +1,7 @@
 import { layDanhSachBoDe, layBoDe, themBoDe, suaBoDe, xoaBoDe } from "../../Controllers/BoDeController.js";
 import { layDanhSachCauHoi, layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layDanhSachCapDo, layCapDo } from "../../Controllers/CapDoController.js";
-import { yeuCauAdmin } from "../../Utils/AUTH.js";
+import { yeuCauAdmin, getUserHienTai } from "../../Utils/AUTH.js";
 
 let editingBoDe = null;
 let currentPage = 1;
@@ -65,15 +65,26 @@ $(document).ready(async function() {
             DanhSachCauHoi: danhSachCauHoi,
             ThoiGian: thoiGian,
             NgayTao: new Date().toLocaleDateString(),
-            NguoiTao: "Admin"
+            NguoiTao: getUserHienTai()?.TenNguoiDung || ""
         };
 
         const boDeDaChuanHoa = chuanHoaBoDe(boDeData);
 
         if (editingBoDe) {
-            await suaBoDe(editingBoDe, boDeData);
+            const old = cachedBoDe.find(bd => bd.MaBoDe === editingBoDe);
+
+            const newData = {
+                ...old,
+                TenBoDe: tenBoDe,
+                CapDo: capDo,
+                DanhSachCauHoi: danhSachCauHoi,
+                ThoiGian: thoiGian
+            };
+
+            await suaBoDe(editingBoDe, newData);
+
             const idx = cachedBoDe.findIndex(bd => bd.MaBoDe === editingBoDe);
-            if (idx >= 0) cachedBoDe[idx] = boDeDaChuanHoa;
+            cachedBoDe[idx] = chuanHoaBoDe(newData);
         } else {
             await themBoDe(boDeData);
             cachedBoDe.push(boDeDaChuanHoa);
