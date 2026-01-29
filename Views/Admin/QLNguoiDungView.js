@@ -1,10 +1,4 @@
-import {
-    layDanhSachNguoiDung,
-    layNguoiDung,
-    themNguoiDung,
-    suaNguoiDung,
-    xoaNguoiDung
-} from "../../Controllers/UserController.js";
+import { layDanhSachNguoiDung, layNguoiDung, themNguoiDung, suaNguoiDung, xoaNguoiDung } from "../../Controllers/UserController.js";
 import { yeuCauAdmin } from "../../Utils/AUTH.js";
 
 let editingUser = null;
@@ -71,6 +65,11 @@ async function saveUser() {
             VaiTro: $("#modalVaiTro").val(),
             NgayDangKy: new Date().toLocaleDateString()
         };
+
+        if (await layNguoiDung(username)) {
+            alert("Tên người dùng đã tồn tại");
+            return;
+        }
 
         await themNguoiDung(userData);
         cachedUsers.push(userData);
