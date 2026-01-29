@@ -2,7 +2,7 @@ import { themPhienChoi, layPhienChoi, suaPhienChoi } from "../../Controllers/Phi
 import { layDanhSachBoDeDayDu, layBoDe } from "../../Controllers/BoDeController.js";
 import { layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layCapDo } from "../../Controllers/CapDoController.js";
-import { yeuCauDangNhap } from "../../Utils/AUTH.js";
+import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.js";
 
 let phienChoi = null;
 let maPhienChoi = null;
@@ -76,7 +76,7 @@ async function taoPhienChoi() {
         NguoiChoiHienTai: tenNguoi[0],
         ChuDeHienTai: "",
         DaKetThuc: false,
-        NguoiTao: localStorage.getItem("currentUser") || "Admin",
+        NguoiTao: getUserHienTai()?.TenNguoiDung || "",
         NgayTao: now.toLocaleDateString("vi-VN") + " " + now.toLocaleTimeString("vi-VN")
     });
 
