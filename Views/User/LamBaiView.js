@@ -3,14 +3,14 @@ import { layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layCapDo } from "../../Controllers/CapDoController.js";
 import { themKetQua } from "../../Controllers/KetQuaController.js";
 
-let timerInterval = null;
-let timeLeft = 0;
-let userAnswers = {};
-let startTime = null;
+let boDemGio = null;
+let soGiayConLai = 0;
+let dapAnNguoiDung = {};
+let thoiGianBatDau = null;
 
 $(document).ready(async function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const maBoDe = urlParams.get("maBoDe");
+    const thamSo = new URLSearchParams(window.location.search);
+    const maBoDe = thamSo.get("maBoDe");
     if (!maBoDe) {
         alert("Không có bộ đề");
         return;
@@ -22,73 +22,73 @@ $(document).ready(async function () {
         return;
     }
 
-    startTime = new Date();
-    timeLeft = boDe.ThoiGian * 60;
-    startTimer();
+    thoiGianBatDau = new Date();
+    soGiayConLai = boDe.ThoiGian * 60;
+    batDauDemGio();
 
-    const questionContainer = $("#questionContainer");
-    questionContainer.empty();
+    const khungCauHoi = $("#khungCauHoi");
+    khungCauHoi.empty();
 
     for (let i = 0; i < boDe.DanhSachCauHoi.length; i++) {
         const maCauHoi = boDe.DanhSachCauHoi[i];
         const cauHoi = await layCauHoi(maCauHoi);
         if (!cauHoi) continue;
 
-        const questionDiv = $(`
-            <div class="question" data-ma="${maCauHoi}">
+        const khoiCauHoi = $(`
+            <div class="cau-hoi" data-ma="${maCauHoi}">
                 <p><b>Câu ${i + 1}:</b> ${cauHoi.NoiDung}</p>
                 ${cauHoi.PhuongAn.map((pa, idx) => `
                     <div>
-                        <input type="radio" name="q${i}" value="${idx}">
+                        <input type="radio" name="cau${i}" value="${idx}">
                         ${pa}
                     </div>
                 `).join("")}
             </div>
         `);
 
-        questionContainer.append(questionDiv);
+        khungCauHoi.append(khoiCauHoi);
     }
 
-    $("#btnSubmit").on("click", submitExam);
+    $("#btnNopBai").on("click", nopBai);
 });
 
-function startTimer() {
-    updateTimerDisplay();
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
+function batDauDemGio() {
+    capNhatHienThiThoiGian();
+    boDemGio = setInterval(() => {
+        soGiayConLai--;
+        if (soGiayConLai <= 0) {
+            clearInterval(boDemGio);
             alert("Hết thời gian! Bài sẽ được nộp tự động.");
-            submitExam();
+            nopBai();
         }
-        updateTimerDisplay();
+        capNhatHienThiThoiGian();
     }, 1000);
 }
 
-function updateTimerDisplay() {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    $("#timer").text(
-        `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
+function capNhatHienThiThoiGian() {
+    const phut = Math.floor(soGiayConLai / 60);
+    const giay = soGiayConLai % 60;
+    $("#thoiGianConLai").text(
+        `${phut.toString().padStart(2, "0")}:${giay.toString().padStart(2, "0")}`
     );
 }
 
-async function submitExam() {
-    $(".question").each(function () {
-        const ma = $(this).data("ma");
-        const ans = $(this).find("input[type=radio]:checked").val();
-        userAnswers[ma] = ans !== undefined ? parseInt(ans) : null;
+async function nopBai() {
+    $(".cau-hoi").each(function () {
+        const maCauHoi = $(this).data("ma");
+        const luaChon = $(this).find("input[type=radio]:checked").val();
+        dapAnNguoiDung[maCauHoi] = luaChon !== undefined ? parseInt(luaChon) : null;
     });
 
-    clearInterval(timerInterval);
-    $("#btnSubmit").prop("disabled", true);
+    clearInterval(boDemGio);
+    $("#btnNopBai").prop("disabled", true);
 
-    const endTime = new Date();
-    const formatDateTime = dt =>
-        dt.toLocaleDateString("vi-VN") + " " + dt.toLocaleTimeString("vi-VN");
+    const thoiGianNop = new Date();
+    const dinhDangThoiGian = tg =>
+        tg.toLocaleDateString("vi-VN") + " " + tg.toLocaleTimeString("vi-VN");
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const maBoDe = urlParams.get("maBoDe");
+    const thamSo = new URLSearchParams(window.location.search);
+    const maBoDe = thamSo.get("maBoDe");
     const boDe = await layBoDe(maBoDe);
     if (!boDe) return;
 
@@ -100,31 +100,31 @@ async function submitExam() {
 
     let tongDiem = 0;
 
-    for (let ma of boDe.DanhSachCauHoi) {
-        const cauHoi = await layCauHoi(ma);
+    for (let maCauHoi of boDe.DanhSachCauHoi) {
+        const cauHoi = await layCauHoi(maCauHoi);
         if (!cauHoi) continue;
 
-        const userAns = userAnswers[ma];
-        if (userAns === null || userAns === undefined) continue;
+        const dapAnChon = dapAnNguoiDung[maCauHoi];
+        if (dapAnChon === null || dapAnChon === undefined) continue;
 
-        if (userAns === cauHoi.DapAnDung) {
+        if (dapAnChon === cauHoi.DapAnDung) {
             tongDiem += capDo.DiemMoiCau;
         }
     }
 
     const diem = Math.round(tongDiem * 100) / 100;
-
     const maKetQua = "KQ" + Date.now();
-    const ketQuaData = {
+
+    const duLieuKetQua = {
         MaKetQua: maKetQua,
         MaDe: maBoDe,
         TenNguoiDung: localStorage.getItem("currentUser") || "Khách",
-        ThoiGianBatDau: formatDateTime(startTime),
-        ThoiGianNop: formatDateTime(endTime),
+        ThoiGianBatDau: dinhDangThoiGian(thoiGianBatDau),
+        ThoiGianNop: dinhDangThoiGian(thoiGianNop),
         Diem: diem
     };
 
-    await themKetQua(ketQuaData);
+    await themKetQua(duLieuKetQua);
     alert(`Bài đã nộp! Điểm của bạn: ${diem}`);
     window.location.href = `u-ketqua.html?maKetQua=${maKetQua}`;
 }
