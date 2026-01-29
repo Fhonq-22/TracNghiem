@@ -2,8 +2,13 @@ import { chuyenMotMa, chuyenHangLoat } from "../../Controllers/ChuyenMaControlle
 import { BANG_THAM_CHIEU, kiemTraThamChieu, doiMaCoRangBuoc } from "../../Controllers/REFERENCE.js";
 import { yeuCauAdmin } from "../../Utils/AUTH.js";
 
+const $logBox = $("#logBox");
+const $btnChuyen1 = $("#btnChuyen1");
+const $btnChuyenNhieu = $("#btnChuyenNhieu");
+
 function log(msg) {
-    $("#logBox").append(msg + "\n");
+    $logBox.append(msg + "\n");
+    $logBox.scrollTop($logBox[0].scrollHeight);
 }
 
 function coRangBuoc(collection) {
@@ -12,11 +17,7 @@ function coRangBuoc(collection) {
 
 function hienThiRangBuoc(ds, maCu, maMoi) {
     let msg = `Mã ${maCu} đang được sử dụng tại:\n\n`;
-
-    ds.forEach(item => {
-        msg += `- ${item.collection} (${item.ma}) → ${item.field}\n`;
-    });
-
+    ds.forEach(i => msg += `- ${i.collection} (${i.ma}) → ${i.field}\n`);
     msg += `\nBạn có chắc chắn muốn chuyển sang ${maMoi} không?`;
     return confirm(msg);
 }
@@ -24,38 +25,37 @@ function hienThiRangBuoc(ds, maCu, maMoi) {
 $(document).ready(() => {
     if (!yeuCauAdmin()) return;
 
-    $("#btnChuyen1").click(async () => {
+    $btnChuyen1.click(async () => {
         const col = $("#collectionSelect").val();
         const oldKey = $("#oldKey").val().trim();
         const newKey = $("#newKey").val().trim();
 
-        if (!oldKey || !newKey) return alert("nhập đúng mã!");
+        if (!oldKey || !newKey) return alert("Nhập đúng mã!");
 
+        $btnChuyen1.prop("disabled", true);
         log(`🔄 chuyển ${oldKey} → ${newKey}`);
 
-        let res;
+        try {
+            let res;
 
-        if (coRangBuoc(col)) {
-            const dsLienQuan = await kiemTraThamChieu(col, oldKey);
-
-            if (dsLienQuan.length > 0) {
-                const ok = hienThiRangBuoc(dsLienQuan, oldKey, newKey);
-                if (!ok) {
+            if (coRangBuoc(col)) {
+                const ds = await kiemTraThamChieu(col, oldKey);
+                if (ds.length && !hienThiRangBuoc(ds, oldKey, newKey)) {
                     log("⛔ đã hủy chuyển mã");
                     return;
                 }
+                res = await doiMaCoRangBuoc(col, oldKey, newKey);
+            } else {
+                res = await chuyenMotMa(col, oldKey, newKey);
             }
 
-            res = await doiMaCoRangBuoc(col, oldKey, newKey);
-        } else {
-            res = await chuyenMotMa(col, oldKey, newKey);
+            res.success ? log("✔ xong!") : log("❌ " + res.message);
+        } finally {
+            $btnChuyen1.prop("disabled", false);
         }
-
-        if (res.success) log("✔ xong!");
-        else log("❌ " + res.message);
     });
 
-    $("#btnChuyenNhieu").click(async () => {
+    $btnChuyenNhieu.click(async () => {
         const col = $("#collectionSelect").val();
         const oldPat = $("#patternOld").val().trim();
         const newPat = $("#patternNew").val().trim();
@@ -67,16 +67,20 @@ $(document).ready(() => {
             return alert("Collection này có ràng buộc, không cho phép chuyển hàng loạt");
 
         if (!oldPat.includes("#") || !newPat.includes("#"))
-            return alert("pattern phải có #");
+            return alert("Pattern phải có #");
 
-        log(`🔧 chuyển toàn bộ theo pattern...`);
+        $btnChuyenNhieu.prop("disabled", true);
+        log("🔧 chuyển toàn bộ theo pattern...");
 
-        const res = await chuyenHangLoat(col, oldPat, newPat);
+        try {
+            const res = await chuyenHangLoat(col, oldPat, newPat);
+            if (!res.success) return log("❌ " + res.message);
 
-        if (!res.success) return log("❌ " + res.message);
-
-        res.changed.forEach(c => log(`→ ${c.from} → ${c.to}`));
-        log("🎉 hoàn tất!");
+            const logs = res.changed.map(c => `→ ${c.from} → ${c.to}`).join("\n");
+            log(logs);
+            log("🎉 hoàn tất!");
+        } finally {
+            $btnChuyenNhieu.prop("disabled", false);
+        }
     });
-
 });
