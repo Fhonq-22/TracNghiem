@@ -6,13 +6,11 @@ let currentPage = 1;
 const pageSize = 10;
 let cachedQuestions = [];
 
-$(document).ready(async function() {
+$(document).ready(async function () {
     if (!yeuCauAdmin()) return;
 
-    const maList = await layDanhSachCauHoi();
-    cachedQuestions = await Promise.all(maList.map(ma => layCauHoi(ma)));
-
-    await renderQuestions(currentPage);
+    cachedQuestions = await Promise.all((await layDanhSachCauHoi()).map(ma => layCauHoi(ma)));
+    renderQuestions(currentPage);
 
     $("#btnAddQuestion").click(() => {
         editingQuestion = null;
@@ -24,12 +22,9 @@ $(document).ready(async function() {
         $("#autoCode").prop("checked", true).prop("disabled", false);
         $("#modalMaCauHoi").val("").prop("disabled", true);
 
-        $("#autoCode").off("change").on("change", function() {
-            if ($(this).is(":checked")) {
-                $("#modalMaCauHoi").val("").prop("disabled", true);
-            } else {
-                $("#modalMaCauHoi").prop("disabled", false);
-            }
+        $("#autoCode").off("change").on("change", function () {
+            $("#modalMaCauHoi").prop("disabled", $(this).is(":checked"));
+            if ($(this).is(":checked")) $("#modalMaCauHoi").val("");
         });
 
         $("#questionModal").show();
@@ -37,20 +32,17 @@ $(document).ready(async function() {
 
     $("#modalCancel").click(() => $("#questionModal").hide());
 
-    $("#modalSave").click(async function() {
+    $("#modalSave").click(async () => {
         let maCauHoi = $("#modalMaCauHoi").val().trim();
 
         if ($("#autoCode").is(":checked") && !editingQuestion) {
-            let numbers = cachedQuestions.map(q => parseInt(q.MaCauHoi.slice(1))).sort((a,b)=>a-b);
-            let nextNum = 1;
-            for (let n of numbers) {
-                if (n === nextNum) nextNum++;
-                else if (n > nextNum) break;
-            }
-            maCauHoi = "Q" + String(nextNum).padStart(5, "0");
+            let n = 1;
+            const used = cachedQuestions.map(q => parseInt(q.MaCauHoi.slice(1))).sort((a, b) => a - b);
+            for (let x of used) if (x === n) n++; else if (x > n) break;
+            maCauHoi = "Q" + String(n).padStart(5, "0");
         }
 
-        const phuongAn = $(".modalPhuongAn").map((i, el) => $(el).val().trim()).get();
+        const phuongAn = $(".modalPhuongAn").map((_, el) => el.value.trim()).get();
 
         const cauHoiData = {
             MaCauHoi: maCauHoi,
@@ -69,7 +61,6 @@ $(document).ready(async function() {
 
         if (editingQuestion) {
             const old = cachedQuestions.find(q => q.MaCauHoi === editingQuestion);
-
             const newData = {
                 ...old,
                 NoiDung: cauHoiData.NoiDung,
@@ -79,43 +70,37 @@ $(document).ready(async function() {
             };
 
             await suaCauHoi(editingQuestion, newData);
-
-            const index = cachedQuestions.findIndex(q => q.MaCauHoi === editingQuestion);
-            cachedQuestions[index] = newData;
+            cachedQuestions[cachedQuestions.findIndex(q => q.MaCauHoi === editingQuestion)] = newData;
+            alert("Cập nhật câu hỏi thành công");
         } else {
             await themCauHoi(cauHoiData);
             cachedQuestions.push(cauHoiData);
+            alert("Thêm câu hỏi thành công");
         }
 
         $("#questionModal").hide();
-        await renderQuestions(currentPage);
+        renderQuestions(currentPage);
     });
 });
 
-async function renderQuestions(page = 1) {
-    const tbody = $("#questionTable tbody");
-    tbody.empty();
-
+function renderQuestions(page = 1) {
+    const tbody = $("#questionTable tbody").empty();
     const totalPages = Math.ceil(cachedQuestions.length / pageSize);
-    currentPage = Math.min(Math.max(page,1), totalPages);
+    currentPage = Math.min(Math.max(page, 1), totalPages);
 
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, cachedQuestions.length);
-    const pageItems = cachedQuestions.slice(startIndex, endIndex);
-
-    for (let cauHoi of pageItems) {
+    cachedQuestions.slice((currentPage - 1) * pageSize, currentPage * pageSize).forEach(cauHoi => {
         const row = $(`
             <tr>
                 <td>${cauHoi.MaCauHoi}</td>
                 <td>${cauHoi.NoiDung}</td>
-                <td>${cauHoi.PhuongAn[0]||""}</td>
-                <td>${cauHoi.PhuongAn[1]||""}</td>
-                <td>${cauHoi.PhuongAn[2]||""}</td>
-                <td>${cauHoi.PhuongAn[3]||""}</td>
+                <td>${cauHoi.PhuongAn[0] || ""}</td>
+                <td>${cauHoi.PhuongAn[1] || ""}</td>
+                <td>${cauHoi.PhuongAn[2] || ""}</td>
+                <td>${cauHoi.PhuongAn[3] || ""}</td>
                 <td>${cauHoi.DapAnDung}</td>
-                <td>${cauHoi.GiaiThich||""}</td>
-                <td>${cauHoi.NguoiTao||""}</td>
-                <td>${cauHoi.NgayTao||""}</td>
+                <td>${cauHoi.GiaiThich || ""}</td>
+                <td>${cauHoi.NguoiTao || ""}</td>
+                <td>${cauHoi.NgayTao || ""}</td>
                 <td>
                     <button class="editBtn">Sửa</button>
                     <button class="deleteBtn">Xóa</button>
@@ -128,9 +113,9 @@ async function renderQuestions(page = 1) {
             $("#modalTitle").text("Sửa câu hỏi");
             $("#modalMaCauHoi").val(cauHoi.MaCauHoi).prop("disabled", true);
             $("#modalNoiDung").val(cauHoi.NoiDung);
-            $(".modalPhuongAn").each((i, el) => $(el).val(cauHoi.PhuongAn[i]||""));
+            $(".modalPhuongAn").each((i, el) => $(el).val(cauHoi.PhuongAn[i] || ""));
             $("#modalDapAnDung").val(cauHoi.DapAnDung);
-            $("#modalGiaiThich").val(cauHoi.GiaiThich||"");
+            $("#modalGiaiThich").val(cauHoi.GiaiThich || "");
             $("#autoCode").prop("checked", true).prop("disabled", true);
             $("#questionModal").show();
         });
@@ -139,55 +124,43 @@ async function renderQuestions(page = 1) {
             if (!confirm(`Xóa câu hỏi ${cauHoi.MaCauHoi}?`)) return;
 
             const res = await xoaCauHoi(cauHoi.MaCauHoi);
-
             if (!res.success) {
                 let msg = res.message || "Không thể xóa câu hỏi";
                 if (res.refs?.length) {
                     msg += "\n\nĐang được sử dụng tại:";
-                    res.refs.forEach(r => {
-                        msg += `\n- ${r.collection} (${r.ma})`;
-                    });
+                    res.refs.forEach(r => msg += `\n- ${r.collection} (${r.ma})`);
                 }
                 alert(msg);
                 return;
             }
 
             cachedQuestions = cachedQuestions.filter(q => q.MaCauHoi !== cauHoi.MaCauHoi);
-            await renderQuestions(currentPage);
+            renderQuestions(currentPage);
         });
 
         tbody.append(row);
-    }
+    });
 
     renderPagination(totalPages);
 }
 
 function renderPagination(totalPages) {
-    const container = $("#pagination");
-    container.empty();
+    const c = $("#pagination").empty();
     if (totalPages <= 1) return;
 
     if (currentPage > 1) {
-        container.append(`<button class="pageBtn" data-page="1"><<</button>`);
-        container.append(`<button class="pageBtn" data-page="${currentPage-1}">Prev</button>`);
+        c.append(`<button class="pageBtn" data-page="1"><<</button>`);
+        c.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
     }
 
-    const visibleRange = 2;
-    let start = Math.max(1,currentPage-visibleRange);
-    let end = Math.min(totalPages,currentPage+visibleRange);
-
-    if (start>1) container.append(`<span>...</span>`);
-    for (let i=start;i<=end;i++){
-        container.append(`<button class="pageBtn ${i===currentPage?"active":""}" data-page="${i}">${i}</button>`);
-    }
-    if (end<totalPages) container.append(`<span>...</span>`);
-    if (currentPage<totalPages){
-        container.append(`<button class="pageBtn" data-page="${currentPage+1}">Next</button>`);
-        container.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+        c.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
     }
 
-    container.find(".pageBtn").click(function(){
-        const page = parseInt($(this).data("page"));
-        renderQuestions(page);
-    });
+    if (currentPage < totalPages) {
+        c.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
+        c.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
+    }
+
+    c.find(".pageBtn").click(e => renderQuestions(+e.target.dataset.page));
 }
