@@ -122,11 +122,24 @@ async function renderQuestions(page = 1) {
         });
 
         row.find(".deleteBtn").click(async () => {
-            if (confirm(`Xóa câu hỏi ${cauHoi.MaCauHoi}?`)) {
-                await xoaCauHoi(cauHoi.MaCauHoi);
-                cachedQuestions = cachedQuestions.filter(q => q.MaCauHoi !== cauHoi.MaCauHoi);
-                await renderQuestions(currentPage);
+            if (!confirm(`Xóa câu hỏi ${cauHoi.MaCauHoi}?`)) return;
+
+            const res = await xoaCauHoi(cauHoi.MaCauHoi);
+
+            if (!res.success) {
+                let msg = res.message || "Không thể xóa câu hỏi";
+                if (res.refs?.length) {
+                    msg += "\n\nĐang được sử dụng tại:";
+                    res.refs.forEach(r => {
+                        msg += `\n- ${r.collection} (${r.ma})`;
+                    });
+                }
+                alert(msg);
+                return;
             }
+
+            cachedQuestions = cachedQuestions.filter(q => q.MaCauHoi !== cauHoi.MaCauHoi);
+            await renderQuestions(currentPage);
         });
 
         tbody.append(row);

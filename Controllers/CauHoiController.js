@@ -1,5 +1,6 @@
 import { addData, getData, updateData, deleteData } from "../Models/firebase-CRUD.js";
 import { CauHoi } from "../Models/MODEL.js";
+import { kiemTraThamChieu } from "./REFERENCE.js";
 
 export async function themCauHoi(cauHoi) {
     await addData("CauHoi", cauHoi.MaCauHoi, new CauHoi(
@@ -45,5 +46,16 @@ export async function suaCauHoi(maCauHoi, cauHoiMoi) {
 }
 
 export async function xoaCauHoi(maCauHoi) {
+    const refs = await kiemTraThamChieu("CauHoi", maCauHoi);
+
+    if (refs.length > 0) {
+        return {
+            success: false,
+            message: "Không thể xóa câu hỏi vì đang được sử dụng",
+            refs
+        };
+    }
+
     await deleteData("CauHoi", maCauHoi);
+    return { success: true };
 }
