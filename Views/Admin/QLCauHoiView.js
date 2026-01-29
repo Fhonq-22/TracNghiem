@@ -1,4 +1,5 @@
 import { layDanhSachCauHoi, layCauHoi, themCauHoi, suaCauHoi, xoaCauHoi } from "../../Controllers/CauHoiController.js";
+import { yeuCauAdmin } from "../../Utils/AUTH.js";
 
 let editingQuestion = null;
 let currentPage = 1;
@@ -6,6 +7,8 @@ const pageSize = 10;
 let cachedQuestions = [];
 
 $(document).ready(async function() {
+    if (!yeuCauAdmin()) return;
+
     const maList = await layDanhSachCauHoi();
     cachedQuestions = await Promise.all(maList.map(ma => layCauHoi(ma)));
 
