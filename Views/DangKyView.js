@@ -7,7 +7,7 @@ $(document).ready(function () {
         const btn = $("#registerForm button[type=submit]");
         btn.prop("disabled", true);
 
-        const username = $("#username").val().trim();
+        const username = String($("#username").val().trim());
         const fullName = $("#fullName").val().trim();
         const email = $("#email").val().trim();
         const password = $("#password").val();
