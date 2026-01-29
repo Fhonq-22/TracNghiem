@@ -32,13 +32,14 @@ $(document).ready(async function () {
     const khungCauHoi = $("#khungCauHoi");
     khungCauHoi.empty();
 
-    for (let i = 0; i < boDe.DanhSachCauHoi.length; i++) {
-        const maCauHoi = boDe.DanhSachCauHoi[i];
-        const cauHoi = await layCauHoi(maCauHoi);
-        if (!cauHoi) continue;
+    const cauHoiPromises = boDe.DanhSachCauHoi.map(maCauHoi => layCauHoi(maCauHoi));
+    const danhSachCauHoi = await Promise.all(cauHoiPromises);
+
+    danhSachCauHoi.forEach((cauHoi, i) => {
+        if (!cauHoi) return;
 
         const khoiCauHoi = $(`
-            <div class="cau-hoi" data-ma="${maCauHoi}">
+            <div class="cau-hoi" data-ma="${cauHoi.MaCauHoi}">
                 <p><b>Câu ${i + 1}:</b> ${cauHoi.NoiDung}</p>
                 ${cauHoi.PhuongAn.map((pa, idx) => `
                     <div>
@@ -50,7 +51,7 @@ $(document).ready(async function () {
         `);
 
         khungCauHoi.append(khoiCauHoi);
-    }
+    });
 
     $("#btnNopBai").on("click", nopBai);
 });
@@ -87,8 +88,7 @@ async function nopBai() {
     $("#btnNopBai").prop("disabled", true);
 
     const thoiGianNop = new Date();
-    const dinhDangThoiGian = tg =>
-        tg.toLocaleDateString("vi-VN") + " " + tg.toLocaleTimeString("vi-VN");
+    const dinhDangThoiGian = tg => tg.toLocaleDateString("vi-VN") + " " + tg.toLocaleTimeString("vi-VN");
 
     const thamSo = new URLSearchParams(window.location.search);
     const maBoDe = thamSo.get("maBoDe");
@@ -101,27 +101,26 @@ async function nopBai() {
         return;
     }
 
-    let tongDiem = 0;
-
-    for (let maCauHoi of boDe.DanhSachCauHoi) {
+    const cauHoiPromises = boDe.DanhSachCauHoi.map(async maCauHoi => {
         const cauHoi = await layCauHoi(maCauHoi);
-        if (!cauHoi) continue;
+        if (!cauHoi) return 0;
 
         const dapAnChon = dapAnNguoiDung[maCauHoi];
-        if (dapAnChon === null || dapAnChon === undefined) continue;
+        if (dapAnChon === null || dapAnChon === undefined) return 0;
 
-        if (dapAnChon === cauHoi.DapAnDung) {
-            tongDiem += capDo.DiemMoiCau;
-        }
-    }
+        return dapAnChon === cauHoi.DapAnDung ? capDo.DiemMoiCau : 0;
+    });
 
+    const diemChon = await Promise.all(cauHoiPromises);
+    const tongDiem = diemChon.reduce((sum, diem) => sum + diem, 0);
     const diem = Math.round(tongDiem * 100) / 100;
+
     const maKetQua = "KQ" + Date.now();
 
     const duLieuKetQua = {
         MaKetQua: maKetQua,
         MaDe: maBoDe,
-        TenNguoiDung: getUserHienTai()?.TenNguoiDung || "",
+        TenNguoiDung: getUserHienTai()?.TenNguoiDung ?? "",
         ThoiGianBatDau: dinhDangThoiGian(thoiGianBatDau),
         ThoiGianNop: dinhDangThoiGian(thoiGianNop),
         Diem: diem
