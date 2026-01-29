@@ -2,7 +2,7 @@ import { layBoDe } from "../../Controllers/BoDeController.js";
 import { layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layCapDo } from "../../Controllers/CapDoController.js";
 import { themKetQua } from "../../Controllers/KetQuaController.js";
-import { yeuCauDangNhap } from "../../Utils/AUTH.js";
+import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.js";
 
 let boDemGio = null;
 let soGiayConLai = 0;
@@ -121,7 +121,7 @@ async function nopBai() {
     const duLieuKetQua = {
         MaKetQua: maKetQua,
         MaDe: maBoDe,
-        TenNguoiDung: localStorage.getItem("currentUser") || "Khách",
+        TenNguoiDung: getUserHienTai()?.TenNguoiDung || "",
         ThoiGianBatDau: dinhDangThoiGian(thoiGianBatDau),
         ThoiGianNop: dinhDangThoiGian(thoiGianNop),
         Diem: diem
