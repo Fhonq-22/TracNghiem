@@ -1,6 +1,7 @@
 import { layDanhSachBoDe, layBoDe, themBoDe, suaBoDe, xoaBoDe } from "../../Controllers/BoDeController.js";
 import { layDanhSachCauHoi, layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layDanhSachCapDo, layCapDo } from "../../Controllers/CapDoController.js";
+import { yeuCauAdmin } from "../../Utils/AUTH.js";
 
 let editingBoDe = null;
 let currentPage = 1;
@@ -10,6 +11,8 @@ let cachedBoDe = [];
 let cachedCapDo = [];
 
 $(document).ready(async function() {
+    if (!yeuCauAdmin()) return;
+    
     cachedCauHoiList = await Promise.all((await layDanhSachCauHoi()).map(ma => layCauHoi(ma)));
 
     const maCapDoList = await layDanhSachCapDo();
