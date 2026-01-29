@@ -1,4 +1,5 @@
 import { layNguoiDung } from "../Controllers/UserController.js";
+import { setAuth } from "../Utils/AUTH.js";
 
 $(document).ready(function() {
     $("#loginForm").submit(async function(e) {
@@ -19,14 +20,7 @@ $(document).ready(function() {
         } else if (user.MatKhau !== password) {
             alert("Mật khẩu không chính xác!");
         } else {
-            localStorage.setItem("P-auth", JSON.stringify({
-                project: "quizie",
-                user: {
-                    TenNguoiDung: user.TenNguoiDung,
-                    VaiTro: user.VaiTro
-                },
-                loginAt: new Date().toISOString()
-            }));
+            setAuth(user);
             
             if (user.VaiTro === "Admin") {
                 window.location.href = "admin.html";
