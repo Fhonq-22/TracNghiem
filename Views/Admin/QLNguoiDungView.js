@@ -91,11 +91,24 @@ function renderUsers(page = 1) {
         });
 
         row.find(".deleteBtn").click(async () => {
-            if (confirm(`Xóa người dùng ${user.TenNguoiDung}?`)) {
-                await xoaNguoiDung(user.TenNguoiDung);
-                cachedUsers = cachedUsers.filter(u => u.TenNguoiDung !== user.TenNguoiDung);
-                renderUsers(currentPage);
+            if (!confirm(`Xóa người dùng ${user.TenNguoiDung}?`)) return;
+
+            const res = await xoaNguoiDung(user.TenNguoiDung);
+
+            if (!res.success) {
+                let msg = res.message || "Không thể xóa người dùng";
+                if (res.refs?.length) {
+                    msg += "\n\nĐang được sử dụng tại:";
+                    res.refs.forEach(r => {
+                        msg += `\n- ${r.collection} (${r.ma})`;
+                    });
+                }
+                alert(msg);
+                return;
             }
+
+            cachedUsers = cachedUsers.filter(u => u.TenNguoiDung !== user.TenNguoiDung);
+            renderUsers(currentPage);
         });
 
         tbody.append(row);

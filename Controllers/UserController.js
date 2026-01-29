@@ -1,5 +1,6 @@
 import { addData, getData, updateData, deleteData } from "../Models/firebase-CRUD.js";
 import { User } from "../Models/MODEL.js";
+import { kiemTraThamChieu } from "./REFERENCE.js";
 
 export async function themNguoiDung(nguoiDung) {
     await addData("User", nguoiDung.TenNguoiDung, new User(
@@ -42,5 +43,16 @@ export async function suaNguoiDung(username, newData) {
 }
 
 export async function xoaNguoiDung(username) {
+    const refs = await kiemTraThamChieu("User", username);
+
+    if (refs.length > 0) {
+        return {
+            success: false,
+            message: "Không thể xóa người dùng vì đang được tham chiếu",
+            refs
+        };
+    }
+
     await deleteData("User", username);
+    return { success: true };
 }
