@@ -46,10 +46,22 @@ $(document).ready(async function () {
         };
 
         if (editingCapDo) {
-            await suaCapDo(editingCapDo, data);
+            const old = cachedCapDo.find(c => c.MaCapDo === editingCapDo);
+
+            const newData = {
+                ...old,
+                TenCapDo: tenCapDo,
+                DiemMoiCau: diemMoiCau,
+                HeSoTraLoiPhu: heSoTraLoiPhu,
+                NgayCapNhat: new Date().toLocaleDateString("vi-VN")
+            };
+
+            await suaCapDo(editingCapDo, newData);
+
             const idx = cachedCapDo.findIndex(c => c.MaCapDo === editingCapDo);
-            if (idx >= 0) cachedCapDo[idx] = data;
-        } else {
+            cachedCapDo[idx] = newData;
+        }
+        else {
             await themCapDo(data);
             cachedCapDo.push(data);
         }
