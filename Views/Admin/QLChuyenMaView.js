@@ -25,6 +25,9 @@ $(document).ready(() => {
         const oldPat = $("#patternOld").val().trim();
         const newPat = $("#patternNew").val().trim();
 
+        if (col === "NguoiDung")
+            return alert("Người dùng chỉ cho phép chuyển từng mã");
+
         if (!oldPat.includes("#") || !newPat.includes("#"))
             return alert("pattern phải có #");
 
