@@ -20,7 +20,7 @@ $(document).ready(function () {
 
     $("#btnKetQua").click(() => {
         disableAll();
-        window.location.href = "u-lichsu.html";
+        window.location.href = "u-ketqua.html";
     });
 
     $("#btnPhienChoi").click(() => {
