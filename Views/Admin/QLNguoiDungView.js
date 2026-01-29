@@ -1,4 +1,5 @@
 import { layDanhSachNguoiDung, layNguoiDung, themNguoiDung, suaNguoiDung, xoaNguoiDung } from "../../Controllers/UserController.js";
+import { isAdmin } from "../../Utils/AUTH.js";
 
 let editingUser = null;
 let currentPage = 1;
@@ -6,6 +7,12 @@ const pageSize = 10;
 let cachedUsers = [];
 
 $(document).ready(async function() {
+    if (!isAdmin()) {
+        alert("Bạn không có quyền truy cập trang này");
+        window.location.href = "../index.html";
+        return;
+    }
+
     const usernames = await layDanhSachNguoiDung();
     cachedUsers = await Promise.all(usernames.map(u => layNguoiDung(u)));
 
