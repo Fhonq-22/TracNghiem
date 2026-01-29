@@ -2,6 +2,7 @@ import { themPhienChoi, layPhienChoi, suaPhienChoi } from "../../Controllers/Phi
 import { layDanhSachBoDeDayDu, layBoDe } from "../../Controllers/BoDeController.js";
 import { layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layCapDo } from "../../Controllers/CapDoController.js";
+import { yeuCauDangNhap } from "../../Utils/AUTH.js";
 
 let phienChoi = null;
 let maPhienChoi = null;
@@ -16,6 +17,8 @@ let daTraLoiChinh = false;
 let dangTraLoiPhu = false;
 
 $(document).ready(function () {
+    if (!yeuCauDangNhap()) return;
+    
     const urlParams = new URLSearchParams(window.location.search);
     maPhienChoi = urlParams.get("maPhienChoi");
 
