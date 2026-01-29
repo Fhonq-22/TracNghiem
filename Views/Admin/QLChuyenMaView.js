@@ -1,5 +1,6 @@
 import { chuyenMotMa, chuyenHangLoat } from "../../Controllers/ChuyenMaController.js";
 import { BANG_THAM_CHIEU, kiemTraThamChieu, doiMaCoRangBuoc } from "../../Controllers/REFERENCE.js";
+import { yeuCauAdmin } from "../../Utils/AUTH.js";
 
 function log(msg) {
     $("#logBox").append(msg + "\n");
@@ -21,6 +22,7 @@ function hienThiRangBuoc(ds, maCu, maMoi) {
 }
 
 $(document).ready(() => {
+    if (!yeuCauAdmin()) return;
 
     $("#btnChuyen1").click(async () => {
         const col = $("#collectionSelect").val();
