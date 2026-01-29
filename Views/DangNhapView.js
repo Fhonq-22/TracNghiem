@@ -1,15 +1,19 @@
 import { layNguoiDung } from "../Controllers/UserController.js";
 import { setAuth } from "../Utils/AUTH.js";
 
-$(document).ready(function() {
-    $("#loginForm").submit(async function(e) {
+$(document).ready(function () {
+    $("#loginForm").submit(async function (e) {
         e.preventDefault();
+
+        const btn = $(this).find("button[type=submit]");
+        btn.prop("disabled", true);
 
         const username = $("#username").val().trim();
         const password = $("#password").val().trim();
 
         if (!username || !password) {
             alert("Vui lòng nhập đầy đủ thông tin!");
+            btn.prop("disabled", false);
             return;
         }
 
@@ -17,16 +21,15 @@ $(document).ready(function() {
 
         if (!user) {
             alert("Tên đăng nhập không tồn tại!");
+            btn.prop("disabled", false);
         } else if (user.MatKhau !== password) {
             alert("Mật khẩu không chính xác!");
+            btn.prop("disabled", false);
         } else {
             setAuth(user);
-            
-            if (user.VaiTro === "Admin") {
-                window.location.href = "admin.html";
-            } else {
-                window.location.href = "index.html";
-            }
+            window.location.replace(
+                user.VaiTro === "Admin" ? "admin.html" : "index.html"
+            );
         }
     });
 });
