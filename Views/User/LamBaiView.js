@@ -1,5 +1,6 @@
 import { layBoDe } from "../../Controllers/BoDeController.js";
 import { layCauHoi } from "../../Controllers/CauHoiController.js";
+import { layCapDo } from "../../Controllers/CapDoController.js";
 import { themKetQua } from "../../Controllers/KetQuaController.js";
 
 let timerInterval = null;
@@ -7,7 +8,7 @@ let timeLeft = 0;
 let userAnswers = {};
 let startTime = null;
 
-$(document).ready(async function() {
+$(document).ready(async function () {
     const urlParams = new URLSearchParams(window.location.search);
     const maBoDe = urlParams.get("maBoDe");
     if (!maBoDe) {
@@ -26,12 +27,16 @@ $(document).ready(async function() {
     startTimer();
 
     const questionContainer = $("#questionContainer");
+    questionContainer.empty();
+
     for (let i = 0; i < boDe.DanhSachCauHoi.length; i++) {
         const maCauHoi = boDe.DanhSachCauHoi[i];
         const cauHoi = await layCauHoi(maCauHoi);
+        if (!cauHoi) continue;
+
         const questionDiv = $(`
             <div class="question" data-ma="${maCauHoi}">
-                <p><b>Câu ${i+1}:</b> ${cauHoi.NoiDung}</p>
+                <p><b>Câu ${i + 1}:</b> ${cauHoi.NoiDung}</p>
                 ${cauHoi.PhuongAn.map((pa, idx) => `
                     <div>
                         <input type="radio" name="q${i}" value="${idx}">
@@ -40,11 +45,11 @@ $(document).ready(async function() {
                 `).join("")}
             </div>
         `);
+
         questionContainer.append(questionDiv);
     }
 
-    $("#btnSubmit").click(submitExam);
-    $("#btnBack").click(() => window.location.href = "index.html");
+    $("#btnSubmit").on("click", submitExam);
 });
 
 function startTimer() {
@@ -63,13 +68,15 @@ function startTimer() {
 function updateTimerDisplay() {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    $("#timer").text(`${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`);
+    $("#timer").text(
+        `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
+    );
 }
 
 async function submitExam() {
-    $(".question").each(function(i, el) {
-        const ma = $(el).data("ma");
-        const ans = $(el).find("input[type=radio]:checked").val();
+    $(".question").each(function () {
+        const ma = $(this).data("ma");
+        const ans = $(this).find("input[type=radio]:checked").val();
         userAnswers[ma] = ans !== undefined ? parseInt(ans) : null;
     });
 
@@ -77,18 +84,35 @@ async function submitExam() {
     $("#btnSubmit").prop("disabled", true);
 
     const endTime = new Date();
-    const formatDateTime = dt => dt.toLocaleDateString("vi-VN") + " " + dt.toLocaleTimeString("vi-VN");
+    const formatDateTime = dt =>
+        dt.toLocaleDateString("vi-VN") + " " + dt.toLocaleTimeString("vi-VN");
 
     const urlParams = new URLSearchParams(window.location.search);
     const maBoDe = urlParams.get("maBoDe");
     const boDe = await layBoDe(maBoDe);
+    if (!boDe) return;
 
-    let correctCount = 0;
+    const capDo = await layCapDo(boDe.CapDo);
+    if (!capDo) {
+        alert("Không tìm thấy cấp độ của bộ đề");
+        return;
+    }
+
+    let tongDiem = 0;
+
     for (let ma of boDe.DanhSachCauHoi) {
         const cauHoi = await layCauHoi(ma);
-        if (userAnswers[ma] === cauHoi.DapAnDung) correctCount++;
+        if (!cauHoi) continue;
+
+        const userAns = userAnswers[ma];
+        if (userAns === null || userAns === undefined) continue;
+
+        if (userAns === cauHoi.DapAnDung) {
+            tongDiem += capDo.DiemMoiCau;
+        }
     }
-    const diem = Math.round((correctCount / boDe.SoCauHoi * 10) * 100) / 100;
+
+    const diem = Math.round(tongDiem * 100) / 100;
 
     const maKetQua = "KQ" + Date.now();
     const ketQuaData = {
