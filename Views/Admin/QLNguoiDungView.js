@@ -1,4 +1,10 @@
-import { layDanhSachNguoiDung, layNguoiDung, themNguoiDung, suaNguoiDung, xoaNguoiDung } from "../../Controllers/UserController.js";
+import {
+    layDanhSachNguoiDung,
+    layNguoiDung,
+    themNguoiDung,
+    suaNguoiDung,
+    xoaNguoiDung
+} from "../../Controllers/UserController.js";
 import { yeuCauAdmin } from "../../Utils/AUTH.js";
 
 let editingUser = null;
@@ -6,134 +12,138 @@ let currentPage = 1;
 const pageSize = 10;
 let cachedUsers = [];
 
-$(document).ready(async function() {
+$(document).ready(async function () {
     if (!yeuCauAdmin()) return;
 
     const usernames = await layDanhSachNguoiDung();
-    cachedUsers = await Promise.all(usernames.map(u => layNguoiDung(u)));
+    cachedUsers = await Promise.all(usernames.map(layNguoiDung));
 
-    renderUsers(currentPage);
+    renderUsers();
 
-    $("#btnAddUser").click(() => {
-        editingUser = null;
-        $("#modalTitle").text("Thêm người dùng");
-        $("#modalUsername").val("").prop("disabled", false);
-        $("#modalHoTen").val("");
-        $("#modalEmail").val("");
-        $("#modalMatKhau").val("");
-        $("#modalVaiTro").val("User");
-        $("#userModal").show();
-    });
+    $("#btnAddUser").on("click", openAddModal);
+    $("#modalCancel").on("click", () => $("#userModal").hide());
+    $("#modalSave").on("click", saveUser);
 
-    $("#modalCancel").click(() => $("#userModal").hide());
+    $("#userTable").on("click", ".editBtn", onEditUser);
+    $("#userTable").on("click", ".deleteBtn", onDeleteUser);
+    $("#pagination").on("click", ".pageBtn", onChangePage);
+});
 
-    $("#modalSave").click(async function() {
-        const userData = {
-            TenNguoiDung: $("#modalUsername").val().trim(),
+function openAddModal() {
+    editingUser = null;
+    $("#modalTitle").text("Thêm người dùng");
+    $("#modalUsername").val("").prop("disabled", false);
+    $("#modalHoTen, #modalEmail, #modalMatKhau").val("");
+    $("#modalVaiTro").val("User");
+    $("#userModal").show();
+}
+
+async function saveUser() {
+    const username = $("#modalUsername").val().trim();
+    const matKhau = $("#modalMatKhau").val().trim();
+
+    if (!username || !matKhau) {
+        alert("Tên người dùng và mật khẩu không được để trống");
+        return;
+    }
+
+    if (editingUser) {
+        const old = cachedUsers.find(u => u.TenNguoiDung === editingUser);
+
+        const newData = {
+            ...old,
             HoTen: $("#modalHoTen").val().trim(),
             Email: $("#modalEmail").val().trim(),
-            MatKhau: $("#modalMatKhau").val().trim(),
+            MatKhau: matKhau,
+            VaiTro: $("#modalVaiTro").val()
+        };
+
+        await suaNguoiDung(editingUser, newData);
+
+        const idx = cachedUsers.findIndex(u => u.TenNguoiDung === editingUser);
+        cachedUsers[idx] = newData;
+    } else {
+        const userData = {
+            TenNguoiDung: username,
+            HoTen: $("#modalHoTen").val().trim(),
+            Email: $("#modalEmail").val().trim(),
+            MatKhau: matKhau,
             VaiTro: $("#modalVaiTro").val(),
             NgayDangKy: new Date().toLocaleDateString()
         };
 
-        if (!userData.TenNguoiDung || !userData.MatKhau) {
-            alert("Tên người dùng và mật khẩu không được để trống");
-            return;
+        await themNguoiDung(userData);
+        cachedUsers.push(userData);
+    }
+
+    $("#userModal").hide();
+    renderUsers();
+}
+
+function onEditUser() {
+    const username = $(this).data("user");
+    const user = cachedUsers.find(u => u.TenNguoiDung === username);
+
+    editingUser = username;
+    $("#modalTitle").text("Sửa người dùng");
+    $("#modalUsername").val(user.TenNguoiDung).prop("disabled", true);
+    $("#modalHoTen").val(user.HoTen || "");
+    $("#modalEmail").val(user.Email || "");
+    $("#modalMatKhau").val(user.MatKhau || "");
+    $("#modalVaiTro").val(user.VaiTro || "User");
+    $("#userModal").show();
+}
+
+async function onDeleteUser() {
+    const username = $(this).data("user");
+    if (!confirm(`Xóa người dùng ${username}?`)) return;
+
+    const res = await xoaNguoiDung(username);
+
+    if (!res.success) {
+        let msg = res.message || "Không thể xóa người dùng";
+        if (res.refs?.length) {
+            msg += "\n\nĐang được sử dụng tại:";
+            res.refs.forEach(r => msg += `\n- ${r.collection} (${r.ma})`);
         }
+        alert(msg);
+        return;
+    }
 
-        if (editingUser) {
-            const old = cachedUsers.find(u => u.TenNguoiDung === editingUser);
+    cachedUsers = cachedUsers.filter(u => u.TenNguoiDung !== username);
+    renderUsers();
+}
 
-            const newData = {
-                ...old,
-                HoTen: userData.HoTen,
-                Email: userData.Email,
-                MatKhau: userData.MatKhau,
-                VaiTro: userData.VaiTro
-            };
-
-            await suaNguoiDung(editingUser, newData);
-
-            const idx = cachedUsers.findIndex(u => u.TenNguoiDung === editingUser);
-            if (idx >= 0) cachedUsers[idx] = newData;
-        } else {
-            await themNguoiDung(userData);
-            cachedUsers.push(userData);
-        }
-
-        $("#userModal").hide();
-        renderUsers(currentPage);
-    });
-});
-
-function renderUsers(page = 1) {
-    const tbody = $("#userTable tbody");
-    tbody.empty();
+function renderUsers(page = currentPage) {
+    const tbody = $("#userTable tbody").empty();
 
     const totalPages = Math.ceil(cachedUsers.length / pageSize);
-    currentPage = Math.min(Math.max(page, 1), totalPages);
+    currentPage = Math.min(Math.max(page, 1), totalPages || 1);
 
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, cachedUsers.length);
-    const pageUsers = cachedUsers.slice(startIndex, endIndex);
+    const start = (currentPage - 1) * pageSize;
+    const pageUsers = cachedUsers.slice(start, start + pageSize);
 
-    for (let user of pageUsers) {
-        const row = $(`
+    pageUsers.forEach(u => {
+        tbody.append(`
             <tr>
-                <td>${user.TenNguoiDung}</td>
-                <td>${user.HoTen || ""}</td>
-                <td>${user.Email || ""}</td>
-                <td>${user.NgayDangKy || ""}</td>
-                <td>${user.VaiTro || ""}</td>
+                <td>${u.TenNguoiDung}</td>
+                <td>${u.HoTen || ""}</td>
+                <td>${u.Email || ""}</td>
+                <td>${u.NgayDangKy || ""}</td>
+                <td>${u.VaiTro || ""}</td>
                 <td>
-                    <button class="editBtn">Sửa</button>
-                    <button class="deleteBtn">Xóa</button>
+                    <button class="editBtn" data-user="${u.TenNguoiDung}">Sửa</button>
+                    <button class="deleteBtn" data-user="${u.TenNguoiDung}">Xóa</button>
                 </td>
             </tr>
         `);
-
-        row.find(".editBtn").click(() => {
-            editingUser = user.TenNguoiDung;
-            $("#modalTitle").text("Sửa người dùng");
-            $("#modalUsername").val(user.TenNguoiDung).prop("disabled", true);
-            $("#modalHoTen").val(user.HoTen);
-            $("#modalEmail").val(user.Email);
-            $("#modalMatKhau").val(user.MatKhau);
-            $("#modalVaiTro").val(user.VaiTro);
-            $("#userModal").show();
-        });
-
-        row.find(".deleteBtn").click(async () => {
-            if (!confirm(`Xóa người dùng ${user.TenNguoiDung}?`)) return;
-
-            const res = await xoaNguoiDung(user.TenNguoiDung);
-
-            if (!res.success) {
-                let msg = res.message || "Không thể xóa người dùng";
-                if (res.refs?.length) {
-                    msg += "\n\nĐang được sử dụng tại:";
-                    res.refs.forEach(r => {
-                        msg += `\n- ${r.collection} (${r.ma})`;
-                    });
-                }
-                alert(msg);
-                return;
-            }
-
-            cachedUsers = cachedUsers.filter(u => u.TenNguoiDung !== user.TenNguoiDung);
-            renderUsers(currentPage);
-        });
-
-        tbody.append(row);
-    }
+    });
 
     renderPagination(totalPages);
 }
 
 function renderPagination(totalPages) {
-    const container = $("#pagination");
-    container.empty();
+    const container = $("#pagination").empty();
     if (totalPages <= 1) return;
 
     if (currentPage > 1) {
@@ -141,22 +151,20 @@ function renderPagination(totalPages) {
         container.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
     }
 
-    const visibleRange = 2;
-    let start = Math.max(1, currentPage - visibleRange);
-    let end = Math.min(totalPages, currentPage + visibleRange);
-
-    if (start > 1) container.append(`<span>...</span>`);
-    for (let i = start; i <= end; i++) {
-        container.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+        container.append(`
+            <button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">
+                ${i}
+            </button>
+        `);
     }
-    if (end < totalPages) container.append(`<span>...</span>`);
+
     if (currentPage < totalPages) {
         container.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
         container.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
     }
+}
 
-    container.find(".pageBtn").click(function() {
-        const page = parseInt($(this).data("page"));
-        renderUsers(page);
-    });
+function onChangePage() {
+    renderUsers(parseInt($(this).data("page")));
 }
