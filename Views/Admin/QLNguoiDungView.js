@@ -1,5 +1,5 @@
 import { layDanhSachNguoiDung, layNguoiDung, themNguoiDung, suaNguoiDung, xoaNguoiDung } from "../../Controllers/UserController.js";
-import { isDangNhap, isAdmin } from "../../Utils/AUTH.js";
+import { yeuCauAdmin } from "../../Utils/AUTH.js";
 
 let editingUser = null;
 let currentPage = 1;
@@ -7,17 +7,7 @@ const pageSize = 10;
 let cachedUsers = [];
 
 $(document).ready(async function() {
-    if (!isDangNhap()) {
-        alert("Bạn chưa đăng nhập");
-        window.location.href = "../dang-nhap.html";
-        return;
-    }
-
-    if (!isAdmin()) {
-        alert("Bạn không có quyền truy cập trang này");
-        window.location.href = "../index.html";
-        return;
-    }
+    if (!yeuCauAdmin()) return;
 
     const usernames = await layDanhSachNguoiDung();
     cachedUsers = await Promise.all(usernames.map(u => layNguoiDung(u)));
