@@ -1,4 +1,5 @@
 import { layDanhSachCapDo, layCapDo, themCapDo, suaCapDo, xoaCapDo } from "../../Controllers/CapDoController.js";
+import { yeuCauAdmin } from "../../Utils/AUTH.js";
 
 let cachedCapDo = [];
 let editingCapDo = null;
@@ -7,6 +8,8 @@ let currentPage = 1;
 const pageSize = 10;
 
 $(document).ready(async function () {
+    if (!yeuCauAdmin()) return;
+
     const maList = await layDanhSachCapDo();
     cachedCapDo = await Promise.all(maList.map(ma => layCapDo(ma)));
 
