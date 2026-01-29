@@ -19,6 +19,15 @@ $(document).ready(function() {
         } else if (user.MatKhau !== password) {
             alert("Mật khẩu không chính xác!");
         } else {
+            localStorage.setItem("P-auth", JSON.stringify({
+                project: "quizie",
+                user: {
+                    TenNguoiDung: user.TenNguoiDung,
+                    VaiTro: user.VaiTro
+                },
+                loginAt: new Date().toISOString()
+            }));
+            
             if (user.VaiTro === "Admin") {
                 window.location.href = "admin.html";
             } else {
