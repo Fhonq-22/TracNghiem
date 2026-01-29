@@ -43,7 +43,7 @@ export function isDungProject() {
 export function yeuCauDangNhap() {
     if (!isDangNhap()) {
         alert("Bạn chưa đăng nhập");
-        window.location.href = "../dang-nhap.html";
+        window.location.href = "./dang-nhap.html";
         return false;
     }
     return true;
@@ -52,13 +52,13 @@ export function yeuCauDangNhap() {
 export function yeuCauAdmin() {
     if (!isDangNhap()) {
         alert("Bạn chưa đăng nhập");
-        window.location.href = "../dang-nhap.html";
+        window.location.href = "./dang-nhap.html";
         return false;
     }
 
     if (!isAdmin()) {
         alert("Bạn không có quyền truy cập trang này");
-        window.location.href = "../index.html";
+        window.location.href = "./index.html";
         return false;
     }
 
