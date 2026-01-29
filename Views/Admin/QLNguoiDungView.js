@@ -43,9 +43,20 @@ $(document).ready(async function() {
         }
 
         if (editingUser) {
-            await suaNguoiDung(editingUser, userData);
+            const old = cachedUsers.find(u => u.TenNguoiDung === editingUser);
+
+            const newData = {
+                ...old,
+                HoTen: userData.HoTen,
+                Email: userData.Email,
+                MatKhau: userData.MatKhau,
+                VaiTro: userData.VaiTro
+            };
+
+            await suaNguoiDung(editingUser, newData);
+
             const idx = cachedUsers.findIndex(u => u.TenNguoiDung === editingUser);
-            if (idx >= 0) cachedUsers[idx] = userData;
+            if (idx >= 0) cachedUsers[idx] = newData;
         } else {
             await themNguoiDung(userData);
             cachedUsers.push(userData);
