@@ -33,7 +33,7 @@ function openAddModal() {
 }
 
 async function saveUser() {
-    const username = $("#modalUsername").val().trim();
+    const username = String($("#modalUsername").val().trim());
     const matKhau = $("#modalMatKhau").val().trim();
 
     if (!username || !matKhau) {
@@ -42,7 +42,7 @@ async function saveUser() {
     }
 
     if (editingUser) {
-        const old = cachedUsers.find(u => u.TenNguoiDung === editingUser);
+        const old = cachedUsers.find(u => String(u.TenNguoiDung) === String(editingUser));
 
         const newData = {
             ...old,
@@ -54,9 +54,14 @@ async function saveUser() {
 
         await suaNguoiDung(editingUser, newData);
 
-        const idx = cachedUsers.findIndex(u => u.TenNguoiDung === editingUser);
+        const idx = cachedUsers.findIndex(u => String(u.TenNguoiDung) === String(editingUser));
         cachedUsers[idx] = newData;
     } else {
+        if (await layNguoiDung(username)) {
+            alert("Tên người dùng đã tồn tại");
+            return;
+        }
+
         const userData = {
             TenNguoiDung: username,
             HoTen: $("#modalHoTen").val().trim(),
@@ -65,11 +70,6 @@ async function saveUser() {
             VaiTro: $("#modalVaiTro").val(),
             NgayDangKy: new Date().toLocaleDateString()
         };
-
-        if (await layNguoiDung(username)) {
-            alert("Tên người dùng đã tồn tại");
-            return;
-        }
 
         await themNguoiDung(userData);
         cachedUsers.push(userData);
@@ -80,8 +80,10 @@ async function saveUser() {
 }
 
 function onEditUser() {
-    const username = $(this).data("user");
-    const user = cachedUsers.find(u => u.TenNguoiDung === username);
+    const username = String($(this).data("user"));
+    const user = cachedUsers.find(u => String(u.TenNguoiDung) === username);
+
+    if (!user) return;
 
     editingUser = username;
     $("#modalTitle").text("Sửa người dùng");
@@ -94,7 +96,7 @@ function onEditUser() {
 }
 
 async function onDeleteUser() {
-    const username = $(this).data("user");
+    const username = String($(this).data("user"));
     if (!confirm(`Xóa người dùng ${username}?`)) return;
 
     const res = await xoaNguoiDung(username);
@@ -109,7 +111,7 @@ async function onDeleteUser() {
         return;
     }
 
-    cachedUsers = cachedUsers.filter(u => u.TenNguoiDung !== username);
+    cachedUsers = cachedUsers.filter(u => String(u.TenNguoiDung) !== username);
     renderUsers();
 }
 
