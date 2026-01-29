@@ -16,7 +16,8 @@ $(document).ready(async function() {
     cachedCapDo = await Promise.all(maCapDoList.map(ma => layCapDo(ma)));
 
     const maBoDeList = await layDanhSachBoDe();
-    cachedBoDe = await Promise.all(maBoDeList.map(ma => layBoDe(ma)));
+    cachedBoDe = (await Promise.all(maBoDeList.map(ma => layBoDe(ma))))
+        .map(bd => chuanHoaBoDe(bd));
 
     renderBoDe(currentPage);
 
@@ -64,19 +65,30 @@ $(document).ready(async function() {
             NguoiTao: "Admin"
         };
 
+        const boDeDaChuanHoa = chuanHoaBoDe(boDeData);
+
         if (editingBoDe) {
             await suaBoDe(editingBoDe, boDeData);
             const idx = cachedBoDe.findIndex(bd => bd.MaBoDe === editingBoDe);
-            if (idx >= 0) cachedBoDe[idx] = boDeData;
+            if (idx >= 0) cachedBoDe[idx] = boDeDaChuanHoa;
         } else {
             await themBoDe(boDeData);
-            cachedBoDe.push(boDeData);
+            cachedBoDe.push(boDeDaChuanHoa);
         }
 
         $("#boDeModal").hide();
         renderBoDe(currentPage);
     });
 });
+
+function chuanHoaBoDe(bd) {
+    const ds = Array.isArray(bd?.DanhSachCauHoi) ? bd.DanhSachCauHoi : [];
+    return {
+        ...bd,
+        DanhSachCauHoi: ds,
+        SoCauHoi: ds.length
+    };
+}
 
 function renderCapDoSelect(selected = null) {
     const select = $("#modalCapDo");
@@ -110,7 +122,7 @@ function renderBoDe(page = 1) {
                 <td>${bd.MaBoDe}</td>
                 <td>${bd.TenBoDe}</td>
                 <td>${bd.CapDo}</td>
-                <td>${bd.DanhSachCauHoi?.length || 0}</td>
+                <td>${bd.SoCauHoi}</td>
                 <td>${bd.ThoiGian}</td>
                 <td>${bd.NgayTao}</td>
                 <td>${bd.NguoiTao}</td>
