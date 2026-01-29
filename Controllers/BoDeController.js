@@ -1,5 +1,6 @@
 import { addData, getData, updateData, deleteData } from "../Models/firebase-CRUD.js";
 import { BoDe } from "../Models/MODEL.js";
+import { kiemTraThamChieu } from "./REFERENCE.js";
 
 export async function themBoDe(boDe) {
     const newBoDe = new BoDe(
@@ -51,5 +52,16 @@ export async function suaBoDe(maBoDe, boDeMoi) {
 }
 
 export async function xoaBoDe(maBoDe) {
+    const refs = await kiemTraThamChieu("BoDe", maBoDe);
+
+    if (refs.length > 0) {
+        return {
+            success: false,
+            message: "Không thể xóa bộ đề vì đang được sử dụng",
+            refs
+        };
+    }
+
     await deleteData("BoDe", maBoDe);
+    return { success: true };
 }

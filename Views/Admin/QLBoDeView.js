@@ -154,11 +154,24 @@ function renderBoDe(page = 1) {
         });
 
         row.find(".deleteBtn").click(async () => {
-            if (confirm(`Xóa bộ đề ${bd.MaBoDe}?`)) {
-                await xoaBoDe(bd.MaBoDe);
-                cachedBoDe = cachedBoDe.filter(b => b.MaBoDe !== bd.MaBoDe);
-                renderBoDe(currentPage);
+            if (!confirm(`Xóa bộ đề ${bd.MaBoDe}?`)) return;
+
+            const res = await xoaBoDe(bd.MaBoDe);
+
+            if (!res.success) {
+                let msg = res.message || "Không thể xóa bộ đề";
+                if (res.refs?.length) {
+                    msg += "\n\nĐang được sử dụng tại:";
+                    res.refs.forEach(r => {
+                        msg += `\n- ${r.collection} (${r.ma})`;
+                    });
+                }
+                alert(msg);
+                return;
             }
+
+            cachedBoDe = cachedBoDe.filter(b => b.MaBoDe !== bd.MaBoDe);
+            renderBoDe(currentPage);
         });
 
         tbody.append(row);
