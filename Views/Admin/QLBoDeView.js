@@ -10,17 +10,12 @@ let cachedCauHoiList = [];
 let cachedBoDe = [];
 let cachedCapDo = [];
 
-$(document).ready(async function() {
+$(document).ready(async function () {
     if (!yeuCauAdmin()) return;
-    
+
     cachedCauHoiList = await Promise.all((await layDanhSachCauHoi()).map(ma => layCauHoi(ma)));
-
-    const maCapDoList = await layDanhSachCapDo();
-    cachedCapDo = await Promise.all(maCapDoList.map(ma => layCapDo(ma)));
-
-    const maBoDeList = await layDanhSachBoDe();
-    cachedBoDe = (await Promise.all(maBoDeList.map(ma => layBoDe(ma))))
-        .map(bd => chuanHoaBoDe(bd));
+    cachedCapDo = await Promise.all((await layDanhSachCapDo()).map(ma => layCapDo(ma)));
+    cachedBoDe = (await Promise.all((await layDanhSachBoDe()).map(ma => layBoDe(ma)))).map(chuanHoaBoDe);
 
     renderBoDe(currentPage);
 
@@ -32,25 +27,25 @@ $(document).ready(async function() {
         $("#modalCauHoiList").empty();
         renderCapDoSelect();
 
-        for (let ch of cachedCauHoiList) {
+        cachedCauHoiList.forEach(ch => {
             $("#modalCauHoiList").append(`
                 <div>
                     <input type="checkbox" class="chkCauHoi" value="${ch.MaCauHoi}">
                     ${ch.MaCauHoi} - ${ch.NoiDung}
                 </div>
             `);
-        }
+        });
 
         $("#boDeModal").show();
     });
 
     $("#modalCancel").click(() => $("#boDeModal").hide());
 
-    $("#modalSave").click(async function() {
+    $("#modalSave").click(async () => {
         const tenBoDe = $("#modalTenBoDe").val().trim();
         const capDo = $("#modalCapDo").val();
         const thoiGian = parseInt($("#modalThoiGian").val());
-        const danhSachCauHoi = $(".chkCauHoi:checked").map((i, el) => $(el).val()).get();
+        const danhSachCauHoi = $(".chkCauHoi:checked").map((_, el) => el.value).get();
 
         if (!tenBoDe || danhSachCauHoi.length === 0) {
             alert("Tên bộ đề và danh sách câu hỏi không được để trống");
@@ -58,21 +53,9 @@ $(document).ready(async function() {
         }
 
         let maBoDe = editingBoDe || await generateNextBoDeCode();
-        const boDeData = {
-            MaBoDe: maBoDe,
-            TenBoDe: tenBoDe,
-            CapDo: capDo,
-            DanhSachCauHoi: danhSachCauHoi,
-            ThoiGian: thoiGian,
-            NgayTao: new Date().toLocaleDateString(),
-            NguoiTao: getUserHienTai()?.TenNguoiDung || ""
-        };
-
-        const boDeDaChuanHoa = chuanHoaBoDe(boDeData);
 
         if (editingBoDe) {
-            const old = cachedBoDe.find(bd => bd.MaBoDe === editingBoDe);
-
+            const old = cachedBoDe.find(b => b.MaBoDe === editingBoDe);
             const newData = {
                 ...old,
                 TenBoDe: tenBoDe,
@@ -82,12 +65,22 @@ $(document).ready(async function() {
             };
 
             await suaBoDe(editingBoDe, newData);
-
-            const idx = cachedBoDe.findIndex(bd => bd.MaBoDe === editingBoDe);
-            cachedBoDe[idx] = chuanHoaBoDe(newData);
+            cachedBoDe[cachedBoDe.findIndex(b => b.MaBoDe === editingBoDe)] = chuanHoaBoDe(newData);
+            alert("Cập nhật bộ đề thành công");
         } else {
+            const boDeData = {
+                MaBoDe: maBoDe,
+                TenBoDe: tenBoDe,
+                CapDo: capDo,
+                DanhSachCauHoi: danhSachCauHoi,
+                ThoiGian: thoiGian,
+                NgayTao: new Date().toLocaleDateString(),
+                NguoiTao: getUserHienTai()?.TenNguoiDung || ""
+            };
+
             await themBoDe(boDeData);
-            cachedBoDe.push(boDeDaChuanHoa);
+            cachedBoDe.push(chuanHoaBoDe(boDeData));
+            alert("Thêm bộ đề thành công");
         }
 
         $("#boDeModal").hide();
@@ -97,40 +90,21 @@ $(document).ready(async function() {
 
 function chuanHoaBoDe(bd) {
     const ds = Array.isArray(bd?.DanhSachCauHoi) ? bd.DanhSachCauHoi : [];
-    return {
-        ...bd,
-        DanhSachCauHoi: ds,
-        SoCauHoi: ds.length
-    };
+    return { ...bd, DanhSachCauHoi: ds, SoCauHoi: ds.length };
 }
 
 function renderCapDoSelect(selected = null) {
-    const select = $("#modalCapDo");
-    select.empty();
-
-    for (let cd of cachedCapDo) {
-        select.append(`
-            <option value="${cd.MaCapDo}">
-                ${cd.TenCapDo}
-            </option>
-        `);
-    }
-
+    const select = $("#modalCapDo").empty();
+    cachedCapDo.forEach(cd => select.append(`<option value="${cd.MaCapDo}">${cd.TenCapDo}</option>`));
     if (selected) select.val(selected);
 }
 
 function renderBoDe(page = 1) {
-    const tbody = $("#boDeTable tbody");
-    tbody.empty();
-
+    const tbody = $("#boDeTable tbody").empty();
     const totalPages = Math.ceil(cachedBoDe.length / pageSize);
     currentPage = Math.min(Math.max(page, 1), totalPages);
 
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, cachedBoDe.length);
-    const pageItems = cachedBoDe.slice(startIndex, endIndex);
-
-    for (let bd of pageItems) {
+    cachedBoDe.slice((currentPage - 1) * pageSize, currentPage * pageSize).forEach(bd => {
         const row = $(`
             <tr>
                 <td>${bd.MaBoDe}</td>
@@ -155,14 +129,14 @@ function renderBoDe(page = 1) {
             $("#modalCauHoiList").empty();
             renderCapDoSelect(bd.CapDo);
 
-            for (let ch of cachedCauHoiList) {
+            cachedCauHoiList.forEach(ch => {
                 $("#modalCauHoiList").append(`
                     <div>
                         <input type="checkbox" class="chkCauHoi" value="${ch.MaCauHoi}" ${bd.DanhSachCauHoi.includes(ch.MaCauHoi) ? "checked" : ""}>
                         ${ch.MaCauHoi} - ${ch.NoiDung}
                     </div>
                 `);
-            }
+            });
 
             $("#boDeModal").show();
         });
@@ -171,14 +145,11 @@ function renderBoDe(page = 1) {
             if (!confirm(`Xóa bộ đề ${bd.MaBoDe}?`)) return;
 
             const res = await xoaBoDe(bd.MaBoDe);
-
             if (!res.success) {
                 let msg = res.message || "Không thể xóa bộ đề";
                 if (res.refs?.length) {
                     msg += "\n\nĐang được sử dụng tại:";
-                    res.refs.forEach(r => {
-                        msg += `\n- ${r.collection} (${r.ma})`;
-                    });
+                    res.refs.forEach(r => msg += `\n- ${r.collection} (${r.ma})`);
                 }
                 alert(msg);
                 return;
@@ -189,47 +160,35 @@ function renderBoDe(page = 1) {
         });
 
         tbody.append(row);
-    }
+    });
 
     renderPagination(totalPages);
 }
 
 function renderPagination(totalPages) {
-    const container = $("#pagination");
-    container.empty();
+    const c = $("#pagination").empty();
     if (totalPages <= 1) return;
 
     if (currentPage > 1) {
-        container.append(`<button class="pageBtn" data-page="1"><<</button>`);
-        container.append(`<button class="pageBtn" data-page="${currentPage-1}">Prev</button>`);
+        c.append(`<button class="pageBtn" data-page="1"><<</button>`);
+        c.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
     }
 
-    const range = 2;
-    let start = Math.max(1, currentPage - range);
-    let end = Math.min(totalPages, currentPage + range);
-
-    if (start > 1) container.append(`<span>...</span>`);
-    for (let i = start; i <= end; i++) {
-        container.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+        c.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
     }
-    if (end < totalPages) container.append(`<span>...</span>`);
 
     if (currentPage < totalPages) {
-        container.append(`<button class="pageBtn" data-page="${currentPage+1}">Next</button>`);
-        container.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
+        c.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
+        c.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
     }
 
-    container.find(".pageBtn").click(function() {
-        renderBoDe(parseInt($(this).data("page")));
-    });
+    c.find(".pageBtn").click(e => renderBoDe(+e.target.dataset.page));
 }
 
 async function generateNextBoDeCode() {
-    let numbers = cachedBoDe.map(bd => parseInt(bd.MaBoDe.slice(2))).sort((a,b) => a-b);
-    let nextNum = 1;
-    for (let n of numbers) {
-        if (n === nextNum) nextNum++;
-        else if (n > nextNum) break;
-    }
-    return "BD" + String(nextNum).padStart(4, "0");
+    let n = 1;
+    const used = cachedBoDe.map(b => parseInt(b.MaBoDe.slice(2))).sort((a, b) => a - b);
+    for (let x of used) if (x === n) n++; else if (x > n) break;
+    return "BD" + String(n).padStart(4, "0");
 }
