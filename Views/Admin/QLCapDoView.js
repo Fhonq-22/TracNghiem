@@ -37,13 +37,7 @@ $(document).ready(async function () {
         }
 
         const maCapDo = editingCapDo || await generateNextCapDoCode();
-        const data = {
-            MaCapDo: maCapDo,
-            TenCapDo: tenCapDo,
-            DiemMoiCau: diemMoiCau,
-            HeSoTraLoiPhu: heSoTraLoiPhu,
-            NgayCapNhat: new Date().toLocaleDateString("vi-VN")
-        };
+        const now = new Date().toLocaleDateString("vi-VN");
 
         if (editingCapDo) {
             const old = cachedCapDo.find(c => c.MaCapDo === editingCapDo);
@@ -53,15 +47,22 @@ $(document).ready(async function () {
                 TenCapDo: tenCapDo,
                 DiemMoiCau: diemMoiCau,
                 HeSoTraLoiPhu: heSoTraLoiPhu,
-                NgayCapNhat: new Date().toLocaleDateString("vi-VN")
+                NgayCapNhat: now
             };
 
             await suaCapDo(editingCapDo, newData);
 
             const idx = cachedCapDo.findIndex(c => c.MaCapDo === editingCapDo);
             cachedCapDo[idx] = newData;
-        }
-        else {
+        } else {
+            const data = {
+                MaCapDo: maCapDo,
+                TenCapDo: tenCapDo,
+                DiemMoiCau: diemMoiCau,
+                HeSoTraLoiPhu: heSoTraLoiPhu,
+                NgayCapNhat: now
+            };
+
             await themCapDo(data);
             cachedCapDo.push(data);
         }
@@ -72,15 +73,13 @@ $(document).ready(async function () {
 });
 
 function renderCapDo(page = 1) {
-    const tbody = $("#capDoTable tbody");
-    tbody.empty();
+    const tbody = $("#capDoTable tbody").empty();
 
-    const totalPages = Math.ceil(cachedCapDo.length / pageSize);
+    const totalPages = Math.ceil(cachedCapDo.length / pageSize) || 1;
     currentPage = Math.min(Math.max(page, 1), totalPages);
 
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, cachedCapDo.length);
-    const pageItems = cachedCapDo.slice(startIndex, endIndex);
+    const start = (currentPage - 1) * pageSize;
+    const pageItems = cachedCapDo.slice(start, start + pageSize);
 
     for (let cd of pageItems) {
         const row = $(`
@@ -134,8 +133,7 @@ function renderCapDo(page = 1) {
 }
 
 function renderPagination(totalPages) {
-    const container = $("#pagination");
-    container.empty();
+    const container = $("#pagination").empty();
     if (totalPages <= 1) return;
 
     if (currentPage > 1) {
@@ -143,9 +141,9 @@ function renderPagination(totalPages) {
         container.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
     }
 
-    const visibleRange = 2;
-    let start = Math.max(1, currentPage - visibleRange);
-    let end = Math.min(totalPages, currentPage + visibleRange);
+    const range = 2;
+    const start = Math.max(1, currentPage - range);
+    const end = Math.min(totalPages, currentPage + range);
 
     if (start > 1) container.append(`<span>...</span>`);
     for (let i = start; i <= end; i++) {
@@ -159,8 +157,7 @@ function renderPagination(totalPages) {
     }
 
     container.find(".pageBtn").click(function () {
-        const page = parseInt($(this).data("page"));
-        renderCapDo(page);
+        renderCapDo(parseInt($(this).data("page")));
     });
 }
 
