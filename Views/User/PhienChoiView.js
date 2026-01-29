@@ -1,12 +1,14 @@
 import { themPhienChoi, layPhienChoi, suaPhienChoi } from "../../Controllers/PhienChoiController.js";
 import { layDanhSachBoDeDayDu, layBoDe } from "../../Controllers/BoDeController.js";
 import { layCauHoi } from "../../Controllers/CauHoiController.js";
+import { layCapDo } from "../../Controllers/CapDoController.js";
 
 let phienChoi = null;
 let maPhienChoi = null;
 let mapBoDe = {};
 
 let boDeDangChoi = null;
+let capDoDangChoi = null;
 let dsCauHoi = [];
 let cauHoiIndex = 0;
 
@@ -36,6 +38,7 @@ function taoDanhSachNhapTen() {
     const soNguoi = parseInt($("#soNguoiChoi").val());
     const container = $("#dsNhapTen").empty();
     if (!soNguoi || soNguoi < 1) return;
+
     for (let i = 1; i <= soNguoi; i++) {
         container.append(`
             <div>
@@ -136,6 +139,8 @@ async function chonChuDe() {
     $("#selectChuDe, #btnChonChuDe").prop("disabled", true);
 
     boDeDangChoi = await layBoDe(chuDe);
+    capDoDangChoi = await layCapDo(boDeDangChoi.CapDo);
+
     dsCauHoi = [];
     for (let ma of boDeDangChoi.DanhSachCauHoi) {
         dsCauHoi.push(await layCauHoi(ma));
@@ -181,13 +186,15 @@ function traLoiCauHoi() {
     if (ans.length === 0) return;
 
     const value = parseInt(ans.val());
+    const diemMoiCau = capDoDangChoi.DiemMoiCau;
+    const heSoPhu = capDoDangChoi.HeSoTraLoiPhu;
 
     if (!daTraLoiChinh) {
         daTraLoiChinh = true;
 
         if (value === ch.DapAnDung) {
-            phienChoi.DanhSachNguoiChoi[phienChoi.NguoiChoiHienTai] += 1;
-            $("#ketQuaTraLoi").text("Đúng (+1 điểm)");
+            phienChoi.DanhSachNguoiChoi[phienChoi.NguoiChoiHienTai] += diemMoiCau;
+            $("#ketQuaTraLoi").text(`Đúng (+${diemMoiCau} điểm)`);
             $("#btnNextCauHoi").prop("disabled", false);
             $("#btnTraLoi").prop("disabled", true);
             render();
@@ -204,12 +211,14 @@ function traLoiCauHoi() {
         const nguoi = $("#selectNguoiTraLoiPhu").val();
         if (!nguoi) return;
 
+        const diemPhu = Math.round(diemMoiCau * heSoPhu * 100) / 100;
+
         if (value === ch.DapAnDung) {
-            phienChoi.DanhSachNguoiChoi[nguoi] += 0.5;
-            $("#ketQuaTraLoi").text(`${nguoi} trả lời đúng (+0.5 điểm)`);
+            phienChoi.DanhSachNguoiChoi[nguoi] += diemPhu;
+            $("#ketQuaTraLoi").text(`${nguoi} trả lời đúng (+${diemPhu} điểm)`);
         } else {
-            phienChoi.DanhSachNguoiChoi[nguoi] -= 0.5;
-            $("#ketQuaTraLoi").text(`${nguoi} trả lời sai (-0.5 điểm)`);
+            phienChoi.DanhSachNguoiChoi[nguoi] -= diemPhu;
+            $("#ketQuaTraLoi").text(`${nguoi} trả lời sai (-${diemPhu} điểm)`);
         }
 
         $("#btnTraLoi").prop("disabled", true);
