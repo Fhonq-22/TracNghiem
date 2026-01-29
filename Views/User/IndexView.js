@@ -1,10 +1,13 @@
 import { layDanhSachBoDe, layBoDe } from "../../Controllers/BoDeController.js";
+import { yeuCauDangNhap } from "../../Utils/AUTH.js";
 
 let currentPage = 1;
 const pageSize = 10;
 let cachedBoDe = [];
 
 $(document).ready(async function() {
+    if (!yeuCauDangNhap()) return;
+
     const username = localStorage.getItem("currentUser") || "Khách";
     $("#userDisplay").text(username);
 
