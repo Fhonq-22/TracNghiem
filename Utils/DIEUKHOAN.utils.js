@@ -1,6 +1,6 @@
 import { daDongYDieuKhoan } from "./CONSENT.utils.js";
 import { PROJECT, TERMS } from "../Config/PROJECT.config.js";
-import { THONGBAO } from "./Notice.utils.js";
+import { THONGBAO } from "./NOTICE.utils.js";
 
 export function yeuCauDongYDieuKhoan() {
     if (daDongYDieuKhoan(PROJECT, TERMS.VERSION)) return true;
