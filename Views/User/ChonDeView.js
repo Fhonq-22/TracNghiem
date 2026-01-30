@@ -1,5 +1,6 @@
 import { layDanhSachBoDe, layBoDe } from "../../Controllers/BoDeController.js";
 import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.utils.js";
+import { yeuCauDongYDieuKhoan } from "../../Utils/DIEUKHOAN.utils.js";
 
 let currentPage = 1;
 const pageSize = 10;
@@ -7,6 +8,7 @@ let cachedBoDe = [];
 
 $(document).ready(async function () {
     if (!yeuCauDangNhap()) return;
+    if (!yeuCauDongYDieuKhoan()) return;
 
     $("#userDisplay").text(getUserHienTai()?.TenNguoiDung || "");
 

@@ -3,6 +3,7 @@ import { layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layCapDo } from "../../Controllers/CapDoController.js";
 import { themKetQua } from "../../Controllers/KetQuaController.js";
 import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.utils.js";
+import { yeuCauDongYDieuKhoan } from "../../Utils/DIEUKHOAN.utils.js";
 
 let boDemGio = null;
 let soGiayConLai = 0;
@@ -11,6 +12,7 @@ let thoiGianBatDau = null;
 
 $(document).ready(async function () {
     if (!yeuCauDangNhap()) return;
+    if (!yeuCauDongYDieuKhoan()) return;
     
     const thamSo = new URLSearchParams(window.location.search);
     const maBoDe = thamSo.get("maBoDe");

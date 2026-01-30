@@ -1,7 +1,9 @@
 import { yeuCauDangNhap, getUserHienTai, removeAuth } from "../../Utils/AUTH.utils.js";
+import { yeuCauDongYDieuKhoan } from "../../Utils/DIEUKHOAN.utils.js";
 
 $(document).ready(function () {
     if (!yeuCauDangNhap()) return;
+    if (!yeuCauDongYDieuKhoan()) return;
 
     $("#userDisplay").text(getUserHienTai()?.TenNguoiDung || "");
 

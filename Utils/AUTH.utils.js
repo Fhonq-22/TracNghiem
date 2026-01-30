@@ -1,4 +1,5 @@
 import { PROJECT, SESSION } from "../Config/PROJECT.config.js";
+import { THONGBAO } from "./NOTICE.utils.js";
 
 const AUTH_KEY = "P-auth";
 
@@ -48,13 +49,13 @@ export function yeuCauDangNhap() {
     const auth = getAuthRaw();
 
     if (!auth) {
-        alert("Bạn chưa đăng nhập");
+        THONGBAO.CanDangNhap();
         window.location.href = "./dang-nhap.html";
         return false;
     }
 
     if (isHetHanPhien()) {
-        alert("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
+        THONGBAO.HetHanPhien();
         removeAuth();
         window.location.href = "./dang-nhap.html";
         return false;
@@ -67,7 +68,7 @@ export function yeuCauAdmin() {
     if (!yeuCauDangNhap()) return false;
 
     if (!isAdmin()) {
-        alert("Bạn không có quyền truy cập trang này");
+        THONGBAO.KhongDuQuyen();
         window.location.href = "./index.html";
         return false;
     }

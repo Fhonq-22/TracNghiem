@@ -3,6 +3,7 @@ import { layDanhSachBoDeDayDu, layBoDe } from "../../Controllers/BoDeController.
 import { layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layCapDo } from "../../Controllers/CapDoController.js";
 import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.utils.js";
+import { yeuCauDongYDieuKhoan } from "../../Utils/DIEUKHOAN.utils.js";
 
 let phienChoi = null;
 let maPhienChoi = null;
@@ -18,6 +19,7 @@ let dangTraLoiPhu = false;
 
 $(document).ready(function () {
     if (!yeuCauDangNhap()) return;
+    if (!yeuCauDongYDieuKhoan()) return;
 
     maPhienChoi = new URLSearchParams(window.location.search).get("maPhienChoi");
     if (maPhienChoi) vaoPhien(maPhienChoi);

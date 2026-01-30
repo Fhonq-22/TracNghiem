@@ -1,8 +1,10 @@
 import { layKetQua } from "../../Controllers/KetQuaController.js";
 import { yeuCauDangNhap } from "../../Utils/AUTH.utils.js";
+import { yeuCauDongYDieuKhoan } from "../../Utils/DIEUKHOAN.utils.js";
 
 $(document).ready(async function () {
     if (!yeuCauDangNhap()) return;
+    if (!yeuCauDongYDieuKhoan()) return;
 
     const maKetQua = new URLSearchParams(window.location.search).get("maKetQua");
     if (!maKetQua) {
