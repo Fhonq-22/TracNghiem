@@ -22,7 +22,7 @@ export function getAuthRaw() {
 export function isHetHanPhien() {
     const auth = getAuthRaw();
     if (!auth || auth.project !== PROJECT) return false;
-    return Date.now() - auth.loginAt > SESSION.EXPIRE_TIME;
+    return Date.now() < auth.loginAt || Date.now() - auth.loginAt > SESSION.EXPIRE_TIME;
 }
 
 export function isDangNhap() {
