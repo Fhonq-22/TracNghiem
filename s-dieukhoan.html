@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều khoản sử dụng - Quizie</title>
+</head>
+<body>
+
+<h1>Điều khoản sử dụng hệ thống Quizie</h1>
+
+<p>
+Trang này quy định các điều khoản và điều kiện khi người dùng sử dụng hệ thống thi trắc nghiệm Quizie.
+Việc tiếp tục sử dụng hệ thống đồng nghĩa với việc người dùng đã đọc, hiểu và đồng ý với các điều khoản dưới đây.
+</p>
+
+<h2>1. Phiên đăng nhập</h2>
+<p>
+Phiên đăng nhập của người dùng có thời hạn <strong>2 giờ 22 phút 22 giây</strong>.
+Sau khi hết hạn, người dùng cần đăng nhập lại để tiếp tục sử dụng hệ thống.
+</p>
+
+<h2>2. Quy định trong quá trình làm bài thi</h2>
+<ul>
+    <li>Người dùng không nên rời khỏi trang làm bài trong thời gian thi.</li>
+    <li>Hạn chế các hành vi sao chép (copy) và dán (paste) nội dung.</li>
+    <li>Không sử dụng các công cụ hỗ trợ bên ngoài trong quá trình làm bài.</li>
+</ul>
+
+<p>
+Hệ thống có thể ghi nhận các hành vi bất thường (ví dụ: rời tab, copy/paste, mở công cụ phát triển)
+nhằm phục vụ mục đích giám sát và đánh giá quá trình làm bài.
+</p>
+
+<h2>3. Kết quả thi</h2>
+<p>
+Kết quả thi được tính toán dựa trên các câu trả lời của người dùng và được lưu lại
+để phục vụ việc xem lại và thống kê.
+</p>
+
+<h2>4. Trách nhiệm người dùng</h2>
+<p>
+Người dùng chịu trách nhiệm với mọi hoạt động được thực hiện thông qua tài khoản của mình.
+Hệ thống không chịu trách nhiệm trong trường hợp người dùng để lộ thông tin đăng nhập.
+</p>
+
+<hr>
+
+<label>
+    <input type="checkbox" id="chkAccept">
+    Tôi đã đọc và đồng ý với điều khoản sử dụng
+</label>
+<br><br>
+<button id="btnAccept">Xác nhận</button>
+
+<script>
+    document.getElementById("btnAccept").onclick = function () {
+        if (!document.getElementById("chkAccept").checked) {
+            alert("Bạn cần đồng ý với điều khoản để tiếp tục.");
+            return;
+        }
+
+        localStorage.setItem("P-terms-accepted", "true");
+        localStorage.setItem("P-terms-accepted-at", Date.now());
+        window.history.back();
+    };
+</script>
+
+</body>
+</html>
