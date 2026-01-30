@@ -1,5 +1,5 @@
 import { layNguoiDung } from "../Controllers/UserController.js";
-import { setAuth } from "../Utils/AUTH.js";
+import { setAuth } from "../Utils/AUTH.utils.js";
 
 $(document).ready(function () {
     $("#loginForm").submit(async function (e) {

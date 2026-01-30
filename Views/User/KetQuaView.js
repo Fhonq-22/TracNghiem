@@ -1,5 +1,5 @@
 import { layKetQua } from "../../Controllers/KetQuaController.js";
-import { yeuCauDangNhap } from "../../Utils/AUTH.js";
+import { yeuCauDangNhap } from "../../Utils/AUTH.utils.js";
 
 $(document).ready(async function () {
     if (!yeuCauDangNhap()) return;

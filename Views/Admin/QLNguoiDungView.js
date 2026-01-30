@@ -1,5 +1,5 @@
 import { layDanhSachNguoiDung, layNguoiDung, themNguoiDung, suaNguoiDung, xoaNguoiDung } from "../../Controllers/UserController.js";
-import { yeuCauAdmin } from "../../Utils/AUTH.js";
+import { yeuCauAdmin } from "../../Utils/AUTH.utils.js";
 
 let editingUser = null;
 let currentPage = 1;

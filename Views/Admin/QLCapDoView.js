@@ -1,5 +1,5 @@
 import { layDanhSachCapDo, layCapDo, themCapDo, suaCapDo, xoaCapDo } from "../../Controllers/CapDoController.js";
-import { yeuCauAdmin } from "../../Utils/AUTH.js";
+import { yeuCauAdmin } from "../../Utils/AUTH.utils.js";
 
 let cachedCapDo = [];
 let editingCapDo = null;

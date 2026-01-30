@@ -2,7 +2,7 @@ import { themPhienChoi, layPhienChoi, suaPhienChoi } from "../../Controllers/Phi
 import { layDanhSachBoDeDayDu, layBoDe } from "../../Controllers/BoDeController.js";
 import { layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layCapDo } from "../../Controllers/CapDoController.js";
-import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.js";
+import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.utils.js";
 
 let phienChoi = null;
 let maPhienChoi = null;

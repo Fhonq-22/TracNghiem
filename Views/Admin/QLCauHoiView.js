@@ -1,5 +1,5 @@
 import { layDanhSachCauHoi, layCauHoi, themCauHoi, suaCauHoi, xoaCauHoi } from "../../Controllers/CauHoiController.js";
-import { yeuCauAdmin, getUserHienTai } from "../../Utils/AUTH.js";
+import { yeuCauAdmin, getUserHienTai } from "../../Utils/AUTH.utils.js";
 
 let editingQuestion = null;
 let currentPage = 1;

@@ -2,7 +2,7 @@ import { layBoDe } from "../../Controllers/BoDeController.js";
 import { layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layCapDo } from "../../Controllers/CapDoController.js";
 import { themKetQua } from "../../Controllers/KetQuaController.js";
-import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.js";
+import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.utils.js";
 
 let boDemGio = null;
 let soGiayConLai = 0;

@@ -1,5 +1,5 @@
 import { layDanhSachBoDe, layBoDe } from "../../Controllers/BoDeController.js";
-import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.js";
+import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.utils.js";
 
 let currentPage = 1;
 const pageSize = 10;

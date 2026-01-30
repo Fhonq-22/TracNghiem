@@ -1,7 +1,7 @@
 import { layDanhSachBoDe, layBoDe, themBoDe, suaBoDe, xoaBoDe } from "../../Controllers/BoDeController.js";
 import { layDanhSachCauHoi, layCauHoi } from "../../Controllers/CauHoiController.js";
 import { layDanhSachCapDo, layCapDo } from "../../Controllers/CapDoController.js";
-import { yeuCauAdmin, getUserHienTai } from "../../Utils/AUTH.js";
+import { yeuCauAdmin, getUserHienTai } from "../../Utils/AUTH.utils.js";
 
 let editingBoDe = null;
 let currentPage = 1;

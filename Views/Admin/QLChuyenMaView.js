@@ -1,6 +1,6 @@
 import { chuyenMotMa, chuyenHangLoat } from "../../Controllers/ChuyenMaController.js";
 import { BANG_THAM_CHIEU, kiemTraThamChieu, doiMaCoRangBuoc } from "../../Controllers/REFERENCE.js";
-import { yeuCauAdmin } from "../../Utils/AUTH.js";
+import { yeuCauAdmin } from "../../Utils/AUTH.utils.js";
 
 const $logBox = $("#logBox");
 const $btnChuyen1 = $("#btnChuyen1");

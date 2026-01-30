@@ -1,4 +1,4 @@
-import { yeuCauDangNhap, getUserHienTai, removeAuth } from "../../Utils/AUTH.js";
+import { yeuCauDangNhap, getUserHienTai, removeAuth } from "../../Utils/AUTH.utils.js";
 
 $(document).ready(function () {
     if (!yeuCauDangNhap()) return;
