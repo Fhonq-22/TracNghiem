@@ -9,5 +9,5 @@ export const SESSION = {
 
 export const TERMS = {
     VERSION: "1.0",
-    UPDATED_AT: "2026-01-01"
+    UPDATED_AT: "30/01/2026"
 };
