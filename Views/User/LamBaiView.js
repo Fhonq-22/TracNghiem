@@ -4,6 +4,7 @@ import { layCapDo } from "../../Controllers/CapDoController.js";
 import { themKetQua } from "../../Controllers/KetQuaController.js";
 import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.utils.js";
 import { yeuCauDongYDieuKhoan } from "../../Utils/DIEUKHOAN.utils.js";
+import { khoiTaoGiamSatHanhVi, layDanhSachHanhVi } from "../../Domain/HANHVI.domain.js";
 
 let boDemGio = null;
 let soGiayConLai = 0;
@@ -26,6 +27,8 @@ $(document).ready(async function () {
         alert("Không tìm thấy bộ đề");
         return;
     }
+
+    khoiTaoGiamSatHanhVi();
 
     thoiGianBatDau = new Date();
     soGiayConLai = boDe.ThoiGian * 60;
@@ -125,7 +128,8 @@ async function nopBai() {
         TenNguoiDung: getUserHienTai()?.TenNguoiDung ?? "",
         ThoiGianBatDau: dinhDangThoiGian(thoiGianBatDau),
         ThoiGianNop: dinhDangThoiGian(thoiGianNop),
-        Diem: diem
+        Diem: diem,
+        HanhViBatThuong: layDanhSachHanhVi()
     };
 
     await themKetQua(duLieuKetQua);
