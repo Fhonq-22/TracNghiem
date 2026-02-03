@@ -8,7 +8,8 @@ export async function themKetQua(ketQua) {
         ketQua.TenNguoiDung,
         ketQua.ThoiGianBatDau,
         ketQua.ThoiGianNop,
-        ketQua.Diem
+        ketQua.Diem,
+        ketQua.HanhViBatThuong ?? []
     );
     await addData("KetQua", newKetQua.MaKetQua, newKetQua.toJSON());
 }
@@ -21,7 +22,8 @@ export async function layKetQua(maKetQua) {
         data.TenNguoiDung,
         data.ThoiGianBatDau,
         data.ThoiGianNop,
-        data.Diem
+        data.Diem,
+        data.HanhViBatThuong ?? []
     ) : null;
 }
 
@@ -37,7 +39,8 @@ export async function suaKetQua(maKetQua, ketQuaMoi) {
         ketQuaMoi.TenNguoiDung,
         ketQuaMoi.ThoiGianBatDau,
         ketQuaMoi.ThoiGianNop,
-        ketQuaMoi.Diem
+        ketQuaMoi.Diem,
+        ketQuaMoi.HanhViBatThuong ?? []
     );
     await updateData("KetQua", maKetQua, updatedKetQua.toJSON());
 }

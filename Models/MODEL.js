@@ -68,13 +68,14 @@ export class BoDe {
 }
 
 export class KetQua {
-    constructor(MaKetQua, MaDe, TenNguoiDung, ThoiGianBatDau, ThoiGianNop, Diem) {
+    constructor(MaKetQua, MaDe, TenNguoiDung, ThoiGianBatDau, ThoiGianNop, Diem, HanhViBatThuong = []) {
         this.MaKetQua = MaKetQua;
         this.MaDe = MaDe;
         this.TenNguoiDung = TenNguoiDung;
         this.ThoiGianBatDau = ThoiGianBatDau;
         this.ThoiGianNop = ThoiGianNop;
         this.Diem = Diem;
+        this.HanhViBatThuong = HanhViBatThuong;
     }
 
     toJSON() {
@@ -83,7 +84,8 @@ export class KetQua {
             TenNguoiDung: this.TenNguoiDung,
             ThoiGianBatDau: this.ThoiGianBatDau,
             ThoiGianNop: this.ThoiGianNop,
-            Diem: this.Diem
+            Diem: this.Diem,
+            HanhViBatThuong: this.HanhViBatThuong
         };
     }
 }
