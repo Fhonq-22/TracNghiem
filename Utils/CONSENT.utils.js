@@ -1,14 +1,16 @@
 const CONSENT_KEY = "P-consent";
 
-export function daDongYDieuKhoan(project, version) {
+export function daDongYDieuKhoan(username, project, version) {
     const consent = JSON.parse(localStorage.getItem(CONSENT_KEY) || "{}");
-    return consent[project]?.version === version;
+    return consent[username]?.[project]?.version === version;
 }
 
-export function dongYDieuKhoan(project, version) {
+export function dongYDieuKhoan(username, project, version) {
     const consent = JSON.parse(localStorage.getItem(CONSENT_KEY) || "{}");
 
-    consent[project] = {
+    if (!consent[username]) consent[username] = {};
+
+    consent[username][project] = {
         version,
         acceptedAt: Date.now()
     };
