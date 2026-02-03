@@ -54,18 +54,5 @@ Hệ thống không chịu trách nhiệm trong trường hợp người dùng �
 <br><br>
 <button id="btnAccept">Xác nhận</button>
 
-<script>
-    document.getElementById("btnAccept").onclick = function () {
-        if (!document.getElementById("chkAccept").checked) {
-            alert("Bạn cần đồng ý với điều khoản để tiếp tục.");
-            return;
-        }
-
-        localStorage.setItem("P-terms-accepted", "true");
-        localStorage.setItem("P-terms-accepted-at", Date.now());
-        window.history.back();
-    };
-</script>
-
 </body>
 </html>
