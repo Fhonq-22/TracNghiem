@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<h1>Điều khoản sử dụng hệ thống Quizie</h1>
+<h1>Điều khoản sử dụng hệ thống <span id="projectName"></span></h1>
 
 <p>
 Trang này quy định các điều khoản và điều kiện khi người dùng sử dụng hệ thống thi trắc nghiệm Quizie.
@@ -17,7 +17,7 @@ Việc tiếp tục sử dụng hệ thống đồng nghĩa với việc ngườ
 
 <h2>1. Phiên đăng nhập</h2>
 <p>
-Phiên đăng nhập của người dùng có thời hạn <strong>2 giờ 22 phút 22 giây</strong>.
+Phiên đăng nhập của người dùng có thời hạn <strong id="sessionExpire"></strong>.
 Sau khi hết hạn, người dùng cần đăng nhập lại để tiếp tục sử dụng hệ thống.
 </p>
 
@@ -46,6 +46,11 @@ Hệ thống không chịu trách nhiệm trong trường hợp người dùng �
 </p>
 
 <hr>
+
+<p>
+Phiên bản điều khoản: <strong id="termsVersion"></strong><br>
+Cập nhật lần cuối: <strong id="termsUpdatedAt"></strong>
+</p>
 
 <label>
     <input type="checkbox" id="chkAccept">
