@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Điều khoản sử dụng - Quizie</title>
+    <title>Điều khoản sử dụng</title>
     <script type="module" src="./Views/DieuKhoanView.js"></script>
 </head>
 <body>
@@ -11,38 +11,49 @@
 <h1>Điều khoản sử dụng hệ thống <span id="projectName"></span></h1>
 
 <p>
-Trang này quy định các điều khoản và điều kiện khi người dùng sử dụng hệ thống thi trắc nghiệm Quizie.
-Việc tiếp tục sử dụng hệ thống đồng nghĩa với việc người dùng đã đọc, hiểu và đồng ý với các điều khoản dưới đây.
+Tài liệu này quy định các điều khoản và điều kiện áp dụng khi người dùng truy cập
+và sử dụng hệ thống thi trắc nghiệm <span id="projectName"></span>.
+Việc tiếp tục sử dụng hệ thống đồng nghĩa với việc người dùng đã đọc,
+hiểu và đồng ý tuân thủ toàn bộ nội dung được nêu trong điều khoản này.
 </p>
 
 <h2>1. Phiên đăng nhập</h2>
 <p>
-Phiên đăng nhập của người dùng có thời hạn <strong id="sessionExpire"></strong>.
-Sau khi hết hạn, người dùng cần đăng nhập lại để tiếp tục sử dụng hệ thống.
+Mỗi phiên đăng nhập của người dùng có thời hạn <strong id="sessionExpire"></strong>.
+Sau khi phiên hết hạn, người dùng cần thực hiện đăng nhập lại
+để tiếp tục sử dụng các chức năng của hệ thống.
 </p>
 
 <h2>2. Quy định trong quá trình làm bài thi</h2>
+<p>
+Để đảm bảo tính công bằng và nghiêm túc trong quá trình thi,
+người dùng cần tuân thủ các quy định sau:
+</p>
 <ul>
-    <li>Người dùng không nên rời khỏi trang làm bài trong thời gian thi.</li>
+    <li>Không tự ý rời khỏi trang làm bài trong thời gian thi.</li>
     <li>Hạn chế các hành vi sao chép (copy) và dán (paste) nội dung.</li>
-    <li>Không sử dụng các công cụ hỗ trợ bên ngoài trong quá trình làm bài.</li>
+    <li>Không sử dụng các công cụ hoặc tài liệu hỗ trợ không được phép.</li>
 </ul>
 
 <p>
-Hệ thống có thể ghi nhận các hành vi bất thường (ví dụ: rời tab, copy/paste, mở công cụ phát triển)
-nhằm phục vụ mục đích giám sát và đánh giá quá trình làm bài.
+Hệ thống có thể ghi nhận một số hành vi phát sinh trong quá trình làm bài
+(ví dụ: rời tab hoặc thao tác bất thường) nhằm phục vụ việc đánh giá
+và đảm bảo tính minh bạch của kỳ thi.
 </p>
 
 <h2>3. Kết quả thi</h2>
 <p>
-Kết quả thi được tính toán dựa trên các câu trả lời của người dùng và được lưu lại
-để phục vụ việc xem lại và thống kê.
+Kết quả thi được xác định dựa trên các câu trả lời của người dùng
+theo quy tắc chấm điểm của từng bài thi.
+Người dùng có thể xem lại kết quả và lịch sử làm bài sau khi hoàn thành bài thi.
 </p>
 
-<h2>4. Trách nhiệm người dùng</h2>
+<h2>4. Trách nhiệm của người dùng</h2>
 <p>
-Người dùng chịu trách nhiệm với mọi hoạt động được thực hiện thông qua tài khoản của mình.
-Hệ thống không chịu trách nhiệm trong trường hợp người dùng để lộ thông tin đăng nhập.
+Người dùng chịu trách nhiệm đối với mọi hoạt động được thực hiện
+thông qua tài khoản của mình khi sử dụng hệ thống <span id="projectName"></span>.
+Hệ thống không chịu trách nhiệm trong trường hợp người dùng
+để lộ hoặc chia sẻ thông tin đăng nhập với bên khác.
 </p>
 
 <hr>
@@ -54,7 +65,7 @@ Cập nhật lần cuối: <strong id="termsUpdatedAt"></strong>
 
 <label>
     <input type="checkbox" id="chkAccept">
-    Tôi đã đọc và đồng ý với điều khoản sử dụng
+    Tôi đã đọc, hiểu và đồng ý với các điều khoản sử dụng
 </label>
 <br><br>
 <button id="btnAccept">Xác nhận</button>
