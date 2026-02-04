@@ -32,6 +32,15 @@ export async function layDanhSachKetQua() {
     return data ? Object.keys(data) : [];
 }
 
+export async function layMaKetQuaTheoNguoiDung(tenNguoiDung) {
+    const data = await getData("KetQua", "");
+    if (!data) return [];
+
+    return Object.keys(data).filter(
+        maKetQua => data[maKetQua].TenNguoiDung === tenNguoiDung
+    );
+}
+
 export async function suaKetQua(maKetQua, ketQuaMoi) {
     const updatedKetQua = new KetQua(
         maKetQua,

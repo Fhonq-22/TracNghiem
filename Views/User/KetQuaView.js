@@ -1,5 +1,5 @@
-import { layKetQua } from "../../Controllers/KetQuaController.js";
-import { yeuCauDangNhap } from "../../Utils/AUTH.utils.js";
+import { layKetQua, layMaKetQuaTheoNguoiDung } from "../../Controllers/KetQuaController.js";
+import { yeuCauDangNhap, getUserHienTai } from "../../Utils/AUTH.utils.js";
 import { yeuCauDongYDieuKhoan } from "../../Utils/DIEUKHOAN.utils.js";
 import { HANHVI } from "../../Domain/HANHVI.domain.js";
 
@@ -14,11 +14,20 @@ function dinhDangThoiGian(iso) {
 }
 
 async function hienThiKetQua(maKetQua) {
-    const kq = await layKetQua(maKetQua);
+    const user = getUserHienTai();
 
+    const kq = await layKetQua(maKetQua);
     if (!kq) {
         $("#ketQuaContainer").html(
-            `<p style="color:red">Không tìm thấy kết quả với mã: <b>${maKetQua}</b></p>`
+            `<p style="color:red">Mã kết quả không tồn tại</p>`
+        );
+        return;
+    }
+
+    const dsMaKetQua = await layMaKetQuaTheoNguoiDung(user.TenNguoiDung);
+    if (!dsMaKetQua.includes(maKetQua)) {
+        $("#ketQuaContainer").html(
+            `<p style="color:red">Bạn không có quyền xem kết quả này</p>`
         );
         return;
     }
@@ -54,17 +63,8 @@ async function hienThiKetQua(maKetQua) {
     `);
 
     $("#btnCopyMaKetQua").on("click", async function () {
-        try {
-            await navigator.clipboard.writeText(maKetQua);
-            alert("Đã copy mã kết quả!");
-        } catch {
-            const temp = $("<input>");
-            $("body").append(temp);
-            temp.val(maKetQua).select();
-            document.execCommand("copy");
-            temp.remove();
-            alert("Đã copy mã kết quả!");
-        }
+        await navigator.clipboard.writeText(maKetQua);
+        alert("Đã copy mã kết quả!");
     });
 }
 
