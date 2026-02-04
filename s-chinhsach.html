@@ -37,6 +37,10 @@ hệ thống có thể thu thập các loại thông tin sau:
     <li>Vận hành và duy trì hoạt động của hệ thống thi trắc nghiệm</li>
     <li>Hiển thị kết quả thi và lịch sử làm bài cho người dùng</li>
     <li>Cải thiện trải nghiệm và hiệu quả sử dụng hệ thống</li>
+    <li>
+        Đảm bảo tính riêng tư và bảo mật của kết quả thi, chỉ hiển thị cho người dùng
+        sở hữu kết quả hoặc các đối tượng được phân quyền phù hợp trong hệ thống
+    </li>
 </ul>
 
 <h2>3. Phạm vi và hình thức lưu trữ</h2>
@@ -63,11 +67,36 @@ Một số thông tin tạm thời, bao gồm trạng thái đăng nhập và d�
 bất kỳ dữ liệu cá nhân nào của người dùng cho bên thứ ba.
 </p>
 
+<p>
+Kết quả thi của người dùng được xem là dữ liệu cá nhân và không được công khai
+hoặc chia sẻ cho người dùng khác khi chưa có sự cho phép phù hợp theo quy định
+của hệ thống.
+</p>
+
 <h2>5. Quyền riêng tư của người dùng</h2>
 <p>
 Người dùng có toàn quyền kiểm soát dữ liệu của mình khi sử dụng
 <strong class="projectName"></strong>, bao gồm việc đăng xuất,
 xóa phiên làm việc hoặc ngừng sử dụng hệ thống bất kỳ lúc nào.
+</p>
+
+<h2>6. Bảo mật kết quả thi</h2>
+<p>
+<strong class="projectName"></strong> áp dụng các biện pháp kỹ thuật nhằm đảm bảo
+rằng kết quả thi chỉ có thể được truy cập và xem bởi chính người dùng đã thực hiện
+bài thi hoặc các đối tượng có quyền quản lý theo phân quyền của hệ thống.
+</p>
+
+<p>
+Mỗi kết quả thi được gắn với thông tin định danh của người dùng trong hệ thống.
+Việc tra cứu và hiển thị kết quả được kiểm soát nhằm ngăn chặn truy cập trái phép,
+xem sai đối tượng hoặc khai thác dữ liệu không phù hợp.
+</p>
+
+<p>
+Trong trường hợp người dùng nhập mã kết quả không hợp lệ hoặc không thuộc quyền
+truy cập của mình, hệ thống sẽ từ chối hiển thị nội dung kết quả nhằm bảo vệ
+quyền riêng tư của các bên liên quan.
 </p>
 
 <p>
