@@ -1,6 +1,17 @@
 import { layKetQua } from "../../Controllers/KetQuaController.js";
 import { yeuCauDangNhap } from "../../Utils/AUTH.utils.js";
 import { yeuCauDongYDieuKhoan } from "../../Utils/DIEUKHOAN.utils.js";
+import { HANHVI } from "../../Domain/HANHVI.domain.js";
+
+function layLabelHanhVi(code) {
+    return Object.values(HANHVI).find(h => h.CODE === code)?.LABEL ?? code;
+}
+
+function dinhDangThoiGian(iso) {
+    const tg = new Date(iso);
+    return tg.toLocaleDateString("vi-VN") + " " +
+           tg.toLocaleTimeString("vi-VN");
+}
 
 $(document).ready(async function () {
     if (!yeuCauDangNhap()) return;
@@ -20,7 +31,17 @@ $(document).ready(async function () {
 
     const hanhVi = kq.HanhViBatThuong ?? [];
     const htmlHanhVi = hanhVi.length
-        ? `<ul>${hanhVi.map(hv => `<li>${hv.Code} - ${hv.ThoiGian}</li>`).join("")}</ul>`
+        ? `
+            <ul>
+                ${hanhVi.map(hv => `
+                    <li>
+                        <b>${layLabelHanhVi(hv.Code)}</b>
+                        <br>
+                        <small>⏱ ${dinhDangThoiGian(hv.ThoiGian)}</small>
+                    </li>
+                `).join("")}
+            </ul>
+        `
         : `<p>Không ghi nhận hành vi bất thường</p>`;
 
     $("#ketQuaContainer").html(`
