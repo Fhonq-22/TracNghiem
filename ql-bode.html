@@ -9,46 +9,52 @@
     <link rel="stylesheet" href="./Assets/css/QL-BoDe.css">
 </head>
 <body>
-    <h1>Quản lý bộ đề</h1>
-    <a href="admin.html">← Quay về trang quản trị</a>
-    <button id="btnAddBoDe">Thêm bộ đề</button>
 
-    <table border="1" id="boDeTable">
-        <thead>
-            <tr>
-                <th>Mã bộ đề</th>
-                <th>Tên bộ đề</th>
-                <th>Cấp độ</th>
-                <th>Số câu hỏi</th>
-                <th>Thời gian (phút)</th>
-                <th>Ngày tạo</th>
-                <th>Người tạo</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<h1>Quản lý bộ đề</h1>
+<a href="admin.html">← Quay về trang quản trị</a>
 
-    <div id="pagination"></div>
+<button id="btnAddBoDe">Thêm bộ đề</button>
 
-    <div id="boDeModal" style="display:none; position:fixed; top:15%; left:30%; background:#fff; padding:20px; border:1px solid #000; width:40%;">
+<table id="boDeTable">
+    <thead>
+        <tr>
+            <th>Mã bộ đề</th>
+            <th>Tên bộ đề</th>
+            <th>Cấp độ</th>
+            <th>Số câu hỏi</th>
+            <th>Thời gian (phút)</th>
+            <th>Ngày tạo</th>
+            <th>Người tạo</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<div id="pagination"></div>
+
+<div id="boDeModal" style="display:none">
+    <div class="modal-content">
         <h3 id="modalTitle">Thêm bộ đề</h3>
 
-        <label>Tên bộ đề</label><br>
-        <input type="text" id="modalTenBoDe"><br><br>
+        <label>Tên bộ đề</label>
+        <input type="text" id="modalTenBoDe">
 
-        <label>Cấp độ</label><br>
-        <select id="modalCapDo">
-        </select><br><br>
+        <label>Cấp độ</label>
+        <select id="modalCapDo"></select>
 
-        <label>Thời gian (phút)</label><br>
-        <input type="number" id="modalThoiGian" value="30"><br><br>
+        <label>Thời gian (phút)</label>
+        <input type="number" id="modalThoiGian" value="30">
 
-        <label>Chọn câu hỏi</label><br>
-        <div id="modalCauHoiList" style="max-height:200px; overflow:auto; border:1px solid #ccc; padding:5px;"></div><br>
+        <label>Chọn câu hỏi</label>
+        <div id="modalCauHoiList"></div>
 
-        <button id="modalSave">Lưu</button>
-        <button id="modalCancel">Hủy</button>
+        <div class="modal-actions">
+            <button id="modalSave">Lưu</button>
+            <button id="modalCancel">Hủy</button>
+        </div>
     </div>
+</div>
+
 </body>
 </html>

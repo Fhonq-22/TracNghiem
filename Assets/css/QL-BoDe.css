@@ -17,15 +17,9 @@ a {
     font-weight: 500;
 }
 
-a:hover {
-    text-decoration: underline;
-}
-
 #btnAddBoDe {
     margin-bottom: var(--space-md);
 }
-
-/* ===== TABLE ===== */
 
 table {
     width: 100%;
@@ -58,22 +52,11 @@ tbody tr:hover {
 
 td:nth-child(2) {
     max-width: 280px;
-    white-space: normal;
     line-height: 1.4;
 }
 
 td:last-child {
     white-space: nowrap;
-}
-
-/* ===== ACTION BUTTONS ===== */
-
-.editBtn {
-    background: var(--color-info);
-}
-
-.deleteBtn {
-    background: var(--color-danger);
 }
 
 .editBtn,
@@ -86,12 +69,13 @@ td:last-child {
     margin-right: 4px;
 }
 
-.editBtn:hover,
-.deleteBtn:hover {
-    filter: brightness(0.95);
+.editBtn {
+    background: var(--color-info);
 }
 
-/* ===== PAGINATION ===== */
+.deleteBtn {
+    background: var(--color-danger);
+}
 
 #pagination {
     margin-top: var(--space-lg);
@@ -114,12 +98,6 @@ td:last-child {
     border-color: var(--color-primary);
 }
 
-.pageBtn:hover {
-    background: var(--color-secondary);
-}
-
-/* ===== MODAL ===== */
-
 #boDeModal {
     position: fixed;
     inset: 0;
@@ -131,7 +109,7 @@ td:last-child {
     z-index: 1000;
 }
 
-#boDeModal > * {
+.modal-content {
     background: var(--color-surface);
     width: 100%;
     max-width: 700px;
@@ -140,21 +118,19 @@ td:last-child {
     box-shadow: var(--shadow-lg);
 }
 
-#boDeModal h3 {
+.modal-content h3 {
     margin-bottom: var(--space-md);
 }
 
-#boDeModal label {
+.modal-content label {
     font-weight: 500;
 }
 
-#boDeModal input,
-#boDeModal select {
+.modal-content input,
+.modal-content select {
     width: 100%;
     margin-bottom: var(--space-sm);
 }
-
-/* ===== QUESTION LIST ===== */
 
 #modalCauHoiList {
     max-height: 220px;
@@ -163,11 +139,11 @@ td:last-child {
     border-radius: var(--radius-sm);
     padding: var(--space-sm);
     background: var(--color-bg-soft);
+    margin-bottom: var(--space-md);
 }
 
 #modalCauHoiList div {
     display: flex;
-    align-items: flex-start;
     gap: 6px;
     padding: 4px 2px;
     border-radius: var(--radius-xs);
@@ -177,11 +153,11 @@ td:last-child {
     background: rgba(0, 0, 0, 0.05);
 }
 
-#modalCauHoiList input[type="checkbox"] {
-    margin-top: 3px;
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
-
-/* ===== MODAL BUTTONS ===== */
 
 #modalSave {
     background: var(--color-success);
@@ -197,5 +173,4 @@ td:last-child {
     border-radius: var(--radius-sm);
     padding: 8px 14px;
     cursor: pointer;
-    margin-right: 6px;
 }
