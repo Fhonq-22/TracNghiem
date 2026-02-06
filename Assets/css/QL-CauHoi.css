@@ -1,0 +1,181 @@
+@import url("./BASE.css");
+
+body {
+    background: var(--color-bg);
+    min-height: 100vh;
+    padding: var(--space-xl);
+}
+
+h1 {
+    margin-bottom: var(--space-sm);
+}
+
+a {
+    display: inline-block;
+    margin-bottom: var(--space-lg);
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#btnAddQuestion {
+    margin-bottom: var(--space-md);
+}
+
+/* ===== TABLE ===== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    font-size: var(--font-size-sm);
+}
+
+thead {
+    background: var(--color-secondary);
+}
+
+th,
+td {
+    padding: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+
+th {
+    font-weight: 600;
+    color: var(--color-text-main);
+    white-space: nowrap;
+}
+
+tbody tr:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+td:nth-child(2),
+td:nth-child(8) {
+    max-width: 280px;
+    white-space: normal;
+    line-height: 1.4;
+}
+
+td:last-child {
+    white-space: nowrap;
+}
+
+/* ===== ACTION BUTTONS ===== */
+
+.editBtn {
+    background: var(--color-info);
+}
+
+.deleteBtn {
+    background: var(--color-danger);
+}
+
+.editBtn,
+.deleteBtn {
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    margin-right: 4px;
+}
+
+.editBtn:hover,
+.deleteBtn:hover {
+    filter: brightness(0.95);
+}
+
+/* ===== PAGINATION ===== */
+
+#pagination {
+    margin-top: var(--space-lg);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.pageBtn {
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    border: var(--border-default);
+    background: var(--color-surface);
+    cursor: pointer;
+}
+
+.pageBtn.active {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+.pageBtn:hover {
+    background: var(--color-secondary);
+}
+
+/* ===== MODAL ===== */
+
+#questionModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+    z-index: 1000;
+}
+
+#questionModal > * {
+    background: var(--color-surface);
+    width: 100%;
+    max-width: 700px;
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+}
+
+#questionModal h3 {
+    margin-bottom: var(--space-md);
+}
+
+#questionModal input,
+#questionModal textarea,
+#questionModal select {
+    width: 100%;
+    margin-bottom: var(--space-sm);
+}
+
+.modalPhuongAn:nth-of-type(1) { background: var(--option-a); }
+.modalPhuongAn:nth-of-type(2) { background: var(--option-b); }
+.modalPhuongAn:nth-of-type(3) { background: var(--option-c); }
+.modalPhuongAn:nth-of-type(4) { background: var(--option-d); }
+
+.modalPhuongAn {
+    border: none;
+}
+
+#modalSave {
+    background: var(--color-success);
+}
+
+#modalCancel {
+    background: var(--color-warning);
+}
+
+#modalSave,
+#modalCancel {
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    cursor: pointer;
+    margin-right: 6px;
+}
