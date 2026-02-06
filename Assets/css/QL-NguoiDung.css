@@ -1,0 +1,171 @@
+@import url("./BASE.css");
+
+body {
+    background: var(--color-bg);
+    min-height: 100vh;
+    padding: var(--space-xl);
+}
+
+h1 {
+    margin-bottom: var(--space-sm);
+}
+
+a {
+    display: inline-block;
+    margin-bottom: var(--space-lg);
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#btnAddUser {
+    margin-bottom: var(--space-md);
+}
+
+/* ===== TABLE ===== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+thead {
+    background: var(--color-secondary);
+}
+
+th, td {
+    padding: var(--space-sm) var(--space-md);
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--font-size-sm);
+}
+
+th {
+    color: var(--color-text-main);
+    font-weight: 600;
+}
+
+tbody tr:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+td:last-child {
+    white-space: nowrap;
+}
+
+/* ===== ACTION BUTTONS ===== */
+
+.editBtn {
+    background: var(--color-info);
+    color: #000;
+}
+
+.deleteBtn {
+    background: var(--color-danger);
+    color: #000;
+}
+
+.editBtn,
+.deleteBtn {
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    margin-right: 4px;
+}
+
+.editBtn:hover,
+.deleteBtn:hover {
+    filter: brightness(0.95);
+}
+
+/* ===== PAGINATION ===== */
+
+#pagination {
+    margin-top: var(--space-lg);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.pageBtn {
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    border: var(--border-default);
+    background: var(--color-surface);
+    cursor: pointer;
+}
+
+.pageBtn.active {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+.pageBtn:hover {
+    background: var(--color-secondary);
+}
+
+/* ===== MODAL ===== */
+
+#userModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#userModal > div,
+#userModal {
+    z-index: 1000;
+}
+
+#userModal {
+    padding: var(--space-md);
+}
+
+#userModal > * {
+    background: var(--color-surface);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 420px;
+    box-shadow: var(--shadow-lg);
+}
+
+#userModal h3 {
+    margin-bottom: var(--space-md);
+}
+
+#userModal input,
+#userModal select {
+    width: 100%;
+    margin-bottom: var(--space-sm);
+}
+
+#modalSave {
+    background: var(--color-success);
+}
+
+#modalCancel {
+    background: var(--color-warning);
+}
+
+#modalSave,
+#modalCancel {
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    margin-right: 6px;
+    cursor: pointer;
+}
