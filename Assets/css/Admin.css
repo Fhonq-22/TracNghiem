@@ -1,0 +1,48 @@
+@import url("./BASE.css");
+
+body {
+    background: var(--color-bg);
+    min-height: 100vh;
+    padding: var(--space-xl);
+}
+
+h1 {
+    margin-bottom: var(--space-xl);
+    color: var(--color-text-main);
+}
+
+body > div {
+    background: var(--color-surface);
+    border: var(--border-default);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+body > div:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+h2 {
+    margin-bottom: var(--space-sm);
+    color: var(--color-text-main);
+    font-size: var(--font-size-lg);
+}
+
+a {
+    display: inline-block;
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#btnLogout {
+    color: var(--color-danger);
+    font-weight: 600;
+}
