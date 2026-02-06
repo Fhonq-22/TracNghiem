@@ -1,0 +1,101 @@
+@import url("./BASE.css");
+
+body {
+    background: var(--color-bg);
+    min-height: 100vh;
+    padding: var(--space-xl);
+}
+
+/* ===== TITLE ===== */
+
+h2 {
+    margin-bottom: var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ===== COMMON ===== */
+
+label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+}
+
+select,
+input {
+    max-width: 360px;
+    margin-bottom: var(--space-sm);
+}
+
+/* ===== BOX ===== */
+
+.box {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    max-width: 520px;
+}
+
+.box h3 {
+    margin-bottom: var(--space-md);
+    color: var(--color-primary);
+}
+
+.box button {
+    margin-top: var(--space-sm);
+}
+
+/* ===== BUTTONS ===== */
+
+#btnChuyen1 {
+    background: var(--color-warning);
+}
+
+#btnChuyenNhieu {
+    background: var(--color-danger);
+}
+
+#btnChuyen1,
+#btnChuyenNhieu {
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+#btnChuyen1:hover,
+#btnChuyenNhieu:hover {
+    filter: brightness(0.95);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ===== LOG ===== */
+
+.log {
+    background: #0f172a;
+    color: #e5e7eb;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    max-width: 100%;
+    max-height: 260px;
+    overflow-y: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    box-shadow: var(--shadow-md);
+}
+
+/* ===== SPACING ===== */
+
+body > div {
+    margin-bottom: var(--space-lg);
+}
