@@ -1,0 +1,65 @@
+@import url("./BASE.css");
+
+body {
+    background: var(--color-bg);
+    color: var(--color-text-main);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-xl);
+    line-height: 1.7;
+}
+
+h1 {
+    margin-bottom: var(--space-lg);
+    color: var(--color-primary);
+}
+
+h2 {
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-sm);
+    color: var(--color-text-main);
+}
+
+p {
+    margin-bottom: var(--space-md);
+    color: var(--color-text-sub);
+}
+
+ul {
+    margin-left: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+
+ul li {
+    margin-bottom: var(--space-xs);
+}
+
+hr {
+    margin: var(--space-xl) 0;
+    border: none;
+    border-top: var(--border-default);
+}
+
+label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-main);
+}
+
+#chkAccept {
+    transform: scale(1.15);
+    accent-color: var(--color-primary);
+}
+
+#btnAccept {
+    margin-top: var(--space-md);
+    padding: var(--space-sm) var(--space-xl);
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: var(--space-lg);
+    }
+}
