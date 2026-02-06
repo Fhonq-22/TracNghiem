@@ -6,18 +6,26 @@
     <title>Làm bài kiểm tra</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="module" src="./Views/User/LamBaiView.js"></script>
+    <link rel="stylesheet" href="./Assets/css/U-LamBai.css">
 </head>
 <body>
-    <h1>Bài kiểm tra</h1>
-    <a href="index.html">← Quay về trang chủ</a>
+  <div class="page">
 
-    <div>
-        <span>Thời gian còn lại: </span>
-        <span id="thoiGianConLai"></span>
+    <div class="page-header">
+      <h1>Bài kiểm tra</h1>
+      <a href="index.html" class="back-link">← Quay về trang chủ</a>
+    </div>
+
+    <div class="timer-box">
+      ⏱ Thời gian còn lại: <span id="thoiGianConLai"></span>
     </div>
 
     <div id="khungCauHoi"></div>
 
-    <button id="btnNopBai">Nộp bài</button>
+    <div class="submit-box">
+      <button id="btnNopBai">Nộp bài</button>
+    </div>
+
+  </div>
 </body>
 </html>
