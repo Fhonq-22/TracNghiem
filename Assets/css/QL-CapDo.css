@@ -6,24 +6,20 @@ body {
     padding: var(--space-xl);
 }
 
-/* ===== HEADER ===== */
-
 h1 {
     margin-bottom: var(--space-sm);
 }
 
 a {
     display: inline-block;
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-lg);
     color: var(--color-primary);
     font-weight: 500;
 }
 
 #btnAddCapDo {
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
 }
-
-/* ===== TABLE ===== */
 
 table {
     width: 100%;
@@ -35,28 +31,27 @@ table {
 }
 
 thead {
-    background: var(--color-primary-soft);
+    background: var(--color-secondary);
 }
 
 th,
 td {
-    padding: 10px 12px;
-    text-align: left;
+    padding: var(--space-sm);
     border-bottom: 1px solid var(--color-border);
+    text-align: left;
+}
+
+th {
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 tbody tr:hover {
-    background: var(--color-hover);
+    background: rgba(0, 0, 0, 0.03);
 }
 
-/* ===== ACTION BUTTON ===== */
-
-.editBtn {
-    background: var(--color-warning);
-}
-
-.deleteBtn {
-    background: var(--color-danger);
+td:last-child {
+    white-space: nowrap;
 }
 
 .editBtn,
@@ -64,17 +59,18 @@ tbody tr:hover {
     border: none;
     border-radius: var(--radius-sm);
     padding: 6px 10px;
-    font-size: 13px;
+    font-size: var(--font-size-sm);
     cursor: pointer;
     margin-right: 4px;
 }
 
-.editBtn:hover,
-.deleteBtn:hover {
-    filter: brightness(0.95);
+.editBtn {
+    background: var(--color-info);
 }
 
-/* ===== PAGINATION ===== */
+.deleteBtn {
+    background: var(--color-danger);
+}
 
 #pagination {
     margin-top: var(--space-lg);
@@ -86,7 +82,7 @@ tbody tr:hover {
 .pageBtn {
     padding: 6px 10px;
     border-radius: var(--radius-sm);
-    border: 1px solid var(--color-border);
+    border: var(--border-default);
     background: var(--color-surface);
     cursor: pointer;
 }
@@ -97,33 +93,51 @@ tbody tr:hover {
     border-color: var(--color-primary);
 }
 
-/* ===== MODAL ===== */
-
 #capDoModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+    z-index: 1000;
+}
+
+.modal-content {
     background: var(--color-surface);
+    width: 100%;
+    max-width: 480px;
+    padding: var(--space-lg);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
 }
 
-#capDoModal h3 {
+.modal-content h3 {
     margin-bottom: var(--space-md);
 }
 
-#capDoModal label {
+.modal-content label {
     font-weight: 500;
 }
 
-#capDoModal input {
+.modal-content input {
     width: 100%;
     margin-bottom: var(--space-sm);
 }
 
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
 #modalSave {
-    background: var(--color-primary);
+    background: var(--color-success);
 }
 
 #modalCancel {
-    background: var(--color-secondary);
+    background: var(--color-warning);
 }
 
 #modalSave,
@@ -132,9 +146,4 @@ tbody tr:hover {
     border-radius: var(--radius-sm);
     padding: 8px 14px;
     cursor: pointer;
-}
-
-#modalSave:hover,
-#modalCancel:hover {
-    filter: brightness(0.95);
 }
