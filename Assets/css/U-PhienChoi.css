@@ -1,0 +1,169 @@
+@import url("./BASE.css");
+
+body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: var(--space-md);
+    color: var(--color-primary);
+}
+
+h2, h3 {
+    margin-bottom: var(--space-sm);
+}
+
+a {
+    display: inline-block;
+    margin-bottom: var(--space-md);
+}
+
+hr {
+    margin: var(--space-lg) 0;
+    border: none;
+    border-top: var(--border-default);
+}
+
+#chonPhienSection,
+#dieuKhienSection {
+    background: var(--color-surface);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+#chonPhienSection > div {
+    margin-bottom: var(--space-md);
+}
+
+#chonPhienSection input[type="number"],
+#chonPhienSection input[type="text"] {
+    max-width: 200px;
+}
+
+#dsNhapTen > div {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+#dieuKhienSection p {
+    margin-bottom: var(--space-xs);
+    color: var(--color-text-sub);
+}
+
+#dieuKhienSection p b {
+    color: var(--color-text-main);
+}
+
+#selectChuDe {
+    min-width: 250px;
+    margin-right: var(--space-sm);
+}
+
+#lamCauHoiSection {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--color-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+#tieuDeCauHoi {
+    margin-bottom: var(--space-sm);
+    color: var(--color-primary);
+}
+
+#noiDungCauHoi p {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-md);
+}
+
+#dsPhuongAn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+#dsPhuongAn > div {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    border: var(--border-default);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    background: var(--color-surface);
+}
+
+#dsPhuongAn > div:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+
+#dsPhuongAn input[type="radio"] {
+    transform: scale(1.2);
+}
+
+#btnTraLoi,
+#btnNextCauHoi,
+#btnNext {
+    margin-right: var(--space-sm);
+    margin-top: var(--space-sm);
+}
+
+#ketQuaTraLoi {
+    margin-top: var(--space-sm);
+    font-weight: 600;
+}
+
+#ketQuaTraLoi:contains("Đúng") {
+    color: var(--color-success);
+}
+
+#ketQuaTraLoi:contains("Sai") {
+    color: var(--color-danger);
+}
+
+#traLoiPhuSection {
+    margin-top: var(--space-sm);
+}
+
+#traLoiPhuSection select {
+    max-width: 250px;
+}
+
+#dsNguoiChoi {
+    margin-top: var(--space-md);
+    list-style: none;
+    padding: 0;
+}
+
+#dsNguoiChoi li {
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-xs);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    display: flex;
+    justify-content: space-between;
+}
+
+#dsNguoiChoi li:nth-child(odd) {
+    background: var(--color-surface);
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: var(--space-md);
+    }
+
+    #dsPhuongAn {
+        grid-template-columns: 1fr;
+    }
+}
