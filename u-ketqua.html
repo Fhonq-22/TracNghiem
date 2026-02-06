@@ -6,19 +6,23 @@
     <title>Kết quả thi</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="module" src="./Views/User/KetQuaView.js"></script>
+    <link rel="stylesheet" href="./Assets/css/U-KetQua.css">
 </head>
 <body>
-    <h1>Kết quả thi</h1>
-    <a href="index.html">← Quay về trang chủ</a>
+  <div class="page">
 
-    <hr>
+    <div class="page-header">
+      <h1>Kết quả thi</h1>
+      <a href="index.html" class="back-link">← Quay về trang chủ</a>
+    </div>
 
-    <h3>Tra cứu kết quả</h3>
-    <input type="text" id="inputMaKetQua" placeholder="Nhập mã kết quả">
-    <button id="btnTraCuu">🔍 Tra cứu</button>
-
-    <hr>
+    <div class="search-box">
+      <input type="text" id="inputMaKetQua" placeholder="Nhập mã kết quả">
+      <button id="btnTraCuu">🔍 Tra cứu</button>
+    </div>
 
     <div id="ketQuaContainer"></div>
+
+  </div>
 </body>
 </html>

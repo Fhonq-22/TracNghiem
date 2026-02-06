@@ -1,0 +1,110 @@
+@import url("./BASE.css");
+
+/* ===== PAGE ===== */
+
+body {
+    background: var(--color-bg);
+    min-height: 100vh;
+}
+
+.page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+}
+
+/* ===== HEADER ===== */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-header h1 {
+    margin: 0;
+}
+
+.back-link {
+    text-decoration: none;
+    color: var(--color-primary);
+    font-size: 14px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== SEARCH BOX ===== */
+
+.search-box {
+    margin: var(--space-lg) 0;
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.search-box input {
+    flex: 1;
+}
+
+.search-box button {
+    white-space: nowrap;
+}
+
+/* ===== RESULT CARD ===== */
+
+#ketQuaContainer {
+    margin-top: var(--space-lg);
+}
+
+.result-card {
+    background: var(--color-surface);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.result-card p {
+    margin: 6px 0;
+}
+
+.result-card hr {
+    margin: var(--space-md) 0;
+}
+
+/* ===== SCORE ===== */
+
+.score {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--color-primary);
+    margin: var(--space-sm) 0 var(--space-md);
+}
+
+/* ===== COPY ===== */
+
+.copy-btn {
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+/* ===== BEHAVIOR ===== */
+
+.behavior-box ul {
+    padding-left: 18px;
+}
+
+.behavior-box li {
+    margin-bottom: 8px;
+}
+
+.behavior-box small {
+    color: var(--color-text-muted);
+}
+
+/* ===== ERROR ===== */
+
+.error-text {
+    color: var(--color-danger);
+    font-weight: 500;
+}
