@@ -25,8 +25,6 @@ a:hover {
     margin-bottom: var(--space-md);
 }
 
-/* ===== TABLE ===== */
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -40,7 +38,8 @@ thead {
     background: var(--color-secondary);
 }
 
-th, td {
+th,
+td {
     padding: var(--space-sm) var(--space-md);
     text-align: left;
     border-bottom: 1px solid var(--color-border);
@@ -48,7 +47,6 @@ th, td {
 }
 
 th {
-    color: var(--color-text-main);
     font-weight: 600;
 }
 
@@ -58,18 +56,6 @@ tbody tr:hover {
 
 td:last-child {
     white-space: nowrap;
-}
-
-/* ===== ACTION BUTTONS ===== */
-
-.editBtn {
-    background: var(--color-info);
-    color: #000;
-}
-
-.deleteBtn {
-    background: var(--color-danger);
-    color: #000;
 }
 
 .editBtn,
@@ -82,12 +68,13 @@ td:last-child {
     margin-right: 4px;
 }
 
-.editBtn:hover,
-.deleteBtn:hover {
-    filter: brightness(0.95);
+.editBtn {
+    background: var(--color-info);
 }
 
-/* ===== PAGINATION ===== */
+.deleteBtn {
+    background: var(--color-danger);
+}
 
 #pagination {
     margin-top: var(--space-lg);
@@ -110,12 +97,6 @@ td:last-child {
     border-color: var(--color-primary);
 }
 
-.pageBtn:hover {
-    background: var(--color-secondary);
-}
-
-/* ===== MODAL ===== */
-
 #userModal {
     position: fixed;
     inset: 0;
@@ -123,18 +104,10 @@ td:last-child {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-#userModal > div,
-#userModal {
     z-index: 1000;
 }
 
-#userModal {
-    padding: var(--space-md);
-}
-
-#userModal > * {
+.modal-content {
     background: var(--color-surface);
     padding: var(--space-lg);
     border-radius: var(--radius-md);
@@ -143,14 +116,20 @@ td:last-child {
     box-shadow: var(--shadow-lg);
 }
 
-#userModal h3 {
+.modal-content h3 {
     margin-bottom: var(--space-md);
 }
 
-#userModal input,
-#userModal select {
+.modal-content input,
+.modal-content select {
     width: 100%;
     margin-bottom: var(--space-sm);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 #modalSave {
@@ -166,6 +145,5 @@ td:last-child {
     border: none;
     border-radius: var(--radius-sm);
     padding: 8px 14px;
-    margin-right: 6px;
     cursor: pointer;
 }
