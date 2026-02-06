@@ -1,0 +1,92 @@
+@import url("./BASE.css");
+
+/* ===== LAYOUT ===== */
+
+body {
+    min-height: 100vh;
+    background: var(--color-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    width: 100%;
+    max-width: 480px;
+    background: var(--color-surface);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+}
+
+/* ===== HEADER ===== */
+
+h1 {
+    margin-bottom: var(--space-sm);
+}
+
+#userDisplay {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* ===== LOGOUT ===== */
+
+#btnLogout {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-lg);
+}
+
+#btnLogout:hover {
+    background: var(--color-hover);
+}
+
+/* ===== SECTION ===== */
+
+h2 {
+    margin-bottom: var(--space-md);
+}
+
+/* ===== ACTION BUTTONS ===== */
+
+.action-group {
+    display: grid;
+    gap: var(--space-md);
+}
+
+#btnChonDe {
+    background: var(--color-primary);
+}
+
+#btnKetQua {
+    background: var(--color-secondary);
+}
+
+#btnPhienChoi {
+    background: var(--color-info);
+}
+
+.action-group button {
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.action-group button:hover {
+    filter: brightness(0.95);
+}
+
+/* ===== DISABLED ===== */
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

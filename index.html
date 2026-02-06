@@ -6,16 +6,22 @@
     <title>Trang chủ</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="module" src="./Views/User/IndexView.js"></script>
+    <link rel="stylesheet" href="./Assets/css/Index.css">
 </head>
 <body>
+  <div class="main">
     <h1>Xin chào, <span id="userDisplay"></span></h1>
     <button id="btnLogout">Đăng xuất</button>
 
     <hr>
 
     <h2>Chức năng</h2>
-    <button id="btnChonDe">Làm bài</button>
-    <button id="btnKetQua">Lịch sử kết quả</button>
-    <button id="btnPhienChoi">Phiên chơi</button>
+
+    <div class="action-group">
+      <button id="btnChonDe">Làm bài</button>
+      <button id="btnKetQua">Lịch sử kết quả</button>
+      <button id="btnPhienChoi">Phiên chơi</button>
+    </div>
+  </div>
 </body>
 </html>
