@@ -6,29 +6,36 @@
     <title>Chọn đề</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="module" src="./Views/User/ChonDeView.js"></script>
+    <link rel="stylesheet" href="./Assets/css/U-ChonDe.css">
 </head>
 <body>
-    <h1>Chọn bộ đề</h1>
-    <a href="index.html">← Quay về trang chủ</a>
-    <div>
+  <div class="page">
+
+    <a href="index.html" class="back-link">← Quay về trang chủ</a>
+
+    <div class="page-header">
+      <h1>Chọn bộ đề</h1>
+      <div class="user-info">
         Người dùng: <b><span id="userDisplay"></span></b>
+      </div>
     </div>
 
-    <table border="1" id="boDeTable">
-        <thead>
-            <tr>
-                <th>Mã bộ đề</th>
-                <th>Tên bộ đề</th>
-                <th>Số câu hỏi</th>
-                <th>Thời gian (phút)</th>
-                <th>Ngày tạo</th>
-                <th>Người tạo</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
+    <table id="boDeTable">
+      <thead>
+        <tr>
+          <th>Mã bộ đề</th>
+          <th>Tên bộ đề</th>
+          <th>Số câu hỏi</th>
+          <th>Thời gian (phút)</th>
+          <th>Ngày tạo</th>
+          <th>Người tạo</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
     </table>
 
     <div id="pagination"></div>
+  </div>
 </body>
 </html>

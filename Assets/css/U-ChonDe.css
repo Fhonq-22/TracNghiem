@@ -1,0 +1,121 @@
+@import url("./BASE.css");
+
+/* ===== LAYOUT ===== */
+
+body {
+    min-height: 100vh;
+    background: var(--color-bg);
+}
+
+.page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+}
+
+/* ===== HEADER ===== */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.page-header h1 {
+    margin: 0;
+}
+
+.user-info {
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.user-info b {
+    color: var(--color-primary);
+}
+
+/* ===== BACK LINK ===== */
+
+.back-link {
+    display: inline-block;
+    margin-bottom: var(--space-md);
+    text-decoration: none;
+    color: var(--color-primary);
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== TABLE ===== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+thead {
+    background: var(--color-table-head);
+}
+
+th,
+td {
+    padding: 12px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--color-border);
+}
+
+th {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+tbody tr:hover {
+    background: var(--color-hover);
+}
+
+/* ===== ACTION ===== */
+
+.startBtn {
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.startBtn:hover {
+    filter: brightness(0.95);
+}
+
+/* ===== PAGINATION ===== */
+
+#pagination {
+    margin-top: var(--space-md);
+    text-align: center;
+}
+
+.pageBtn {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 6px 10px;
+    margin: 0 3px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.pageBtn.active {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+.pageBtn:hover:not(.active) {
+    background: var(--color-hover);
+}
