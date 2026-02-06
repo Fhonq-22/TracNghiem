@@ -17,15 +17,9 @@ a {
     font-weight: 500;
 }
 
-a:hover {
-    text-decoration: underline;
-}
-
 #btnAddQuestion {
     margin-bottom: var(--space-md);
 }
-
-/* ===== TABLE ===== */
 
 table {
     width: 100%;
@@ -50,7 +44,6 @@ td {
 
 th {
     font-weight: 600;
-    color: var(--color-text-main);
     white-space: nowrap;
 }
 
@@ -61,22 +54,11 @@ tbody tr:hover {
 td:nth-child(2),
 td:nth-child(8) {
     max-width: 280px;
-    white-space: normal;
     line-height: 1.4;
 }
 
 td:last-child {
     white-space: nowrap;
-}
-
-/* ===== ACTION BUTTONS ===== */
-
-.editBtn {
-    background: var(--color-info);
-}
-
-.deleteBtn {
-    background: var(--color-danger);
 }
 
 .editBtn,
@@ -89,12 +71,13 @@ td:last-child {
     margin-right: 4px;
 }
 
-.editBtn:hover,
-.deleteBtn:hover {
-    filter: brightness(0.95);
+.editBtn {
+    background: var(--color-info);
 }
 
-/* ===== PAGINATION ===== */
+.deleteBtn {
+    background: var(--color-danger);
+}
 
 #pagination {
     margin-top: var(--space-lg);
@@ -117,12 +100,6 @@ td:last-child {
     border-color: var(--color-primary);
 }
 
-.pageBtn:hover {
-    background: var(--color-secondary);
-}
-
-/* ===== MODAL ===== */
-
 #questionModal {
     position: fixed;
     inset: 0;
@@ -134,7 +111,7 @@ td:last-child {
     z-index: 1000;
 }
 
-#questionModal > * {
+.modal-content {
     background: var(--color-surface);
     width: 100%;
     max-width: 700px;
@@ -143,13 +120,13 @@ td:last-child {
     box-shadow: var(--shadow-lg);
 }
 
-#questionModal h3 {
+.modal-content h3 {
     margin-bottom: var(--space-md);
 }
 
-#questionModal input,
-#questionModal textarea,
-#questionModal select {
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
     width: 100%;
     margin-bottom: var(--space-sm);
 }
@@ -161,6 +138,12 @@ td:last-child {
 
 .modalPhuongAn {
     border: none;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 #modalSave {
@@ -177,5 +160,4 @@ td:last-child {
     border-radius: var(--radius-sm);
     padding: 8px 14px;
     cursor: pointer;
-    margin-right: 6px;
 }

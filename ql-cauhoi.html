@@ -9,56 +9,66 @@
     <link rel="stylesheet" href="./Assets/css/QL-CauHoi.css">
 </head>
 <body>
-    <h1>Quản lý câu hỏi</h1>
-    <a href="admin.html">← Quay về trang quản trị</a>
 
-    <button id="btnAddQuestion">Thêm câu hỏi</button>
+<h1>Quản lý câu hỏi</h1>
+<a href="admin.html">← Quay về trang quản trị</a>
 
-    <table border="1" id="questionTable">
-        <thead>
-            <tr>
-                <th>Mã câu hỏi</th>
-                <th>Nội dung</th>
-                <th>Phương án 0</th>
-                <th>Phương án 1</th>
-                <th>Phương án 2</th>
-                <th>Phương án 3</th>
-                <th>Đáp án đúng</th>
-                <th>Giải thích</th>
-                <th>Người tạo</th>
-                <th>Ngày tạo</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<button id="btnAddQuestion">Thêm câu hỏi</button>
 
-    <div id="pagination"></div>
+<table id="questionTable">
+    <thead>
+        <tr>
+            <th>Mã câu hỏi</th>
+            <th>Nội dung</th>
+            <th>Phương án 0</th>
+            <th>Phương án 1</th>
+            <th>Phương án 2</th>
+            <th>Phương án 3</th>
+            <th>Đáp án đúng</th>
+            <th>Giải thích</th>
+            <th>Người tạo</th>
+            <th>Ngày tạo</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
-    <div id="questionModal" style="display:none; position:fixed; top:20%; left:30%; background:#fff; padding:20px; border:1px solid #000;">
+<div id="pagination"></div>
+
+<div id="questionModal" style="display:none">
+    <div class="modal-content">
         <h3 id="modalTitle">Thêm câu hỏi</h3>
-        <label><input type="checkbox" id="autoCode" checked> Tạo mã tự động</label><br><br>
-        <input type="text" id="modalMaCauHoi" placeholder="Mã câu hỏi"><br><br>
 
-        <textarea id="modalNoiDung" placeholder="Nội dung câu hỏi" rows="3" cols="50"></textarea><br><br>
+        <label>
+            <input type="checkbox" id="autoCode" checked>
+            Tạo mã tự động
+        </label>
 
-        <input type="text" class="modalPhuongAn" placeholder="Phương án A"><br>
-        <input type="text" class="modalPhuongAn" placeholder="Phương án B"><br>
-        <input type="text" class="modalPhuongAn" placeholder="Phương án C"><br>
-        <input type="text" class="modalPhuongAn" placeholder="Phương án D"><br><br>
+        <input type="text" id="modalMaCauHoi" placeholder="Mã câu hỏi">
 
-        <label>Đáp án đúng:</label>
+        <textarea id="modalNoiDung" placeholder="Nội dung câu hỏi" rows="3"></textarea>
+
+        <input type="text" class="modalPhuongAn" placeholder="Phương án A">
+        <input type="text" class="modalPhuongAn" placeholder="Phương án B">
+        <input type="text" class="modalPhuongAn" placeholder="Phương án C">
+        <input type="text" class="modalPhuongAn" placeholder="Phương án D">
+
         <select id="modalDapAnDung">
             <option value="0">A</option>
             <option value="1">B</option>
             <option value="2">C</option>
             <option value="3">D</option>
-        </select><br><br>
+        </select>
 
-        <textarea id="modalGiaiThich" placeholder="Giải thích" rows="3" cols="50"></textarea><br><br>
+        <textarea id="modalGiaiThich" placeholder="Giải thích" rows="3"></textarea>
 
-        <button id="modalSave">Lưu</button>
-        <button id="modalCancel">Hủy</button>
+        <div class="modal-actions">
+            <button id="modalSave">Lưu</button>
+            <button id="modalCancel">Hủy</button>
+        </div>
     </div>
+</div>
+
 </body>
 </html>
