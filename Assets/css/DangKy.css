@@ -1,0 +1,66 @@
+@import url("./BASE.css");
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        135deg,
+        var(--color-secondary),
+        var(--color-bg)
+    );
+}
+
+h1 {
+    margin-bottom: var(--space-lg);
+    color: var(--color-text-main);
+}
+
+#registerForm {
+    width: 100%;
+    max-width: 480px;
+    background: var(--color-surface);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: var(--border-default);
+}
+
+#registerForm input {
+    width: 100%;
+    margin-bottom: var(--space-md);
+}
+
+#registerForm p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-sub);
+    margin-bottom: var(--space-md);
+    line-height: 1.5;
+}
+
+#registerForm a {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+#registerForm a:hover {
+    text-decoration: underline;
+}
+
+#registerForm button {
+    width: 100%;
+    margin-top: var(--space-sm);
+}
+
+body > p {
+    margin-top: var(--space-lg);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-sub);
+}
+
+body > p a {
+    color: var(--color-primary);
+    font-weight: 500;
+}
