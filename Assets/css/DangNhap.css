@@ -12,63 +12,71 @@ body {
     );
 }
 
-h2 {
+.auth-container {
+    width: 100%;
+    max-width: 420px;
     text-align: center;
+}
+
+h2 {
     margin-bottom: var(--space-lg);
     color: var(--color-text-main);
 }
 
 #loginForm {
-    width: 100%;
-    max-width: 420px;
     background: var(--color-surface);
     padding: var(--space-xl);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     border: var(--border-default);
+    text-align: left;
 }
 
 #loginForm label {
+    display: block;
+    margin-bottom: var(--space-xs);
     font-weight: 600;
     color: var(--color-text-sub);
 }
 
 #loginForm input {
     width: 100%;
-    margin-top: var(--space-xs);
     margin-bottom: var(--space-md);
 }
 
 #loginForm button {
     width: 100%;
-    margin-top: var(--space-md);
+    margin-top: var(--space-sm);
 }
 
-#loginForm p {
+.policy {
     text-align: center;
-    margin-top: var(--space-md);
     font-size: var(--font-size-sm);
+    margin-bottom: var(--space-md);
 }
 
-#loginForm a {
+.policy a {
     color: var(--color-primary);
     font-weight: 500;
 }
 
-#loginForm a:hover {
+.policy a:hover {
     text-decoration: underline;
 }
 
-body > p {
-    margin-top: var(--space-lg);
-    text-align: center;
+.switch-auth {
+    margin-top: var(--space-md);
     font-size: var(--font-size-sm);
     color: var(--color-text-sub);
 }
 
+.switch-auth a {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
 #loginMessage {
-    margin-top: var(--space-md);
-    text-align: center;
+    margin-top: var(--space-sm);
     font-size: var(--font-size-sm);
     color: var(--color-danger);
 }

@@ -9,25 +9,30 @@
     <link rel="stylesheet" href="./Assets/css/DangNhap.css">
 </head>
 <body>
-    <h2>Đăng nhập</h2>
+    <div class="auth-container">
+        <h2>Đăng nhập</h2>
 
-    <form id="loginForm">
-        <label for="username">Tên người dùng:</label><br>
-        <input type="text" id="username" name="username" required><br><br>
+        <form id="loginForm">
+            <label for="username">Tên người dùng</label>
+            <input type="text" id="username" required>
 
-        <label for="password">Mật khẩu:</label><br>
-        <input type="password" id="password" name="password" required><br><br>
+            <label for="password">Mật khẩu</label>
+            <input type="password" id="password" required>
 
-        <p>
-            <a href="s-dieukhoan.html" target="_blank">Điều khoản sử dụng</a> |
-            <a href="s-chinhsach.html" target="_blank">Chính sách bảo mật</a>
+            <p class="policy">
+                <a href="s-dieukhoan.html" target="_blank">Điều khoản sử dụng</a> |
+                <a href="s-chinhsach.html" target="_blank">Chính sách bảo mật</a>
+            </p>
+
+            <button type="submit">Đăng nhập</button>
+        </form>
+
+        <p class="switch-auth">
+            Chưa có tài khoản?
+            <a href="dang-ky.html">Đăng ký</a>
         </p>
 
-        <button type="submit">Đăng nhập</button>
-    </form>
-
-    <p>Chưa có tài khoản? <a href="dang-ky.html">Đăng ký</a></p>
-
-    <div id="loginMessage"></div>
+        <div id="loginMessage"></div>
+    </div>
 </body>
 </html>
