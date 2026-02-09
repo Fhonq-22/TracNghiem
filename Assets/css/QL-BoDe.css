@@ -1,139 +1,12 @@
-@import url("./BASE.css");
-
-body {
-    background: var(--color-bg);
-    min-height: 100vh;
-    padding: var(--space-xl);
-}
-
-h1 {
-    margin-bottom: var(--space-sm);
-}
-
-a {
-    display: inline-block;
-    margin-bottom: var(--space-lg);
-    color: var(--color-primary);
-    font-weight: 500;
-}
-
-#btnAddBoDe {
-    margin-bottom: var(--space-md);
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--color-surface);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-}
-
-thead {
-    background: var(--color-secondary);
-}
-
-th,
-td {
-    padding: var(--space-sm);
-    border-bottom: 1px solid var(--color-border);
-    vertical-align: middle;
-}
-
-th {
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-tbody tr:hover {
-    background: rgba(0, 0, 0, 0.03);
-}
-
-td:nth-child(2) {
-    max-width: 280px;
-    line-height: 1.4;
-}
-
-td:last-child {
-    white-space: nowrap;
-}
-
-.editBtn,
-.deleteBtn {
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 6px 10px;
-    font-size: var(--font-size-sm);
-    cursor: pointer;
-    margin-right: 4px;
-}
-
-.editBtn {
-    background: var(--color-info);
-}
-
-.deleteBtn {
-    background: var(--color-danger);
-}
-
-#pagination {
-    margin-top: var(--space-lg);
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-}
-
-.pageBtn {
-    padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    border: var(--border-default);
-    background: var(--color-surface);
-    cursor: pointer;
-}
-
-.pageBtn.active {
-    background: var(--color-primary);
-    color: #fff;
-    border-color: var(--color-primary);
-}
-
-#boDeModal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-md);
-    z-index: 1000;
-}
-
-.modal-content {
-    background: var(--color-surface);
-    width: 100%;
-    max-width: 700px;
-    padding: var(--space-lg);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-}
-
-.modal-content h3 {
-    margin-bottom: var(--space-md);
-}
-
-.modal-content label {
-    font-weight: 500;
-}
-
-.modal-content input,
-.modal-content select {
+#ten-bo-de,
+#cap-do,
+#thoi-gian {
     width: 100%;
     margin-bottom: var(--space-sm);
 }
 
-#modalCauHoiList {
-    max-height: 220px;
+#danh-sach-cau-hoi {
+    max-height: 240px;
     overflow-y: auto;
     border: var(--border-default);
     border-radius: var(--radius-sm);
@@ -142,35 +15,30 @@ td:last-child {
     margin-bottom: var(--space-md);
 }
 
-#modalCauHoiList div {
+.dong-cau-hoi {
     display: flex;
     gap: 6px;
     padding: 4px 2px;
     border-radius: var(--radius-xs);
+    cursor: pointer;
 }
 
-#modalCauHoiList div:hover {
+.dong-cau-hoi:hover {
     background: rgba(0, 0, 0, 0.05);
 }
 
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
+.btn-sua {
+    background: var(--color-info);
 }
 
-#modalSave {
-    background: var(--color-success);
+.btn-xoa {
+    background: var(--color-danger);
 }
 
-#modalCancel {
-    background: var(--color-warning);
-}
-
-#modalSave,
-#modalCancel {
+.btn-sua,
+.btn-xoa {
     border: none;
     border-radius: var(--radius-sm);
-    padding: 8px 14px;
+    padding: 6px 10px;
     cursor: pointer;
 }

@@ -4,55 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý bộ đề</title>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="module" src="./Views/Admin/QLBoDeView.js"></script>
+
+    <link rel="stylesheet" href="./Assets/css/QuanLy.css">
     <link rel="stylesheet" href="./Assets/css/QL-BoDe.css">
 </head>
-<body>
+<body class="admin-page">
 
-<h1>Quản lý bộ đề</h1>
-<a href="admin.html">← Quay về trang quản trị</a>
+<div class="admin-container">
 
-<button id="btnAddBoDe">Thêm bộ đề</button>
+    <header class="admin-header">
+        <div>
+            <h1 id="tieu-de-trang">Quản lý bộ đề</h1>
+            <a href="admin.html" class="link-back">← Quay về trang quản trị</a>
+        </div>
+        <button id="btn-them">Thêm bộ đề</button>
+    </header>
 
-<table id="boDeTable">
-    <thead>
-        <tr>
-            <th>Mã bộ đề</th>
-            <th>Tên bộ đề</th>
-            <th>Cấp độ</th>
-            <th>Số câu hỏi</th>
-            <th>Thời gian (phút)</th>
-            <th>Ngày tạo</th>
-            <th>Người tạo</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+    <section class="admin-content">
+        <table class="bang-du-lieu">
+            <thead>
+                <tr>
+                    <th>Mã bộ đề</th>
+                    <th>Tên bộ đề</th>
+                    <th>Cấp độ</th>
+                    <th>Số câu hỏi</th>
+                    <th>Thời gian</th>
+                    <th>Ngày tạo</th>
+                    <th>Người tạo</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="bang-body"></tbody>
+        </table>
+    </section>
 
-<div id="pagination"></div>
+    <div id="phan-trang" class="phan-trang"></div>
 
-<div id="boDeModal" style="display:none">
+</div>
+
+<div id="modal" class="modal hidden">
     <div class="modal-content">
-        <h3 id="modalTitle">Thêm bộ đề</h3>
 
-        <label>Tên bộ đề</label>
-        <input type="text" id="modalTenBoDe">
+        <h3 id="modal-title">Thêm bộ đề</h3>
 
-        <label>Cấp độ</label>
-        <select id="modalCapDo"></select>
+        <input type="text" id="ten-bo-de" placeholder="Tên bộ đề">
 
-        <label>Thời gian (phút)</label>
-        <input type="number" id="modalThoiGian" value="30">
+        <select id="cap-do"></select>
 
-        <label>Chọn câu hỏi</label>
-        <div id="modalCauHoiList"></div>
+        <input type="number" id="thoi-gian" value="30" min="1">
+
+        <div id="danh-sach-cau-hoi"></div>
 
         <div class="modal-actions">
-            <button id="modalSave">Lưu</button>
-            <button id="modalCancel">Hủy</button>
+            <button id="modal-luu">Lưu</button>
+            <button id="modal-huy">Hủy</button>
         </div>
+
     </div>
 </div>
 
