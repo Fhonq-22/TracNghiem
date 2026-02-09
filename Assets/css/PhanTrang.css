@@ -2,19 +2,33 @@
     margin-top: var(--space-lg);
     display: flex;
     gap: 6px;
-    flex-wrap: wrap;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
 }
 
 .page-btn {
     padding: 6px 10px;
+    min-width: 36px;
     border-radius: var(--radius-sm);
     border: var(--border-default);
     background: var(--color-surface);
+    color: var(--color-text);
     cursor: pointer;
+    white-space: nowrap;
+}
+
+.page-btn:hover {
+    background: var(--color-bg-soft);
 }
 
 .page-btn.active {
     background: var(--color-primary);
     color: #fff;
     border-color: var(--color-primary);
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
