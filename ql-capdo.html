@@ -4,50 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý cấp độ</title>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="module" src="./Views/Admin/QLCapDoView.js"></script>
+
+    <link rel="stylesheet" href="./Assets/css/QuanLy.css">
     <link rel="stylesheet" href="./Assets/css/QL-CapDo.css">
 </head>
-<body>
+<body class="admin-page">
 
-<h1>Quản lý cấp độ</h1>
-<a href="admin.html">← Quay về trang quản trị</a>
+<div class="admin-container">
 
-<button id="btnAddCapDo">Thêm cấp độ</button>
+    <header class="admin-header">
+        <div>
+            <h1 id="tieu-de-trang">Quản lý cấp độ</h1>
+            <a href="admin.html" class="link-back">← Quay về trang quản trị</a>
+        </div>
+        <button id="btn-them">Thêm cấp độ</button>
+    </header>
 
-<table id="capDoTable">
-    <thead>
-        <tr>
-            <th>Mã cấp độ</th>
-            <th>Tên cấp độ</th>
-            <th>Điểm mỗi câu</th>
-            <th>Hệ số trả lời phụ</th>
-            <th>Ngày cập nhật</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+    <section class="admin-content">
+        <table class="bang-du-lieu">
+            <thead>
+                <tr>
+                    <th>Mã cấp độ</th>
+                    <th>Tên cấp độ</th>
+                    <th>Điểm mỗi câu</th>
+                    <th>Hệ số trả lời phụ</th>
+                    <th>Ngày cập nhật</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="bang-body"></tbody>
+        </table>
+    </section>
 
-<div id="pagination"></div>
+    <div id="phan-trang" class="phan-trang"></div>
 
-<div id="capDoModal" style="display:none">
+</div>
+
+<div id="modal" class="modal hidden">
     <div class="modal-content">
-        <h3 id="modalTitle">Thêm cấp độ</h3>
 
-        <label>Tên cấp độ</label>
-        <input type="text" id="modalTenCapDo">
+        <h3 id="modal-title">Thêm cấp độ</h3>
 
-        <label>Điểm mỗi câu</label>
-        <input type="number" id="modalDiemMoiCau">
-
-        <label>Hệ số trả lời phụ</label>
-        <input type="number" step="0.1" id="modalHeSoTraLoiPhu" value="0.5">
+        <input type="text" id="ten-cap-do" placeholder="Tên cấp độ">
+        <input type="number" id="diem-moi-cau" placeholder="Điểm mỗi câu">
+        <input type="number" step="0.1" id="he-so-tra-loi-phu" value="0.5">
 
         <div class="modal-actions">
-            <button id="modalSave">Lưu</button>
-            <button id="modalCancel">Hủy</button>
+            <button id="modal-luu">Lưu</button>
+            <button id="modal-huy">Hủy</button>
         </div>
+
     </div>
 </div>
 
