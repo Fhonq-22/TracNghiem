@@ -1,166 +1,186 @@
 import { layDanhSachCauHoi, layCauHoi, themCauHoi, suaCauHoi, xoaCauHoi } from "../../Controllers/CauHoiController.js";
 import { yeuCauAdmin, getUserHienTai } from "../../Utils/AUTH.utils.js";
 
-let editingQuestion = null;
-let currentPage = 1;
-const pageSize = 10;
-let cachedQuestions = [];
+let maDangSua = null;
+let trangHienTai = 1;
+const soDongMoiTrang = 10;
+let danhSachCauHoi = [];
 
 $(document).ready(async function () {
     if (!yeuCauAdmin()) return;
 
-    cachedQuestions = await Promise.all((await layDanhSachCauHoi()).map(ma => layCauHoi(ma)));
-    renderQuestions(currentPage);
+    danhSachCauHoi = await Promise.all(
+        (await layDanhSachCauHoi()).map(ma => layCauHoi(ma))
+    );
 
-    $("#btnAddQuestion").click(() => {
-        editingQuestion = null;
-        $("#modalTitle").text("Thêm câu hỏi");
-        $("#modalNoiDung").val("");
-        $(".modalPhuongAn").val("");
-        $("#modalDapAnDung").val("0");
-        $("#modalGiaiThich").val("");
-        $("#autoCode").prop("checked", true).prop("disabled", false);
-        $("#modalMaCauHoi").val("").prop("disabled", true);
+    renderDanhSach();
 
-        $("#autoCode").off("change").on("change", function () {
-            $("#modalMaCauHoi").prop("disabled", $(this).is(":checked"));
-            if ($(this).is(":checked")) $("#modalMaCauHoi").val("");
-        });
+    $("#btn-them").on("click", moModalThem);
+    $("#modal-huy").on("click", dongModal);
+    $("#modal-luu").on("click", luuCauHoi);
 
-        $("#questionModal").show();
-    });
-
-    $("#modalCancel").click(() => $("#questionModal").hide());
-
-    $("#modalSave").click(async () => {
-        let maCauHoi = $("#modalMaCauHoi").val().trim();
-
-        if ($("#autoCode").is(":checked") && !editingQuestion) {
-            let n = 1;
-            const used = cachedQuestions.map(q => parseInt(q.MaCauHoi.slice(1))).sort((a, b) => a - b);
-            for (let x of used) if (x === n) n++; else if (x > n) break;
-            maCauHoi = "Q" + String(n).padStart(5, "0");
-        }
-
-        const phuongAn = $(".modalPhuongAn").map((_, el) => el.value.trim()).get();
-
-        const cauHoiData = {
-            MaCauHoi: maCauHoi,
-            NoiDung: $("#modalNoiDung").val().trim(),
-            PhuongAn: phuongAn,
-            DapAnDung: parseInt($("#modalDapAnDung").val()),
-            GiaiThich: $("#modalGiaiThich").val().trim(),
-            NguoiTao: getUserHienTai()?.TenNguoiDung || "",
-            NgayTao: new Date().toLocaleDateString()
-        };
-
-        if (!cauHoiData.MaCauHoi || !cauHoiData.NoiDung) {
-            alert("Mã câu hỏi và nội dung không được để trống");
-            return;
-        }
-
-        if (editingQuestion) {
-            const old = cachedQuestions.find(q => q.MaCauHoi === editingQuestion);
-            const newData = {
-                ...old,
-                NoiDung: cauHoiData.NoiDung,
-                PhuongAn: cauHoiData.PhuongAn,
-                DapAnDung: cauHoiData.DapAnDung,
-                GiaiThich: cauHoiData.GiaiThich
-            };
-
-            await suaCauHoi(editingQuestion, newData);
-            cachedQuestions[cachedQuestions.findIndex(q => q.MaCauHoi === editingQuestion)] = newData;
-            alert("Cập nhật câu hỏi thành công");
-        } else {
-            await themCauHoi(cauHoiData);
-            cachedQuestions.push(cauHoiData);
-            alert("Thêm câu hỏi thành công");
-        }
-
-        $("#questionModal").hide();
-        renderQuestions(currentPage);
+    $("#phan-trang").on("click", ".page-btn", e => {
+        renderDanhSach(+e.target.dataset.page);
     });
 });
 
-function renderQuestions(page = 1) {
-    const tbody = $("#questionTable tbody").empty();
-    const totalPages = Math.ceil(cachedQuestions.length / pageSize);
-    currentPage = Math.min(Math.max(page, 1), totalPages);
+function moModalThem() {
+    maDangSua = null;
+    $("#modal-title").text("Thêm câu hỏi");
 
-    cachedQuestions.slice((currentPage - 1) * pageSize, currentPage * pageSize).forEach(cauHoi => {
-        const row = $(`
-            <tr>
-                <td>${cauHoi.MaCauHoi}</td>
-                <td>${cauHoi.NoiDung}</td>
-                <td>${cauHoi.PhuongAn[0] || ""}</td>
-                <td>${cauHoi.PhuongAn[1] || ""}</td>
-                <td>${cauHoi.PhuongAn[2] || ""}</td>
-                <td>${cauHoi.PhuongAn[3] || ""}</td>
-                <td>${cauHoi.DapAnDung}</td>
-                <td>${cauHoi.GiaiThich || ""}</td>
-                <td>${cauHoi.NguoiTao || ""}</td>
-                <td>${cauHoi.NgayTao || ""}</td>
-                <td>
-                    <button class="editBtn">Sửa</button>
-                    <button class="deleteBtn">Xóa</button>
-                </td>
-            </tr>
-        `);
+    $("#noi-dung").val("");
+    $(".phuong-an").val("");
+    $("#dap-an-dung").val("0");
+    $("#giai-thich").val("");
 
-        row.find(".editBtn").click(() => {
-            editingQuestion = cauHoi.MaCauHoi;
-            $("#modalTitle").text("Sửa câu hỏi");
-            $("#modalMaCauHoi").val(cauHoi.MaCauHoi).prop("disabled", true);
-            $("#modalNoiDung").val(cauHoi.NoiDung);
-            $(".modalPhuongAn").each((i, el) => $(el).val(cauHoi.PhuongAn[i] || ""));
-            $("#modalDapAnDung").val(cauHoi.DapAnDung);
-            $("#modalGiaiThich").val(cauHoi.GiaiThich || "");
-            $("#autoCode").prop("checked", true).prop("disabled", true);
-            $("#questionModal").show();
-        });
+    $("#tu-dong-ma").prop("checked", true).prop("disabled", false);
+    $("#ma-cau-hoi").val("").prop("disabled", true);
 
-        row.find(".deleteBtn").click(async () => {
-            if (!confirm(`Xóa câu hỏi ${cauHoi.MaCauHoi}?`)) return;
-
-            const res = await xoaCauHoi(cauHoi.MaCauHoi);
-            if (!res.success) {
-                let msg = res.message || "Không thể xóa câu hỏi";
-                if (res.refs?.length) {
-                    msg += "\n\nĐang được sử dụng tại:";
-                    res.refs.forEach(r => msg += `\n- ${r.collection} (${r.ma})`);
-                }
-                alert(msg);
-                return;
-            }
-
-            cachedQuestions = cachedQuestions.filter(q => q.MaCauHoi !== cauHoi.MaCauHoi);
-            renderQuestions(currentPage);
-        });
-
-        tbody.append(row);
+    $("#tu-dong-ma").off("change").on("change", function () {
+        $("#ma-cau-hoi").prop("disabled", $(this).is(":checked"));
+        if ($(this).is(":checked")) $("#ma-cau-hoi").val("");
     });
 
-    renderPagination(totalPages);
+    $("#modal").removeClass("hidden");
 }
 
-function renderPagination(totalPages) {
-    const c = $("#pagination").empty();
-    if (totalPages <= 1) return;
+function dongModal() {
+    $("#modal").addClass("hidden");
+}
 
-    if (currentPage > 1) {
-        c.append(`<button class="pageBtn" data-page="1"><<</button>`);
-        c.append(`<button class="pageBtn" data-page="${currentPage - 1}">Prev</button>`);
+async function luuCauHoi() {
+    let maCauHoi = $("#ma-cau-hoi").val().trim();
+
+    if ($("#tu-dong-ma").is(":checked") && !maDangSua) {
+        let n = 1;
+        const used = danhSachCauHoi
+            .map(q => parseInt(q.MaCauHoi.slice(1)))
+            .sort((a, b) => a - b);
+
+        for (let x of used) {
+            if (x === n) n++;
+            else if (x > n) break;
+        }
+
+        maCauHoi = "Q" + String(n).padStart(5, "0");
     }
 
-    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
-        c.append(`<button class="pageBtn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`);
+    const phuongAn = $(".phuong-an").map((_, el) => el.value.trim()).get();
+
+    const duLieu = {
+        MaCauHoi: maCauHoi,
+        NoiDung: $("#noi-dung").val().trim(),
+        PhuongAn: phuongAn,
+        DapAnDung: parseInt($("#dap-an-dung").val()),
+        GiaiThich: $("#giai-thich").val().trim(),
+        NguoiTao: getUserHienTai()?.TenNguoiDung || "",
+        NgayTao: new Date().toLocaleDateString()
+    };
+
+    if (!duLieu.MaCauHoi || !duLieu.NoiDung) {
+        alert("Mã câu hỏi và nội dung không được để trống");
+        return;
     }
 
-    if (currentPage < totalPages) {
-        c.append(`<button class="pageBtn" data-page="${currentPage + 1}">Next</button>`);
-        c.append(`<button class="pageBtn" data-page="${totalPages}">>></button>`);
+    if (maDangSua) {
+        const cu = danhSachCauHoi.find(q => q.MaCauHoi === maDangSua);
+        const moi = { ...cu, ...duLieu };
+
+        await suaCauHoi(maDangSua, moi);
+        danhSachCauHoi[danhSachCauHoi.findIndex(q => q.MaCauHoi === maDangSua)] = moi;
+    } else {
+        await themCauHoi(duLieu);
+        danhSachCauHoi.push(duLieu);
     }
 
-    c.find(".pageBtn").click(e => renderQuestions(+e.target.dataset.page));
+    dongModal();
+    renderDanhSach();
+}
+
+function renderDanhSach(page = trangHienTai) {
+    const tbody = $("#bang-body").empty();
+
+    const tongTrang = Math.ceil(danhSachCauHoi.length / soDongMoiTrang);
+    trangHienTai = Math.min(Math.max(page, 1), tongTrang || 1);
+
+    danhSachCauHoi
+        .slice((trangHienTai - 1) * soDongMoiTrang, trangHienTai * soDongMoiTrang)
+        .forEach(ch => {
+            const row = $(`
+                <tr>
+                    <td>${ch.MaCauHoi}</td>
+                    <td>${ch.NoiDung}</td>
+                    <td>${ch.PhuongAn[0] || ""}</td>
+                    <td>${ch.PhuongAn[1] || ""}</td>
+                    <td>${ch.PhuongAn[2] || ""}</td>
+                    <td>${ch.PhuongAn[3] || ""}</td>
+                    <td>${ch.DapAnDung}</td>
+                    <td>${ch.GiaiThich || ""}</td>
+                    <td>${ch.NguoiTao || ""}</td>
+                    <td>${ch.NgayTao || ""}</td>
+                    <td>
+                        <button class="btn-sua">Sửa</button>
+                        <button class="btn-xoa">Xóa</button>
+                    </td>
+                </tr>
+            `);
+
+            row.find(".btn-sua").on("click", () => moModalSua(ch));
+            row.find(".btn-xoa").on("click", () => xoa(ch.MaCauHoi));
+
+            tbody.append(row);
+        });
+
+    renderPhanTrang(tongTrang);
+}
+
+function moModalSua(ch) {
+    maDangSua = ch.MaCauHoi;
+
+    $("#modal-title").text("Sửa câu hỏi");
+    $("#ma-cau-hoi").val(ch.MaCauHoi).prop("disabled", true);
+    $("#noi-dung").val(ch.NoiDung);
+    $(".phuong-an").each((i, el) => $(el).val(ch.PhuongAn[i] || ""));
+    $("#dap-an-dung").val(ch.DapAnDung);
+    $("#giai-thich").val(ch.GiaiThich || "");
+
+    $("#tu-dong-ma").prop("checked", true).prop("disabled", true);
+    $("#modal").removeClass("hidden");
+}
+
+async function xoa(ma) {
+    if (!confirm(`Xóa câu hỏi ${ma}?`)) return;
+
+    const res = await xoaCauHoi(ma);
+    if (!res.success) {
+        let msg = res.message || "Không thể xóa câu hỏi";
+        if (res.refs?.length) {
+            msg += "\n\nĐang được sử dụng tại:";
+            res.refs.forEach(r => msg += `\n- ${r.collection} (${r.ma})`);
+        }
+        alert(msg);
+        return;
+    }
+
+    danhSachCauHoi = danhSachCauHoi.filter(q => q.MaCauHoi !== ma);
+    renderDanhSach();
+}
+
+function renderPhanTrang(tongTrang) {
+    const c = $("#phan-trang").empty();
+    if (tongTrang <= 1) return;
+
+    if (trangHienTai > 1) {
+        c.append(`<button class="page-btn" data-page="1"><<</button>`);
+        c.append(`<button class="page-btn" data-page="${trangHienTai - 1}">Prev</button>`);
+    }
+
+    for (let i = Math.max(1, trangHienTai - 2); i <= Math.min(tongTrang, trangHienTai + 2); i++) {
+        c.append(`<button class="page-btn ${i === trangHienTai ? "active" : ""}" data-page="${i}">${i}</button>`);
+    }
+
+    if (trangHienTai < tongTrang) {
+        c.append(`<button class="page-btn" data-page="${trangHienTai + 1}">Next</button>`);
+        c.append(`<button class="page-btn" data-page="${tongTrang}">>></button>`);
+    }
 }

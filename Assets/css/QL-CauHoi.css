@@ -1,127 +1,22 @@
-@import url("./BASE.css");
-
-body {
-    background: var(--color-bg);
-    min-height: 100vh;
-    padding: var(--space-xl);
-}
-
-h1 {
-    margin-bottom: var(--space-sm);
-}
-
-a {
-    display: inline-block;
-    margin-bottom: var(--space-lg);
-    color: var(--color-primary);
-    font-weight: 500;
-}
-
-#btnAddQuestion {
+#btn-them {
     margin-bottom: var(--space-md);
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--color-surface);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    font-size: var(--font-size-sm);
-}
-
-thead {
-    background: var(--color-secondary);
-}
-
-th,
-td {
-    padding: var(--space-sm);
-    border-bottom: 1px solid var(--color-border);
-    vertical-align: top;
-}
-
-th {
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-tbody tr:hover {
-    background: rgba(0, 0, 0, 0.03);
-}
-
-td:nth-child(2),
-td:nth-child(8) {
+.bang-du-lieu td:nth-child(2),
+.bang-du-lieu td:nth-child(8) {
     max-width: 280px;
     line-height: 1.4;
 }
 
-td:last-child {
-    white-space: nowrap;
+.modal-content {
+    max-width: 700px;
 }
 
-.editBtn,
-.deleteBtn {
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 6px 10px;
-    font-size: var(--font-size-sm);
-    cursor: pointer;
-    margin-right: 4px;
-}
-
-.editBtn {
-    background: var(--color-info);
-}
-
-.deleteBtn {
-    background: var(--color-danger);
-}
-
-#pagination {
-    margin-top: var(--space-lg);
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-}
-
-.pageBtn {
-    padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    border: var(--border-default);
-    background: var(--color-surface);
-    cursor: pointer;
-}
-
-.pageBtn.active {
-    background: var(--color-primary);
-    color: #fff;
-    border-color: var(--color-primary);
-}
-
-#questionModal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+.checkbox-line {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: var(--space-md);
-    z-index: 1000;
-}
-
-.modal-content {
-    background: var(--color-surface);
-    width: 100%;
-    max-width: 700px;
-    padding: var(--space-lg);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-}
-
-.modal-content h3 {
-    margin-bottom: var(--space-md);
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
 }
 
 .modal-content input,
@@ -131,31 +26,25 @@ td:last-child {
     margin-bottom: var(--space-sm);
 }
 
-.modalPhuongAn:nth-of-type(1) { background: var(--option-a); }
-.modalPhuongAn:nth-of-type(2) { background: var(--option-b); }
-.modalPhuongAn:nth-of-type(3) { background: var(--option-c); }
-.modalPhuongAn:nth-of-type(4) { background: var(--option-d); }
+.phuong-an:nth-of-type(1) { background: var(--option-a); }
+.phuong-an:nth-of-type(2) { background: var(--option-b); }
+.phuong-an:nth-of-type(3) { background: var(--option-c); }
+.phuong-an:nth-of-type(4) { background: var(--option-d); }
 
-.modalPhuongAn {
+.phuong-an {
     border: none;
 }
 
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-}
-
-#modalSave {
+#modal-luu {
     background: var(--color-success);
 }
 
-#modalCancel {
+#modal-huy {
     background: var(--color-warning);
 }
 
-#modalSave,
-#modalCancel {
+#modal-luu,
+#modal-huy {
     border: none;
     border-radius: var(--radius-sm);
     padding: 8px 14px;

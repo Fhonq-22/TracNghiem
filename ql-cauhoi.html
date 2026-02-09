@@ -4,69 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý câu hỏi</title>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="module" src="./Views/Admin/QLCauHoiView.js"></script>
+
+    <link rel="stylesheet" href="./Assets/css/QuanLy.css">
     <link rel="stylesheet" href="./Assets/css/QL-CauHoi.css">
 </head>
-<body>
+<body class="admin-page">
 
-<h1>Quản lý câu hỏi</h1>
-<a href="admin.html">← Quay về trang quản trị</a>
+<div class="admin-container">
 
-<button id="btnAddQuestion">Thêm câu hỏi</button>
+    <header class="admin-header">
+        <div>
+            <h1 id="tieu-de-trang">Quản lý câu hỏi</h1>
+            <a href="admin.html" class="link-back">← Quay về trang quản trị</a>
+        </div>
+        <button id="btn-them">Thêm câu hỏi</button>
+    </header>
 
-<table id="questionTable">
-    <thead>
-        <tr>
-            <th>Mã câu hỏi</th>
-            <th>Nội dung</th>
-            <th>Phương án 0</th>
-            <th>Phương án 1</th>
-            <th>Phương án 2</th>
-            <th>Phương án 3</th>
-            <th>Đáp án đúng</th>
-            <th>Giải thích</th>
-            <th>Người tạo</th>
-            <th>Ngày tạo</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+    <section class="admin-content">
+        <table class="bang-du-lieu">
+            <thead id="bang-head">
+                <tr>
+                    <th>Mã câu hỏi</th>
+                    <th>Nội dung</th>
+                    <th>Phương án A</th>
+                    <th>Phương án B</th>
+                    <th>Phương án C</th>
+                    <th>Phương án D</th>
+                    <th>Đáp án</th>
+                    <th>Giải thích</th>
+                    <th>Người tạo</th>
+                    <th>Ngày tạo</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="bang-body"></tbody>
+        </table>
+    </section>
 
-<div id="pagination"></div>
+    <div id="phan-trang" class="phan-trang"></div>
 
-<div id="questionModal" style="display:none">
+</div>
+
+<div id="modal" class="modal hidden">
     <div class="modal-content">
-        <h3 id="modalTitle">Thêm câu hỏi</h3>
 
-        <label>
-            <input type="checkbox" id="autoCode" checked>
+        <h3 id="modal-title">Thêm câu hỏi</h3>
+
+        <label class="checkbox-line">
+            <input type="checkbox" id="tu-dong-ma" checked>
             Tạo mã tự động
         </label>
 
-        <input type="text" id="modalMaCauHoi" placeholder="Mã câu hỏi">
+        <input type="text" id="ma-cau-hoi" placeholder="Mã câu hỏi">
 
-        <textarea id="modalNoiDung" placeholder="Nội dung câu hỏi" rows="3"></textarea>
+        <textarea id="noi-dung" rows="3" placeholder="Nội dung câu hỏi"></textarea>
 
-        <input type="text" class="modalPhuongAn" placeholder="Phương án A">
-        <input type="text" class="modalPhuongAn" placeholder="Phương án B">
-        <input type="text" class="modalPhuongAn" placeholder="Phương án C">
-        <input type="text" class="modalPhuongAn" placeholder="Phương án D">
+        <input type="text" class="phuong-an" placeholder="Phương án A">
+        <input type="text" class="phuong-an" placeholder="Phương án B">
+        <input type="text" class="phuong-an" placeholder="Phương án C">
+        <input type="text" class="phuong-an" placeholder="Phương án D">
 
-        <select id="modalDapAnDung">
+        <select id="dap-an-dung">
             <option value="0">A</option>
             <option value="1">B</option>
             <option value="2">C</option>
             <option value="3">D</option>
         </select>
 
-        <textarea id="modalGiaiThich" placeholder="Giải thích" rows="3"></textarea>
+        <textarea id="giai-thich" rows="3" placeholder="Giải thích"></textarea>
 
         <div class="modal-actions">
-            <button id="modalSave">Lưu</button>
-            <button id="modalCancel">Hủy</button>
+            <button id="modal-luu">Lưu</button>
+            <button id="modal-huy">Hủy</button>
         </div>
+
     </div>
 </div>
 
