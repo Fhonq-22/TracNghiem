@@ -1,0 +1,25 @@
+.phan-trang {
+    margin-top: var(--space-lg);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    border: var(--border-default);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.page-btn:hover {
+    background: var(--color-gray-100);
+}
+
+.page-btn.active {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+}

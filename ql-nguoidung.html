@@ -6,48 +6,40 @@
     <title>Quản lý người dùng</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="module" src="./Views/Admin/QLNguoiDungView.js"></script>
-    <link rel="stylesheet" href="./Assets/css/QL-NguoiDung.css">
+
+    <link rel="stylesheet" href="./Assets/css/QuanLy.css">
+    <link rel="stylesheet" href="./Assets/css/PhanTrang.css">
 </head>
-<body>
+<body class="admin-page">
 
-<h1>Quản lý người dùng</h1>
-<a href="admin.html">← Quay về trang quản trị</a>
+<div class="admin-container">
 
-<button id="btnAddUser">Thêm người dùng</button>
+    <header class="admin-header">
+        <div>
+            <h1 id="tieu-de-trang"></h1>
+            <a href="admin.html" class="link-back">← Quay về trang quản trị</a>
+        </div>
+        <button id="btn-them"></button>
+    </header>
 
-<table id="userTable">
-    <thead>
-        <tr>
-            <th>Tên người dùng</th>
-            <th>Họ tên</th>
-            <th>Email</th>
-            <th>Ngày đăng ký</th>
-            <th>Vai trò</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+    <section class="admin-content">
+        <table class="bang-du-lieu">
+            <thead id="bang-head"></thead>
+            <tbody id="bang-body"></tbody>
+        </table>
+    </section>
 
-<div id="pagination"></div>
+    <div id="phan-trang" class="phan-trang"></div>
 
-<div id="userModal" style="display:none">
+</div>
+
+<div id="modal" class="modal hidden">
     <div class="modal-content">
-        <h3 id="modalTitle">Thêm người dùng</h3>
-
-        <input type="text" id="modalUsername" placeholder="Tên người dùng">
-        <input type="text" id="modalHoTen" placeholder="Họ tên">
-        <input type="text" id="modalEmail" placeholder="Email">
-        <input type="text" id="modalMatKhau" placeholder="Mật khẩu">
-
-        <select id="modalVaiTro">
-            <option value="User">User</option>
-            <option value="Admin">Admin</option>
-        </select>
-
+        <h3 id="modal-title"></h3>
+        <div id="modal-body"></div>
         <div class="modal-actions">
-            <button id="modalSave">Lưu</button>
-            <button id="modalCancel">Hủy</button>
+            <button id="modal-luu">Lưu</button>
+            <button id="modal-huy">Hủy</button>
         </div>
     </div>
 </div>
