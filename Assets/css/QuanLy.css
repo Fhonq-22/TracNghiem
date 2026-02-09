@@ -1,4 +1,5 @@
 @import url("./BASE.css");
+@import url("./PhanTrang.css");
 
 body {
     background: var(--color-bg);
