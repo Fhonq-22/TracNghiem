@@ -11,15 +11,10 @@
     border: var(--border-default);
     background: var(--color-surface);
     cursor: pointer;
-    transition: var(--transition-fast);
-}
-
-.page-btn:hover {
-    background: var(--color-gray-100);
 }
 
 .page-btn.active {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: #fff;
     border-color: var(--color-primary);
 }

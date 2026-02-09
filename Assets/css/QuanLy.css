@@ -1,22 +1,33 @@
 @import url("./BASE.css");
 
+body {
+    background: var(--color-bg);
+    min-height: 100vh;
+}
+
 .admin-container {
-    max-width: 1200px;
-    margin: auto;
     padding: var(--space-xl);
 }
 
 .admin-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: var(--space-lg);
+}
+
+.admin-header h1 {
+    margin-bottom: var(--space-sm);
 }
 
 .link-back {
     display: inline-block;
-    margin-top: 4px;
     font-weight: 500;
+    color: var(--color-primary);
+}
+
+.link-back:hover {
+    text-decoration: underline;
 }
 
 .bang-du-lieu {
@@ -44,11 +55,16 @@
     background: rgba(0, 0, 0, 0.03);
 }
 
+.bang-du-lieu td:last-child {
+    white-space: nowrap;
+}
+
 .btn-sua,
 .btn-xoa {
     border: none;
     border-radius: var(--radius-sm);
     padding: 6px 10px;
+    font-size: var(--font-size-sm);
     cursor: pointer;
     margin-right: 4px;
 }
@@ -81,10 +97,11 @@
     border-radius: var(--radius-md);
     width: 100%;
     max-width: 420px;
+    box-shadow: var(--shadow-lg);
 }
 
-.modal-content input,
-.modal-content select {
-    width: 100%;
-    margin-bottom: var(--space-sm);
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }

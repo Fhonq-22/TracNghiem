@@ -1,119 +1,5 @@
-@import url("./BASE.css");
-
-body {
-    background: var(--color-bg);
-    min-height: 100vh;
-    padding: var(--space-xl);
-}
-
-h1 {
-    margin-bottom: var(--space-sm);
-}
-
-a {
-    display: inline-block;
-    margin-bottom: var(--space-lg);
-    color: var(--color-primary);
-    font-weight: 500;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-#btnAddUser {
+#btn-them {
     margin-bottom: var(--space-md);
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--color-surface);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-}
-
-thead {
-    background: var(--color-secondary);
-}
-
-th,
-td {
-    padding: var(--space-sm) var(--space-md);
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-    font-size: var(--font-size-sm);
-}
-
-th {
-    font-weight: 600;
-}
-
-tbody tr:hover {
-    background: rgba(0, 0, 0, 0.03);
-}
-
-td:last-child {
-    white-space: nowrap;
-}
-
-.editBtn,
-.deleteBtn {
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 6px 10px;
-    font-size: var(--font-size-sm);
-    cursor: pointer;
-    margin-right: 4px;
-}
-
-.editBtn {
-    background: var(--color-info);
-}
-
-.deleteBtn {
-    background: var(--color-danger);
-}
-
-#pagination {
-    margin-top: var(--space-lg);
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-}
-
-.pageBtn {
-    padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    border: var(--border-default);
-    background: var(--color-surface);
-    cursor: pointer;
-}
-
-.pageBtn.active {
-    background: var(--color-primary);
-    color: #fff;
-    border-color: var(--color-primary);
-}
-
-#userModal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background: var(--color-surface);
-    padding: var(--space-lg);
-    border-radius: var(--radius-md);
-    width: 100%;
-    max-width: 420px;
-    box-shadow: var(--shadow-lg);
 }
 
 .modal-content h3 {
@@ -126,22 +12,16 @@ td:last-child {
     margin-bottom: var(--space-sm);
 }
 
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-}
-
-#modalSave {
+#modal-luu {
     background: var(--color-success);
 }
 
-#modalCancel {
+#modal-huy {
     background: var(--color-warning);
 }
 
-#modalSave,
-#modalCancel {
+#modal-luu,
+#modal-huy {
     border: none;
     border-radius: var(--radius-sm);
     padding: 8px 14px;
