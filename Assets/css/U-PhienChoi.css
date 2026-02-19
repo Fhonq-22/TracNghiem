@@ -1,7 +1,5 @@
 @import url("./BASE.css");
 
-/* ===== PAGE ===== */
-
 body {
     background: var(--color-bg);
     min-height: 100vh;
@@ -12,8 +10,6 @@ body {
     margin: 0 auto;
     padding: var(--space-lg);
 }
-
-/* ===== HEADER ===== */
 
 .page-header {
     display: flex;
@@ -35,8 +31,6 @@ body {
     text-decoration: underline;
 }
 
-/* ===== SECTION ===== */
-
 .section {
     background: var(--color-surface);
     padding: var(--space-lg);
@@ -49,8 +43,6 @@ body {
 .section h2 {
     margin-top: 0;
 }
-
-/* ===== FORM ===== */
 
 .form-row {
     display: flex;
@@ -69,8 +61,6 @@ body {
     margin-bottom: 6px;
 }
 
-/* ===== GAME INFO ===== */
-
 .game-info p {
     margin: 4px 0;
 }
@@ -80,43 +70,68 @@ body {
     color: var(--color-primary);
 }
 
-/* ===== QUESTION ===== */
-
 #lamCauHoiSection {
-    background: var(--color-bg-soft);
+    background: var(--color-gray-100);
     padding: var(--space-md);
     border-radius: var(--radius-sm);
+    border: var(--border-default);
 }
 
 #tieuDeCauHoi {
     margin-top: 0;
 }
 
-#dsPhuongAn > div {
-    padding: 6px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
+#dsPhuongAn {
+    margin-top: var(--space-sm);
 }
 
-#dsPhuongAn > div:hover {
-    background: rgba(0,0,0,0.04);
+#dsPhuongAn > div {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    border: var(--border-default);
+    cursor: pointer;
+    transition: var(--transition-fast);
 }
+
+#dsPhuongAn > div:nth-child(1) { background: var(--option-a); }
+#dsPhuongAn > div:nth-child(2) { background: var(--option-b); }
+#dsPhuongAn > div:nth-child(3) { background: var(--option-c); }
+#dsPhuongAn > div:nth-child(4) { background: var(--option-d); }
+
+#dsPhuongAn > div:nth-child(1):hover { background: var(--option-a-hover); }
+#dsPhuongAn > div:nth-child(2):hover { background: var(--option-b-hover); }
+#dsPhuongAn > div:nth-child(3):hover { background: var(--option-c-hover); }
+#dsPhuongAn > div:nth-child(4):hover { background: var(--option-d-hover); }
 
 #ketQuaTraLoi {
     font-weight: bold;
     margin-top: var(--space-sm);
 }
 
-/* ===== PHU ANSWER ===== */
+#btnGiaiThich {
+    margin-top: var(--space-sm);
+}
+
+#giaiThichBox {
+    margin-top: var(--space-sm);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background: var(--color-info);
+    border: var(--border-default);
+    box-shadow: var(--shadow-sm);
+    color: var(--color-text-main);
+    animation: fadeIn 0.25s ease;
+}
 
 #traLoiPhuSection {
     margin-top: var(--space-sm);
     padding: var(--space-sm);
-    background: #fff7e6;
+    background: var(--color-warning);
     border-radius: var(--radius-sm);
 }
-
-/* ===== PLAYER LIST ===== */
 
 #dsNguoiChoi {
     padding-left: 18px;
@@ -126,15 +141,22 @@ body {
     margin-bottom: 4px;
 }
 
-/* ===== BUTTON STATE ===== */
-
 button[disabled] {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-/* ===== SEPARATOR ===== */
-
 hr {
     margin: var(--space-lg) 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

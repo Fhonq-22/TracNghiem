@@ -35,6 +35,7 @@ $(document).ready(function () {
     $("#btnTraLoi").click(traLoiCauHoi);
     $("#btnNext").click(nextLuot);
     $("#btnNextCauHoi").click(sangCauHoi);
+    $("#btnGiaiThich").click(hienGiaiThich);
 });
 
 function taoDanhSachNhapTen() {
@@ -162,6 +163,8 @@ function hienCauHoi() {
     $("#btnNextCauHoi").prop("disabled", true);
     $("#ketQuaTraLoi").text("");
     $("#traLoiPhuSection").hide();
+    $("#btnGiaiThich").hide();
+    $("#giaiThichBox").hide().text("");
 
     $("#tieuDeCauHoi").text(`Câu ${cauHoiIndex + 1} / ${dsCauHoi.length}`);
     $("#noiDungCauHoi").html(`<p>${ch.NoiDung}</p>`);
@@ -198,11 +201,13 @@ function traLoiCauHoi() {
             $("#ketQuaTraLoi").text(`Đúng (+${diemMoiCau} điểm)`);
             $("#btnNextCauHoi").prop("disabled", false);
             $("#btnTraLoi").prop("disabled", true);
+            $("#btnGiaiThich").show();
             render();
         } else {
             ans.prop("checked", false).prop("disabled", true);
             $("#ketQuaTraLoi").text("Sai – người khác được trả lời");
             $("#btnNextCauHoi").prop("disabled", false);
+            $("#btnGiaiThich").show();
             hienTraLoiPhu();
         }
         return;
@@ -224,6 +229,7 @@ function traLoiCauHoi() {
 
         $("#btnTraLoi").prop("disabled", true);
         $("#btnNextCauHoi").prop("disabled", false);
+        $("#btnGiaiThich").show();
         render();
     }
 }
@@ -235,6 +241,17 @@ function hienTraLoiPhu() {
         .filter(t => t !== phienChoi.NguoiChoiHienTai)
         .forEach(t => select.append(`<option value="${t}">${t}</option>`));
     $("#traLoiPhuSection").show();
+}
+
+function hienGiaiThich() {
+    const ch = dsCauHoi[cauHoiIndex];
+    if (!ch) return;
+
+    const text = ch.GiaiThich && ch.GiaiThich.trim()
+        ? ch.GiaiThich
+        : "Không có lời giải thích cho câu hỏi này.";
+
+    $("#giaiThichBox").text(text).show();
 }
 
 function sangCauHoi() {
